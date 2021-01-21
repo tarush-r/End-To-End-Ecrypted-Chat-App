@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import './screens/register_screen.dart';
+import './screens/login_screen.dart';
+import './screens/authenticate.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -10,17 +13,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
-
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RegisterScreen(),
+      home: Authenticate(),
       routes: {
-        RegisterScreen.routeName: (ctx)=> RegisterScreen()
+        RegisterScreen.routeName: (ctx) => RegisterScreen(),
+        LoginScreen.routeName: (ctx) => LoginScreen()
       },
     );
   }
 }
-
-

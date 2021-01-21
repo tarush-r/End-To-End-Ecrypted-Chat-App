@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatefulWidget {
-  static final String routeName = '/register';
+class LoginScreen extends StatefulWidget {
+  static final String routeName = '/Login';
   final Function toggleView;
-  RegisterScreen({this.toggleView});
+  LoginScreen({this.toggleView});
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   _submit() {
@@ -16,6 +16,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool passwordHide = false;
+  String email = '';
   String password = '';
 
   @override
@@ -27,12 +28,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register"),
+        title: Text("Login"),
         actions: <Widget>[
           FlatButton.icon(
-            icon: Icon(Icons.person, color: Colors.white),
+            icon: Icon(Icons.person_add, color: Colors.white),
             label: Text(
-              'Login',
+              'Register',
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             onPressed: () {
@@ -48,22 +49,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Enter Phone No"),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Invalid No";
-                    }
+                  decoration: InputDecoration(
+                      hintText: 'Email',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 2.0))),
+                  validator: (val) =>
+                      val.isEmpty ? 'Enter a valid Email' : null,
+                  onChanged: (val) {
+                    setState(() => email = val);
                   },
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: "Enter Email"),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Invalid Email";
-                    }
-                  },
-                ),
+                SizedBox(height: 20.0),
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -92,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
                 RaisedButton(
-                  child: Text("Register"),
+                  child: Text("Login"),
                   onPressed: _submit,
                 )
               ],

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import '../helpers/encryption_helper.dart';
+import 'package:rsa_encrypt/rsa_encrypt.dart';
+import 'package:pointycastle/api.dart' as encryption;
+import '../api/authentication_api.dart';
+// import 'package:crypto/crypto.dart';
+// import 'dart:convert';
 
 class RegisterScreen extends StatefulWidget {
   static final String routeName = '/register';
@@ -10,9 +16,32 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  TextEditingController passwordController = new TextEditingController();
 
-  _submit() {
-    _formKey.currentState.validate();
+  // _hashPassword(String password) {
+  //   var bytes = utf8.encode(password); // data being hashed
+
+  //   var digest = sha1.convert(bytes).toString();
+  //   print(digest);
+  // }
+
+  _submit() async {
+    final isValid = _formKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState.save();
+    String hashedPassword = EncryptionHelper.hashPassword(passwordController.text);
+    encryption.AsymmetricKeyPair keyPair = await EncryptionHelper.generateKeyPair();
+    
+    //--------------------------------------------------
+    //YEH API KO UNCOMMENT MAT KARNA NAHI TOH ERROR AEGA
+    //--------------------------------------------------
+    
+    // AuthenticationApi.register(hashedPassword, keyPair.publicKey, keyPair.privateKey);
+    print(keyPair.publicKey);
+    // _hashPassword(passwordController.text);
+    // print(passwordController.text);
   }
 
   bool passwordHide = false;
@@ -83,9 +112,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                     ),
                   ),
-                  validator: (val) => val.length < 6
-                      ? 'Enter a password greater than 6 characters.'
-                      : null,
+                  validator: (val) {
+                    if (val.length < 6) {
+                      return 'Enter a password greater than 6 characters.';
+                    } else {
+                      return null;
+                    }
+                  },
+                  controller: passwordController,
                   obscureText: passwordHide,
                   onChanged: (val) {
                     setState(() => password = val);

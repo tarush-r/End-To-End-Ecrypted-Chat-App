@@ -1,4 +1,6 @@
+import 'package:chatapp_client/api/authentication_api.dart';
 import 'package:flutter/material.dart';
+import '../helpers/encryption_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String routeName = '/Login';
@@ -10,14 +12,23 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  TextEditingController passwordController = new TextEditingController();
+
 
   _submit() {
+    String hashedPassword;
+    // print("HEllo");
     _formKey.currentState.validate();
+    hashedPassword = EncryptionHelper.hashPassword(passwordController.text);
+    //DONT UNCOMMENT API
+    // AuthenticationApi.login(hashedPassword);
+    // print("done");
   }
 
   bool passwordHide = false;
   String email = '';
   String password = '';
+
 
   @override
   void initState() {
@@ -83,6 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                   ),
+                  controller: passwordController,
                   validator: (val) => val.length < 6
                       ? 'Enter a password greater than 6 characters.'
                       : null,

@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   asn1lib:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: asn1lib
       url: "https://pub.dartlang.org"
@@ -131,7 +131,7 @@ packages:
     source: hosted
     version: "1.9.2"
   pointycastle:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: pointycastle
       url: "https://pub.dartlang.org"

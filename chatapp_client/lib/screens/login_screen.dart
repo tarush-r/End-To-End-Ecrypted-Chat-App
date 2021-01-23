@@ -2,6 +2,8 @@ import 'package:chatapp_client/api/authentication_api.dart';
 import 'package:flutter/material.dart';
 import '../helpers/encryption_helper.dart';
 
+
+
 class LoginScreen extends StatefulWidget {
   static final String routeName = '/Login';
   final Function toggleView;

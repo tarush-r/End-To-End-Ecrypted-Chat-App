@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
 const jwt=require('jsonwebtoken')
 const User = mongoose.model('user');
-const Token = mongoose.model('token');
-const Refresh = mongoose.model('refresh');
+// const Token = mongoose.model('token');
+// const Refresh = mongoose.model('refresh');
 
 router.post('/login',async (req, res) => {
     if(/\S+@\S+\.\S+/.test(req.body.email)){
@@ -47,23 +47,25 @@ async function login(email_id,pass){
 } 
 
 async function generateTokens(email_id,uuid){
-    token_uuid = jwt.sign({
+    const token = jwt.sign({
             data: uuid
         }, 'secret', { expiresIn: '1h' });
     refresh_uuid = jwt.sign({
             data: uuid
         }, 'secret', { expiresIn: '7d' });
     
-    var utoken = new Token()
-    utoken.token = token_uuid
-    utoken.email = email_id
-    var rtoken = new Refresh()
-    rtoken.refresh_token = refresh_uuid
-    rtoken.email = email_id
+    // var utoken = new Token()
+    // utoken.token = token_uuid
+    // utoken.email = email_id
+    // var rtoken = new Refresh()
+    // rtoken.refresh_token = refresh_uuid
+    // rtoken.email = email_id
 
     try{
-        utoken.save()
-        rtoken.save()
+        const user=await User.findOne({email:email_id})
+        console.log("USERRRR-",user)
+        user.tokens=user.tokens.concat({token})
+        user.save()
         return {"token_uuid":token_uuid,"refresh_uuid":refresh_uuid}
     }catch(error){
         return {error}

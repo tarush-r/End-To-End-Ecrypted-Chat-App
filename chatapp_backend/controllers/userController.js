@@ -6,6 +6,8 @@ var nodemailer = require('nodemailer');
 const User = mongoose.model('user');
 const OTP = mongoose.model('otp');
 
+const {ggmail,ppassword}= require('../config/key')
+
 
 router.post('/getotp',async (req, res) => {
     if(/\S+@\S+\.\S+/.test(req.body.email)&&/^\d{3}$/.test(req.body.phone_num)){
@@ -85,13 +87,13 @@ async function generateOTP(email) {
     var transporter = await nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'email',
-          pass: 'pass'
+          user: ggmail,
+          pass:ppassword
         }
       });
       
       var mailOptions = {
-        from: 'email',
+        from: ggmail,
         to: email,
         subject: 'OTP for ChatApp',
         text: ('Your OTP is '+OTP)

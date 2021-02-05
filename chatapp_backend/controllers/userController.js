@@ -70,13 +70,13 @@ async function generateOTP(email) {
     var transporter = await nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'askrparikh@gmail.com',
-          pass: 'Imgonnamakeit'
+          user: 'email@gmail.com',
+          pass: 'pass'
         }
       });
       
       var mailOptions = {
-        from: 'askrparikh@gmail.com',
+        from: 'email@gmail.com',
         to: email,
         subject: 'OTP for ChatApp',
         text: ('Your OTP is '+OTP)

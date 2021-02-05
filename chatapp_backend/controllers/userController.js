@@ -12,7 +12,8 @@ router.post('/getotp',async (req, res) => {
         console.log(req.body.email)
         console.log(req.body.phone_num)
         var otp = await generateOTP(req.body.email)
-        if(await insertUserMongod(req.body.name,req.body.email,req.body.phone_num,otp))
+        const response= insertUserMongod(req.body.name,req.body.email,req.body.phone_num,otp)
+        if(response)
             res.json({'message': "New person added", 'type': "success"});
         else
             res.json({'message': "Database error", 'type': "error"});
@@ -24,39 +25,53 @@ router.post('/getotp',async (req, res) => {
 
 
 async function insertUserMongod(name,email,phone_num,otp){
-   var newUser = new User()
-   newUser.name = name
-   newUser.email = email
-   newUser.number = phone_num
-
-   var newOTP = new OTP()
-   newOTP.email = email
-   newOTP.otp = otp
-   newOTP.otp_check = false
-
-   var result=true;
-   await newUser.save(function(err, User){
-    if(err){
-        result = false
-        console.log(err)
+    const newUser=new User({
+        name:name,
+        email:email,
+        number:phone_num
+    })
+    const otp_generated=new OTP({email:email,otp:otp,otp_check : false})
+    try{
+        await newUser.save()
+        await otp_generated.save()
+        console.log("DONE")
+        return true
+    }catch(error){
+        return false
     }
-    else{
-        result = true
-        console.log(result)
-    }
-    });
-    await newOTP.save(function(err, User){
-        if(err){
-            result = false
-            console.log(err)
-        }
-        else{
-            result = true
-            console.log(result)
-        }
-        });
-    console.log(result+"res")
-    return result
+//    var newUser = new User()
+//    newUser.name = name
+//    newUser.email = email
+//    newUser.number = phone_num
+
+//    var newOTP = new OTP()
+//    newOTP.email = email
+//    newOTP.otp = otp
+//    newOTP.otp_check = false
+
+//    var result=true;
+//    await newUser.save(function(err, User){
+//     if(err){
+//         result = false
+//         console.log(err)
+//     }
+//     else{
+//         result = true
+//         console.log(result)
+//     }
+//     });
+//     await newOTP.save(function(err, User){
+//         if(err){
+//             result = false
+//             console.log(err)
+//         }
+//         else{
+//             result = true
+//             console.log(result)
+//         }
+//         });
+//     console.log(result+"res")
+    // return result
 }
 
 
@@ -70,13 +85,13 @@ async function generateOTP(email) {
     var transporter = await nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'email@gmail.com',
+          user: 'email',
           pass: 'pass'
         }
       });
       
       var mailOptions = {
-        from: 'email@gmail.com',
+        from: 'email',
         to: email,
         subject: 'OTP for ChatApp',
         text: ('Your OTP is '+OTP)
@@ -115,12 +130,12 @@ router.post("/verifyotp",async (req,res) => {
 
 async function checkOTP(otp,email_id) {
     var result = true
-    var id = await OTP.find({email:email_id},["otp","otp_check"],
+    var id = await OTP.findOne({email:email_id,otp:otp},
     function(err, response){
         if(!err){
             console.log("Retrieve Response check : "+response); 
             if(response!=null){
-                if(response[0]['otp_check']){
+                if(response['otp_check']){
                     result=false     
                 }    
             }
@@ -129,8 +144,10 @@ async function checkOTP(otp,email_id) {
             result=false
         }
     });
-    if(otp==id[0].otp&&result!=false){
-        await OTP.findByIdAndUpdate(id[0]._id, {otp_check: true}, function(err, response){
+    console.log("DDDDDDDDDD-",id)
+    if(otp==id.otp&&result!=false){
+        console.log("Inside IF")
+        await OTP.findByIdAndUpdate(id._id, {otp_check: true}, function(err, response){
             if(!err){
                 console.log("Retrieve Response update : "+response);
                 if(response==null){
@@ -164,7 +181,7 @@ router.post("/register", (req,res) =>{
 
 function register(pass,email_id){
     var result = true
-    User.updateOne({email:email_id}, {pass: pass}, function(err, response){
+    User.findOneAndUpdate({email:email_id}, {password: pass}, function(err, response){
         if(!err){
             console.log("Retrieve Response : "+response);
             if(response==null){

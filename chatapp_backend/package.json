@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "chat": "nodemon index.js localhost 8080"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "dependencies": {
     "constantinople": "^4.0.1",
@@ -19,6 +19,7 @@
     "morgan": "~1.9.1",
     "node-uuid": "^1.4.8",
     "nodemailer": "^6.4.17",
+    "nodemon": "^2.0.7",
     "pug": "^3.0.0"
   }
 }

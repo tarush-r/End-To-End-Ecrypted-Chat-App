@@ -29,6 +29,7 @@ dependencies:
   asn1lib: ^0.8.1
   pointycastle: ^2.0.1
   encrypt: ^4.1.0
+  sqflite:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

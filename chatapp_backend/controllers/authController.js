@@ -14,9 +14,12 @@ router.post('/login',async (req, res) => {
         doc = await login(req.body.email,req.body.password)
         console.log("CCCCCCCCHECK-",doc)
         if(doc['status']){
-            tokenPair = generateTokens(req.body.email,doc['id'])
-            console.log("TOKENNNN--",tokenPair)
-            res.json({'status': "success", 'token_uuid': tokenPair['token_uuid'], 'refresh_uuid':tokenPair['refresh_uuid']});
+            // tokenPair = generateTokens(req.body.email,doc['id'])
+            // console.log("TOKENNNN--",tokenPair)
+            user =await generateTokens(req.body.email,doc['id'])
+            console.log("...TOKENNNN--",user)
+            res.status(200).send(user)
+            //res.json({'status': "success", 'token_uuid': tokenPair['token_uuid'], 'refresh_uuid':tokenPair['refresh_uuid']});
         }
         else
             res.json({'message': "Technical Error", 'type': "error"});
@@ -39,7 +42,7 @@ async function login(email_id,pass){
             result=false
         }
     }).exec();
-    console.log("result : "+result)
+    // console.log("result : "+result)
     if(result)
         return {"status":result,"id":id._id}
     else
@@ -66,7 +69,8 @@ async function generateTokens(email_id,uuid){
         console.log("USERRRR-",user)
         user.tokens=user.tokens.concat({token})
         user.save()
-        return {"token_uuid":token_uuid,"refresh_uuid":refresh_uuid}
+        // return {"token_uuid":token_uuid,"refresh_uuid":refresh_uuid}
+        return {user}
     }catch(error){
         return {error}
     }

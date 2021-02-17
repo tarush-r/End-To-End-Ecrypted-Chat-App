@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp_client/screens/register_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
+import './generate_otp_screen.dart';
 
 class Authenticate extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _AuthenticateState extends State<Authenticate> {
     if (showLogin == true) {
       return LoginScreen(toggleView: toggleView);
     } else {
-      return RegisterScreen(toggleView: toggleView);
+      return GenerateOtpScreen(toggleView: toggleView);
     }
   }
 }

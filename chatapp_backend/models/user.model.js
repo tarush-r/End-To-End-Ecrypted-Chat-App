@@ -7,6 +7,9 @@ var userSchema = new mongoose.Schema({
     number: {type : String , unique : true, required : true},
     email: {type : String , unique : true, required : true},
     password: {type : String},
+    publicKey: {type : String},
+    privateKey: {type: String},
+    hashedPass: {type : String},
     tokens:[{
       token:{
           type:String,

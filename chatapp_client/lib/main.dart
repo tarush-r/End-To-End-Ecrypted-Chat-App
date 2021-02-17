@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import './screens/register_screen.dart';
+import './screens/generate_otp_screen.dart';
 import './screens/login_screen.dart';
 import './screens/authenticate.dart';
+import './screens/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,8 +20,10 @@ class MyApp extends StatelessWidget {
       ),
       home: Authenticate(),
       routes: {
-        RegisterScreen.routeName: (ctx) => RegisterScreen(),
-        LoginScreen.routeName: (ctx) => LoginScreen()
+        GenerateOtpScreen.routeName: (ctx) => GenerateOtpScreen(),
+        LoginScreen.routeName: (ctx) => LoginScreen(),
+        Home.routeName: (ctx) => Home(),
+        // RegisterScreen.routeName: (ctx) => RegisterScreen()
       },
     );
   }

@@ -6,6 +6,8 @@ import '../api/authentication_api.dart';
 import 'package:pointycastle/export.dart' as pointy;
 import 'package:encrypt/encrypt.dart';
 
+import '../api/authentication_api.dart';
+import 'package:http/http.dart' as http;
 import 'package:asn1lib/asn1lib.dart';
 
 import 'dart:convert';
@@ -15,29 +17,49 @@ import 'dart:typed_data';
 // import 'package:crypto/crypto.dart';
 // import 'dart:convert';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends StatelessWidget {
   static final String routeName = '/register';
-  final Function toggleView;
-  RegisterScreen({this.toggleView});
-  @override
-  _RegisterScreenState createState() => _RegisterScreenState();
-}
 
-class _RegisterScreenState extends State<RegisterScreen> {
+  // String name, email, phone_num, password;
   final GlobalKey<FormState> _formKey = GlobalKey();
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  TextEditingController phone_numController = new TextEditingController();
+  TextEditingController otpController = new TextEditingController();
+
+  RegisterScreen(String name, String email, String password, String phone_num) {
+    nameController.text = name;
+    emailController.text = email;
+    passwordController.text = password;
+    phone_numController.text = phone_num;
+  }
 
   _submit() async {
+    // print(name);
     final isValid = _formKey.currentState.validate();
     if (!isValid) {
       return;
     }
     _formKey.currentState.save();
+
     List<String> divided_hashed_password =
         EncryptionHelper.hashPassword(passwordController.text);
     encryption.AsymmetricKeyPair keyPair =
         await EncryptionHelper.generateKeyPair();
 
+    http.Response response = await AuthenticationApi.verifyOtp(
+        nameController.text,
+        emailController.text,
+        EncryptionHelper.hashPassword(passwordController.text)[0],
+        phone_numController.text,
+        int.parse(otpController.text),
+        EncryptionHelper.convertPublicKeyToString(keyPair.publicKey),
+        EncryptionHelper.encryptPrivateKey(divided_hashed_password[1], EncryptionHelper.convertPrivateKeyToString(keyPair.privateKey)),
+        divided_hashed_password[0]);
+
+    var status = json.decode(response.body);
+    // print(status['type']);
     //--------------------------------------------------
     //YEH API KO UNCOMMENT MAT KARNA NAHI TOH ERROR AEGA
     //--------------------------------------------------
@@ -69,14 +91,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool passwordHide = false;
-  String password = '';
+  String passwordText = '';
+
+  // @override
+  // void initState() {
+  //   passwordHide = true;
+  //   passwordController.text = widget.password;
+  //   print(passwordController.text);
+  //   super.initState();
+  // }
+
+  // void initState() {
+  //   passwordHide = true;
+  //   passwordController.text = widget.password;
+  //   print(passwordController.text);
+  //   super.initState();
+  // }
 
   @override
-  void initState() {
-    passwordHide = true;
-    super.initState();
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -89,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             onPressed: () {
-              widget.toggleView();
+              // widget.toggleView();
             },
           ),
         ],
@@ -102,6 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: <Widget>[
                 TextFormField(
                   decoration: InputDecoration(labelText: "Enter Phone No"),
+                  controller: phone_numController,
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -111,6 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: "Enter Email"),
+                  controller: emailController,
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Invalid Email";
@@ -118,6 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
                 TextFormField(
+                  // initialValue: passwordController.text,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     enabledBorder: OutlineInputBorder(
@@ -130,9 +165,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         passwordHide ? Icons.visibility_off : Icons.visibility,
                       ),
                       onPressed: () {
-                        setState(() {
-                          passwordHide = !passwordHide;
-                        });
+                        // setState(() {
+                        //   passwordHide = !passwordHide;
+                        // });
                       },
                     ),
                   ),
@@ -145,8 +180,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   controller: passwordController,
                   obscureText: passwordHide,
-                  onChanged: (val) {
-                    setState(() => password = val);
+                  // onChanged: (val) {
+                  //   setState(() => passwordText = val);
+                  // },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: "Enter The OTP"),
+                  controller: otpController,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Invalid Email";
+                    }
                   },
                 ),
                 RaisedButton(

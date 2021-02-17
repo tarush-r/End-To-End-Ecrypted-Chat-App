@@ -1,8 +1,9 @@
 import 'package:chatapp_client/api/authentication_api.dart';
+import 'package:chatapp_client/screens/home.dart';
 import 'package:flutter/material.dart';
 import '../helpers/encryption_helper.dart';
-
-
+import 'dart:convert';
+import '../helpers/sharedpreferences_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String routeName = '/Login';
@@ -15,26 +16,42 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
 
-
-  _submit() {
-    String hashedPassword;
+  _submit() async {
+    List<String> hashedPassword;
     // print("HEllo");
     _formKey.currentState.validate();
-    hashedPassword = EncryptionHelper.hashPassword(passwordController.text);
+    hashedPassword =
+        EncryptionHelper.hashPassword(passwordController.text.trim());
+    var response = await AuthenticationApi.login(
+        hashedPassword[0], emailController.text.trim());
+    print(response.body);
+    SharedPreferencesHelper.persistOnLogin(json.encode(json.decode(response.body)['user']));
+    var user = await SharedPreferencesHelper.getUser();
+    
     //DONT UNCOMMENT API
     // AuthenticationApi.login(hashedPassword);
     // print("done");
   }
 
   bool passwordHide = false;
-  String email = '';
-  String password = '';
-
+  // String email = '';
+  // String password = '';
+  void checkLogin() async
+  {
+    var user =  await SharedPreferencesHelper.getUser();
+    if(user!=null)
+    {
+      print("hello");
+      Navigator.pushReplacementNamed(context, Home.routeName);
+    }     
+  }
 
   @override
   void initState() {
     passwordHide = true;
+    checkLogin();
     super.initState();
   }
 
@@ -72,9 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               BorderSide(color: Colors.blue, width: 2.0))),
                   validator: (val) =>
                       val.isEmpty ? 'Enter a valid Email' : null,
-                  onChanged: (val) {
-                    setState(() => email = val);
-                  },
+                  controller: emailController,
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
@@ -101,9 +116,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ? 'Enter a password greater than 6 characters.'
                       : null,
                   obscureText: passwordHide,
-                  onChanged: (val) {
-                    setState(() => password = val);
-                  },
+                  // onChanged: (val) {
+                  //   setState(() => password = val);
+                  // },
                 ),
                 RaisedButton(
                   child: Text("Login"),

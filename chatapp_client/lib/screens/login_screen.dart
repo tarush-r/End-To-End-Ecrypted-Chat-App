@@ -1,5 +1,5 @@
 import 'package:chatapp_client/api/authentication_api.dart';
-import 'package:chatapp_client/screens/home.dart';
+import 'package:chatapp_client/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../helpers/encryption_helper.dart';
 import 'dart:convert';
@@ -29,7 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
     print(response.body);
     SharedPreferencesHelper.persistOnLogin(json.encode(json.decode(response.body)['user']));
     var user = await SharedPreferencesHelper.getUser();
-    
+    if(user!=null)
+    {
+      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+    }
     //DONT UNCOMMENT API
     // AuthenticationApi.login(hashedPassword);
     // print("done");
@@ -44,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if(user!=null)
     {
       print("hello");
-      Navigator.pushReplacementNamed(context, Home.routeName);
+      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     }     
   }
 

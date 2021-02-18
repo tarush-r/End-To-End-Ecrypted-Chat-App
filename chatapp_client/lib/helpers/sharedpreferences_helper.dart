@@ -12,6 +12,19 @@ class SharedPreferencesHelper
   static Future getUser() async
   {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return json.decode(prefs.getString('user'));
+    if(prefs.getString('user')!=null)
+    {
+      return json.decode(prefs.getString('user'));
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+  static Future logout() async
+  {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("user");
   }
 }

@@ -125,7 +125,7 @@ router.post("/verifyotp", async (req, res) => {
       console.log(err);
     }
     if (verified) {
-      if (register(req.body.password, req.body.email, req.body.name, req.body.phone_num, req.body.publicKey, req.body.privateKey, req.body.hashedPass)) {
+      if (register(req.body.password, req.body.email, req.body.phone_num, req.body.name, req.body.publicKey, req.body.privateKey, req.body.hashedPass)) {
         console.log(" status : " + "Success")
         res.json({ "status": "Success" })
       } else {
@@ -236,5 +236,40 @@ async function register(pass, email, phone_num, name, publicKey, privateKey, has
   // });
   return result;
 }
+
+
+router.post('/getverifiedcontacts', async (req, res)=>{
+  var result = false
+  var verifiedContacts = []
+  for(var i =0; i<req.body['contactlist'].length ;i++) {
+    req.body['contactlist'][i]['number'] = req.body['contactlist'][i]['number'].replace(/\s/g, '')
+    req.body['contactlist'][i]['number'] = req.body['contactlist'][i]['number'].replace('+91', '')
+    console.log("!!!!"+req.body['contactlist'][1]['number'])
+    await User.findOne({number : req.body['contactlist'][i]['number']}, function (err, res) {
+      if(!err){
+        if(res!=null){
+          // console.log(res)
+          // verifiedContacts.push(res)
+          verifiedContacts.push({
+            'name' : res['name'],
+            'email' : res['email'],
+            'number': res['number']
+
+          }) 
+        }
+      }
+      else{
+        console.log("Error occured while getting contacts")
+        result = false
+      }
+    }).exec()
+  }
+  // console.log(req.body)
+  console.log("sjdf skjnvjosfov sfjv"+verifiedContacts[0]['name'])
+  res.send(verifiedContacts)
+  // return verifiedContacts;
+  // console.log(req.body['contactlist'][0]['number'].replace(/\s/g, ''));
+  // str = str.replace(' ', '');
+})
 
 module.exports = router 

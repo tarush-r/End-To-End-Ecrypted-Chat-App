@@ -1,3 +1,4 @@
+import 'package:chatapp_client/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import '../api/authentication_api.dart';
 import "dart:convert";
@@ -60,7 +61,8 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             onPressed: () {
-              widget.toggleView();
+              // widget.toggleView();
+              Navigator.pushReplacementNamed(context, LoginScreen.routeName);
             },
           ),
         ],

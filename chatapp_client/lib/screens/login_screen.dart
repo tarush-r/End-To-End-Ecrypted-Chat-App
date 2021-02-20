@@ -1,9 +1,12 @@
 import 'package:chatapp_client/api/authentication_api.dart';
+import 'package:chatapp_client/screens/generate_otp_screen.dart';
 import 'package:chatapp_client/screens/home_screen.dart';
+import 'package:chatapp_client/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import '../helpers/encryption_helper.dart';
 import 'dart:convert';
 import '../helpers/sharedpreferences_helper.dart';
+import './register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String routeName = '/Login';
@@ -27,10 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
     var response = await AuthenticationApi.login(
         hashedPassword[0], emailController.text.trim());
     print(response.body);
-    SharedPreferencesHelper.persistOnLogin(json.encode(json.decode(response.body)['user']));
+    SharedPreferencesHelper.persistOnLogin(
+        json.encode(json.decode(response.body)['user']));
     var user = await SharedPreferencesHelper.getUser();
-    if(user!=null)
-    {
+    if (user != null) {
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     }
     //DONT UNCOMMENT API
@@ -41,14 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool passwordHide = false;
   // String email = '';
   // String password = '';
-  void checkLogin() async
-  {
-    var user =  await SharedPreferencesHelper.getUser();
-    if(user!=null)
-    {
+  void checkLogin() async {
+    var user = await SharedPreferencesHelper.getUser();
+    if (user != null) {
       print("hello");
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-    }     
+    }
   }
 
   @override
@@ -70,7 +71,8 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             onPressed: () {
-              widget.toggleView();
+              Navigator.pushReplacementNamed(context, GenerateOtpScreen.routeName);
+              // widget.toggleView();
             },
           ),
         ],

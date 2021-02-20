@@ -5,6 +5,7 @@ import './screens/login_screen.dart';
 import './screens/authenticate.dart';
 import 'screens/home_screen.dart';
 import './helpers/sharedpreferences_helper.dart';
+import './screens/contacts_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         GenerateOtpScreen.routeName: (ctx) => GenerateOtpScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
         HomeScreen.routeName: (ctx) => HomeScreen(),
+        ContactsScreen.routeName : (ctx) => ContactsScreen(),
         // RegisterScreen.routeName: (ctx) => RegisterScreen()
       },
     );

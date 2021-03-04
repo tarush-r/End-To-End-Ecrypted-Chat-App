@@ -13,12 +13,10 @@ router.post("/login", async (req, res) => {
     console.log(req.body.email);
     console.log(req.body.hashedPassword);
     doc = await login(req.body.email, req.body.hashedPassword);
-    console.log("CCCCCCCCHECK-", doc);
     if (doc["status"]) {
       // tokenPair = generateTokens(req.body.email,doc['id'])
       // console.log("TOKENNNN--",tokenPair)
       user = await generateTokens(req.body.email, doc["id"]);
-      console.log("...TOKENNNN--", user);
       res.status(200).send(user);
       //res.json({'status': "success", 'token_uuid': tokenPair['token_uuid'], 'refresh_uuid':tokenPair['refresh_uuid']});
     } else res.json({ message: "Technical Error", type: "error" });

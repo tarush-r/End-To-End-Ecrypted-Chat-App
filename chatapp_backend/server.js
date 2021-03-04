@@ -3,10 +3,10 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const { options } = require('./app');
-const e = require('express');
+
 const userController = require('./controllers/userController')
 const authController = require('./controllers/authController')
-const Chat = require("../models/chat");
+const Chat = require("./models/chat");
 const port = 3000;
 
 
@@ -22,8 +22,7 @@ app.use('/auth',authController)
 
 //sockets
 
-var express = require("express");
-var app = express();
+
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 

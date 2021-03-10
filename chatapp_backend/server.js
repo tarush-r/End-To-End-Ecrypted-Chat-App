@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const { options } = require('./app');
+const path = require('path')
 
 const userController = require('./controllers/userController')
 const authController = require('./controllers/authController')
@@ -10,7 +11,7 @@ const Chat = require("./models/chat");
 const port = 3000;
 
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 
 // app.listen(port, () => {
@@ -21,11 +22,11 @@ app.use('/user',userController)
 app.use('/auth',authController)
 
 //sockets
-
+// const socketio=require('socket.io')
 
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
-
+const http = require('http')
 let ON_CONNECTION = "connection";
 let ON_DISCONNECT = "disconnect";
 
@@ -36,7 +37,8 @@ let EVENT_SINGLE_CHAT_MESSAGE = "single_chat_message";
 // Sub Events
 let SUB_EVENT_RECEIVE_MESSAGE = "receive_message";
 let SUB_EVENT_IS_USER_CONNECTED = "is_user_connected";
-
+const publicDirectoryPath = path.join(__dirname, './public')
+app.use(express.static(publicDirectoryPath))
 let listen_port = 3000;
 
 let STATUS_MESSAGE_NOT_SENT = 10001;
@@ -44,9 +46,14 @@ let STATUS_MESSAGE_SENT = 10001;
 
 const userMap = new Map();
 
-io.sockets.on(ON_CONNECTION, (socket) => {
-  onEachUserConnection(socket);
-});
+// io.sockets.on(ON_CONNECTION, (socket) => {
+//   console.log("HEEEEEEEY")
+//   onEachUserConnection(socket);
+// });
+
+io.on('connection', () => {
+  console.log('New WebSocket connection')
+})
 
 function onEachUserConnection(socket) {
   var query = stringifyJson(socket.handshake.query);
@@ -189,3 +196,24 @@ app.get("/", (req, res) => {
 server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+// const path = require('path')
+// const http = require('http')
+// const express = require('express')
+// const socketio = require('socket.io')
+
+// const app = express()
+// const server = http.createServer(app)
+// const io = socketio(server)
+
+// const port = process.env.PORT || 3000
+// const publicDirectoryPath = path.join(__dirname, './public')
+
+// app.use(express.static(publicDirectoryPath))
+
+// io.on('connection', () => {
+//     console.log('New WebSocket connection')
+// })
+
+// server.listen(port, () => {
+//     console.log(`Server is up on port ${port}!`)
+// })

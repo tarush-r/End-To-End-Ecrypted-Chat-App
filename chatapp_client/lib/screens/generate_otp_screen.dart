@@ -1,4 +1,5 @@
 import 'package:chatapp_client/screens/login_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../api/authentication_api.dart';
 import "dart:convert";
@@ -24,21 +25,28 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
 
   _submit() async {
     final isValid = _formKey.currentState.validate();
-    if(isValid){
+    if (isValid) {
       print("calling api");
-      http.Response response = await AuthenticationApi.getOtp(nameController.text.trim(), emailController.text.trim(), phone_numController.text.trim());
+      http.Response response = await AuthenticationApi.getOtp(
+          nameController.text.trim(),
+          emailController.text.trim(),
+          phone_numController.text.trim());
       var status = json.decode(response.body);
-      if(status['type']=="success")
-      {
-        print("passwor"+passwordController.text);
+      if (status['type'] == "success") {
+        print("passwor" + passwordController.text);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RegisterScreen(nameController.text, emailController.text, passwordController.text, phone_numController.text),
+            builder: (context) => RegisterScreen(
+                nameController.text,
+                emailController.text,
+                passwordController.text,
+                phone_numController.text),
           ),
         );
         // Navigator.pushReplacementNamed(context, RegisterScreen.routeName, arguments: passwordController.text);
-      };
+      }
+      ;
       // print("response here"+response);
     }
   }
@@ -51,30 +59,87 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Generate Otp"),
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: Text(
-              'Login',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            onPressed: () {
-              // widget.toggleView();
-              Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-            },
-          ),
-        ],
-      ),
-      body: Center(
+      // appBar: AppBar(
+      //   backgroundColor: Colors.black,
+      //   title: Text("Register"),
+      //   actions: <Widget>[
+      //     FlatButton.icon(
+      //       icon: Icon(Icons.person, color: Colors.white),
+      //       label: Text(
+      //         'Login',
+      //         style: TextStyle(fontSize: 18, color: Colors.white),
+      //       ),
+      //       onPressed: () {
+      //         // widget.toggleView();
+      //         Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+      //       },
+      //     ),
+      //   ],
+      // ),
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FlatButton(
+                      child: Row(children: <Widget>[
+                        Icon(Icons.person, color: Colors.white),
+                        SizedBox(width: 10.0),
+                        Text('Login', style: TextStyle(color: Colors.white)),
+                      ]),
+                      color: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                      onPressed: () {
+                        // widget.toggleView();
+                        Navigator.pushReplacementNamed(
+                            context, LoginScreen.routeName);
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 40.0),
+                CircleAvatar(
+                  radius: 48,
+                  backgroundColor: Colors.black,
+                  child: Icon(
+                    CupertinoIcons.chat_bubble,
+                    size: 48,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Cypher',
+                      style: TextStyle(
+                        fontFamily: 'Poiret',
+                        fontSize: 47,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        textBaseline: TextBaseline.alphabetic,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 60.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Enter Phone No"),
+                  decoration: InputDecoration(
+                      hintText: 'Phone Number',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.red, width: 2.0))),
                   keyboardType: TextInputType.phone,
                   controller: phone_numController,
                   validator: (value) {
@@ -83,8 +148,16 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                     }
                   },
                 ),
+                SizedBox(height: 10.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Enter Name"),
+                  decoration: InputDecoration(
+                      hintText: 'Name',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.red, width: 2.0))),
                   controller: nameController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -92,15 +165,21 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                     }
                   },
                 ),
+                SizedBox(height: 10.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Enter Email"),
+                  decoration: InputDecoration(
+                      hintText: 'Email',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.red, width: 2.0))),
+                  validator: (val) =>
+                      val.isEmpty ? 'Enter a valid Email' : null,
                   controller: emailController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Invalid Email";
-                    }
-                  },
                 ),
+                SizedBox(height: 10.0),
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -108,7 +187,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                         borderSide:
                             BorderSide(color: Colors.black, width: 2.0)),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 2.0)),
+                        borderSide: BorderSide(color: Colors.red, width: 2.0)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         passwordHide ? Icons.visibility_off : Icons.visibility,
@@ -133,9 +212,26 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                     setState(() => password = val);
                   },
                 ),
-                RaisedButton(
-                  child: Text("Register"),
-                  onPressed: _submit,
+                SizedBox(height: 20.0),
+                SizedBox(
+                  width: 250,
+                  child: RaisedButton(
+                      color: Colors.red,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Text(
+                          'REGISTER',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 3,
+                          ),
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
+                      onPressed: _submit),
                 )
               ],
             ),

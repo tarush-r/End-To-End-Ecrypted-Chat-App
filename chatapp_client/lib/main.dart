@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
           ChatScreen.routeName: (ctx) => ChatScreen(),
           CallsScreen.routeName: (ctx) => CallsScreen(),
           SettingsScreen.routeName: (ctx) => SettingsScreen(),
-          HomeScreen.routeName: (ctx) => HomeScreen()
-          // RegisterScreen.routeName: (ctx) => RegisterScreen()
+          HomeScreen.routeName: (ctx) => HomeScreen(),
+          //RegisterScreen.routeName: (ctx) => RegisterScreen(),
         },
       ),
     );

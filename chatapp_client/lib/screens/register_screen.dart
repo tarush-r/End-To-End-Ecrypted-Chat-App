@@ -55,7 +55,8 @@ class RegisterScreen extends StatelessWidget {
         phone_numController.text,
         int.parse(otpController.text),
         EncryptionHelper.convertPublicKeyToString(keyPair.publicKey),
-        EncryptionHelper.encryptPrivateKey(divided_hashed_password[1], EncryptionHelper.convertPrivateKeyToString(keyPair.privateKey)),
+        EncryptionHelper.encryptPrivateKey(divided_hashed_password[1],
+            EncryptionHelper.convertPrivateKeyToString(keyPair.privateKey)),
         divided_hashed_password[0]);
 
     var status = json.decode(response.body);
@@ -112,28 +113,38 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register"),
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: Text(
-              'Login',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            onPressed: () {
-              // widget.toggleView();
-            },
-          ),
-        ],
+        backgroundColor: Colors.black,
+        title: Text("Verify OTP"),
+        // actions: <Widget>[
+        //   FlatButton.icon(
+        //     icon: Icon(Icons.person, color: Colors.white),
+        //     label: Text(
+        //       'Login',
+        //       style: TextStyle(fontSize: 18, color: Colors.white),
+        //     ),
+        //     onPressed: () {
+        //       // widget.toggleView();
+        //     },
+        //   ),
+        // ],
       ),
-      body: Center(
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                SizedBox(height: 30.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Enter Phone No"),
+                  decoration: InputDecoration(
+                      hintText: 'Phone Number',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.red, width: 2.0))),
                   controller: phone_numController,
                   keyboardType: TextInputType.phone,
                   validator: (value) {
@@ -142,8 +153,16 @@ class RegisterScreen extends StatelessWidget {
                     }
                   },
                 ),
+                SizedBox(height: 10.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Enter Email"),
+                  decoration: InputDecoration(
+                      hintText: 'Email',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.red, width: 2.0))),
                   controller: emailController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -151,15 +170,15 @@ class RegisterScreen extends StatelessWidget {
                     }
                   },
                 ),
+                SizedBox(height: 10.0),
                 TextFormField(
-                  // initialValue: passwordController.text,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     enabledBorder: OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Colors.black, width: 2.0)),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 2.0)),
+                        borderSide: BorderSide(color: Colors.red, width: 2.0)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         passwordHide ? Icons.visibility_off : Icons.visibility,
@@ -184,18 +203,43 @@ class RegisterScreen extends StatelessWidget {
                   //   setState(() => passwordText = val);
                   // },
                 ),
+                SizedBox(height: 10.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Enter The OTP"),
+                                    decoration: InputDecoration(
+                      hintText: 'Enter OTP',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.red, width: 2.0))),
                   controller: otpController,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return "Invalid Email";
+                      return "Invalid otp";
                     }
                   },
                 ),
-                RaisedButton(
-                  child: Text("Register"),
-                  onPressed: _submit,
+                SizedBox(height: 20.0),
+                SizedBox(
+                  width: 250,
+                  child: RaisedButton(
+                      color: Colors.red,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Text(
+                          'Verify OTP',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 3,
+                          ),
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
+                      onPressed: _submit),
                 )
               ],
             ),

@@ -1,12 +1,13 @@
 import 'package:chatapp_client/api/authentication_api.dart';
 import 'package:chatapp_client/screens/generate_otp_screen.dart';
-import 'package:chatapp_client/screens/home_screen.dart';
+import 'package:chatapp_client/screens/chatslist_screen.dart';
 import 'package:chatapp_client/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import '../helpers/encryption_helper.dart';
 import 'dart:convert';
 import '../helpers/sharedpreferences_helper.dart';
 import './register_screen.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String routeName = '/Login';

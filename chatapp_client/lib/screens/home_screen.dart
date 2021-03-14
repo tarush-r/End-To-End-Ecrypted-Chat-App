@@ -1,30 +1,144 @@
-import 'package:chatapp_client/screens/login_screen.dart';
+import 'package:chatapp_client/screens/chatslist_screen.dart';
+import 'package:chatapp_client/utlis/color_themes.dart';
 import 'package:flutter/material.dart';
-import '../helpers/sharedpreferences_helper.dart';
-import '../helpers/contacts_helper.dart';
-import './contacts_screen.dart';
+import 'settings_screen.dart';
+import 'calls_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-
+class HomeScreen extends StatefulWidget {
   static String routeName = '/home';
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<Widget> screens = [
+    CallsScreen(),
+    ChatsListScreen(),
+    SettingsScreen()
+  ];
+  int _navigationIndex = 1;
+
+  _navigate(index) {
+    setState(() {
+      _navigationIndex = index;
+    });
+  }
+
+  _customBottomNavigation() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        height: 80,
+        decoration: BoxDecoration(
+            // color: Colors.red,
+            ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            RawMaterialButton(
+              shape: CircleBorder(),
+              onPressed: () {
+                _navigate(0);
+              },
+              child: Container(
+                height: 60,
+                width: 60,
+                // color: Colors.red,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _navigationIndex == 0
+                        ? ColorThemes.primary
+                        : Colors.grey[200]),
+                child: Center(
+                    child: Icon(
+                  Icons.phone,
+                  color: _navigationIndex == 0
+                      ? ColorThemes.secondary2
+                      : ColorThemes.secondary,
+                )),
+              ),
+            ),
+            RawMaterialButton(
+              shape: CircleBorder(),
+              onPressed: () {
+                _navigate(1);
+              },
+              child: Container(
+                height: 80,
+                width: 80,
+                // color: Colors.red,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _navigationIndex == 1
+                        ? ColorThemes.primary
+                        : Colors.grey[200]),
+                child: Center(
+                    child: Icon(
+                  Icons.chat_bubble,
+                  color: _navigationIndex == 1
+                      ? ColorThemes.secondary2
+                      : ColorThemes.secondary,
+                )),
+              ),
+            ),
+            RawMaterialButton(
+              shape: CircleBorder(),
+              onPressed: () {
+                _navigate(2);
+              },
+              child: Container(
+                height: 60,
+                width: 60,
+                // color: Colors.red,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _navigationIndex == 2
+                        ? ColorThemes.primary
+                        : Colors.grey[200]),
+                child: Center(
+                    child: Icon(
+                  Icons.settings,
+                  color: _navigationIndex == 2
+                      ? ColorThemes.secondary2
+                      : ColorThemes.secondary,
+                )),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [RaisedButton(onPressed: () {
-          SharedPreferencesHelper.logout();
-          
-          Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-        })],
-      ),
-      body: Container(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.contacts),
-        onPressed: () {
-          Navigator.pushNamed(context, ContactsScreen.routeName);
-          // ContactsHelper.getContacts();
-        },
-      ),
-    );
+        body: screens[_navigationIndex],
+        bottomNavigationBar: _customBottomNavigation()
+        // BottomNavigationBar(
+        //   currentIndex: _navigationIndex,
+        //   onTap: (index) {
+        //     setState(() {
+        //       _navigationIndex = index;
+        //     });
+        //     print(index);
+        //   },
+        //   items: [
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.phone),
+        //       label: 'Calls',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.chat),
+        //       label: 'Chats',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.settings),
+        //       label: 'Settings',
+        //     ),
+        //   ],
+        // ),
+        );
   }
 }

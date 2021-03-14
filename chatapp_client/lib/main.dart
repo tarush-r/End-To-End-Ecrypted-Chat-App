@@ -1,36 +1,52 @@
+import 'package:chatapp_client/screens/calls_screen.dart';
+import 'package:chatapp_client/screens/chat_screen.dart';
+import 'package:chatapp_client/screens/home_screen.dart';
+import 'package:chatapp_client/screens/settings_screen.dart';
+import 'package:chatapp_client/utlis/color_themes.dart';
+import 'package:chatapp_client/utlis/message_store.dart';
 import 'package:flutter/material.dart';
 import './screens/register_screen.dart';
 import './screens/generate_otp_screen.dart';
 import './screens/login_screen.dart';
 import './screens/authenticate.dart';
-import 'screens/home_screen.dart';
+import 'screens/chatslist_screen.dart';
 import './helpers/sharedpreferences_helper.dart';
 import './screens/contacts_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
-  
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        Provider<MessageStore>(
+          create: (_) => MessageStore(),
+          dispose: (_, store) => store.dispose(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: ColorThemes.primary,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: Authenticate(),
+        routes: {
+          GenerateOtpScreen.routeName: (ctx) => GenerateOtpScreen(),
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+          ChatsListScreen.routeName: (ctx) => ChatsListScreen(),
+          ContactsScreen.routeName: (ctx) => ContactsScreen(),
+          ChatScreen.routeName: (ctx) => ChatScreen(),
+          CallsScreen.routeName: (ctx) => CallsScreen(),
+          SettingsScreen.routeName: (ctx) => SettingsScreen(),
+          HomeScreen.routeName: (ctx) => HomeScreen()
+          // RegisterScreen.routeName: (ctx) => RegisterScreen()
+        },
       ),
-      home: Authenticate(),
-      routes: {
-        GenerateOtpScreen.routeName: (ctx) => GenerateOtpScreen(),
-        LoginScreen.routeName: (ctx) => LoginScreen(),
-        HomeScreen.routeName: (ctx) => HomeScreen(),
-        ContactsScreen.routeName : (ctx) => ContactsScreen(),
-        // RegisterScreen.routeName: (ctx) => RegisterScreen()
-      },
     );
   }
 }

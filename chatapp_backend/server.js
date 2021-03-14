@@ -38,7 +38,7 @@ let EVENT_SINGLE_CHAT_MESSAGE = "single_chat_message";
 let SUB_EVENT_RECEIVE_MESSAGE = "receive_message";
 let SUB_EVENT_IS_USER_CONNECTED = "is_user_connected";
 const publicDirectoryPath = path.join(__dirname, './public')
-app.use(express.static(publicDirectoryPath))
+// app.use(express.static(publicDirectoryPath))
 let listen_port = 3000;
 
 let STATUS_MESSAGE_NOT_SENT = 10001;

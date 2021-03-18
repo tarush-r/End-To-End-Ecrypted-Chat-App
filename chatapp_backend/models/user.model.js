@@ -10,6 +10,8 @@ var userSchema = new mongoose.Schema({
     publicKey: {type : String},
     privateKey: {type: String},
     hashedPass: {type : String},
+    resetPasswordOTP:{type:Number},
+    resetPasswordReq:{type:Boolean, default:false},
     tokens:[{
       token:{
           type:String,
@@ -26,6 +28,12 @@ var userSchema = new mongoose.Schema({
     otp_check: {type : Boolean, required : true},
     createdAt:{type : Number,expires: '600s', default: Date.now},
  });
+
+ userSchema.pre('remove',async function(next){
+  const user=this
+  await Chat.deleteMany({from:user._id})
+  next()
+})
 
 //  var tokenSchema = new mongoose.Schema({
 //     email: {type : String , unique : true, required : true},

@@ -8,7 +8,7 @@ const User = mongoose.model("user");
 // const Refresh = mongoose.model('refresh');
 
 router.post("/login", async (req, res) => {
-  console.log(req.body);
+  console.log("login===",req.body);
   if (/\S+@\S+\.\S+/.test(req.body.email)) {
     console.log(req.body.email);
     console.log(req.body.hashedPassword);

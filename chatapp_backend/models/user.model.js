@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var uuid = require('node-uuid');
+// const Chat = mongoose.model("Chat");
 
 var userSchema = new mongoose.Schema({
     _id: { type: String, default: uuid.v1 },
@@ -29,11 +30,11 @@ var userSchema = new mongoose.Schema({
     createdAt:{type : Number,expires: '600s', default: Date.now},
  });
 
- userSchema.pre('remove',async function(next){
-  const user=this
-  await Chat.deleteMany({from:user._id})
-  next()
-})
+//  userSchema.pre('remove',async function(next){
+//   const user=this
+//   await Chat.deleteMany({from:user._id})
+//   next()
+// })
 
 //  var tokenSchema = new mongoose.Schema({
 //     email: {type : String , unique : true, required : true},

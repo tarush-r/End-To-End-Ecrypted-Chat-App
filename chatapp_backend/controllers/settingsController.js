@@ -5,57 +5,82 @@ var nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const User = mongoose.model("user");
 const login_required = require('../middleware/login_required')
+const { ggmail, ppassword } = require('../config/key')
 
-router.post('/resetPassword', login_required, async (req, res) => {
+router.post('/resetPassword', async (req, res) => {
+   console.log(req.body)
    if (!req.body.oldPassword || !req.body.newPassword || !req.body.email) {
       return res.status(422).json({ error: "Please add all fields" })
    }
    else {
       try {
          const emailId = req.body.email
-         const user = await User.findOne({ emailId });
+         console.log(emailId)
+         const user = await User.findOne({ email: emailId });
          if (user.password === req.body.oldPassword) {
+         console.log(user.password+ " "+req.body.oldPassword)
+
             await User.updateOne(
                { email: req.body.email },
                {
-                  $set: { password: newPassword },
+                  $set: { password: req.body.newPassword },
                }
             );
-            res.json({ user, token })
+            console.log('SUCCESS')
+            res.json({ user })
          }
 
       }
       catch (error) {
+         console.log(error)
          res.status(404).send()
       }
    }
 })
 
-router.post('/sendotpForgetPassword', login_required, async (req, res) => {
+router.post('/sendotpForgetPassword', async (req, res) => {
 
-   var otp = await generateOTP(req.user.email)
+   var otp = await generateOTP(req.body.email)
    var val=true
-   await User.updateOne(
-      { email: req.user.email },
-      {
-         $set: { resetPasswordOTP: otp, resetPasswordReq:val },
-      }
-   );
+   try {
+      console.log(otp)
+      await User.updateOne(
+         { email: req.body.email },
+         {
+            $set: { resetPasswordOTP: otp, resetPasswordReq:val },
+         }
+      );
+      res.send({
+         'data': 'otp sent'
+      })
+   }
+   catch(e){
+      console.log(e)
+      res.send({
+         'data': e
+      })
+   }
 })
 
-router.post('/forgetPassword', login_required, async (req, res) => {
+router.post('/forgetPassword', async (req, res) => {
 
-   const emailId = req.user.email;
+   const emailId = req.body.email;
+   console.log(req.body)
    try {
-      const user = await User.findOne({ emailId });
+      const user = await User.findOne({ email: emailId });
+      console.log(user)
+
       if (req.body.otp === user.resetPasswordOTP && user.resetPasswordReq === true) {
          await User.updateOne(
-            { email: req.user.email },
+            { email: req.body.email },
             {
                $set: { resetPasswordReq:false, password:req.body.newPassword },
             }
          );
       }
+      res.send({
+         'data':'success'
+      })
    }
    catch (error) {
       res.status(404).send()
@@ -63,11 +88,15 @@ router.post('/forgetPassword', login_required, async (req, res) => {
 })
 
 
-router.post('/deleteAccount', login_required, async (req, res) => {
+router.post('/deleteAccount', async (req, res) => {
+   console.log(req.body)
    try {
-      await req.user.remove()
-      res.send(req.user)
+      emailId = req.body.email
+      const user = await User.findOne({ email: emailId });
+      await user.remove()
+      res.send(user)
    } catch (e) {
+      console.log(e)
       return res.status(500).send()
    }
 })

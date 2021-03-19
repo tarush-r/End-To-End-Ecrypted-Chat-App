@@ -215,7 +215,9 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle, color: Colors.grey[200]),
                 child: Icon(Icons.contacts)),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, ContactsScreen.routeName);
+            },
           )
         ],
       ),
@@ -243,7 +245,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
               children: [
                 _topBar(),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height*0.7,
                   child: ListView.builder(
                     itemCount: chatContacts.length,
                     itemBuilder: (context, index) {

@@ -89,6 +89,7 @@ class AuthenticationApi {
         // "Content-Type": "application/json",
       },
     );
+    print(res.body);
     return res;
   }
 }

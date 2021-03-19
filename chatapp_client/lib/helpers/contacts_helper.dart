@@ -11,7 +11,7 @@ class ContactsHelper {
     print(contactsiter.toList().length);
     List contactslist = [];
     for(int i=0; i<contactsiter.toList().length; i++) {
-      ContactModel contact = new ContactModel(contactsiter.toList()[i].displayName, contactsiter.toList()[i].phones.toList()[0].value);
+      ContactModel contact = new ContactModel(name:contactsiter.toList()[i].displayName, number:contactsiter.toList()[i].phones.toList()[0].value);
       contactslist.add(contact.toJson());
     }
     List<dynamic> verifiedContacts = await ContactsApi.getVerifiedContacts({'contactlist':contactslist});

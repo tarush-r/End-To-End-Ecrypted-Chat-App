@@ -239,6 +239,7 @@ async function register(pass, email, phone_num, name, publicKey, privateKey, has
 
 
 router.post('/getverifiedcontacts', async (req, res)=>{
+  console.log(req.body)
   var result = false
   var verifiedContacts = []
   for(var i =0; i<req.body['contactlist'].length ;i++) {

@@ -9,6 +9,8 @@ class ContactsApi {
   static Future getVerifiedContacts(contactslist) async {
 
     const url = BaseUrl+"user/getverifiedcontacts/";
+    print(json.encode(contactslist));
+    print("asdasda");
     http.Response res = await http.post(
       url,
       body: json.encode(contactslist),

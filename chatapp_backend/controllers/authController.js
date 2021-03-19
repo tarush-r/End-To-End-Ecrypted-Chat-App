@@ -17,6 +17,8 @@ router.post("/login", async (req, res) => {
       // tokenPair = generateTokens(req.body.email,doc['id'])
       // console.log("TOKENNNN--",tokenPair)
       user = await generateTokens(req.body.email, doc["id"]);
+      console.log("USERGHERHERHERHEHREHRE")
+      console.log(user)
       res.status(200).send(user);
       //res.json({'status': "success", 'token_uuid': tokenPair['token_uuid'], 'refresh_uuid':tokenPair['refresh_uuid']});
     } else res.json({ message: "Technical Error", type: "error" });

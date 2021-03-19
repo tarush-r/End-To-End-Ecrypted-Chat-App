@@ -1,3 +1,4 @@
+import 'package:chatapp_client/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import '../helpers/encryption_helper.dart';
 import 'package:rsa_encrypt/rsa_encrypt.dart';
@@ -35,7 +36,7 @@ class RegisterScreen extends StatelessWidget {
     phone_numController.text = phone_num;
   }
 
-  _submit() async {
+  _submit(context) async {
     // print(name);
     final isValid = _formKey.currentState.validate();
     if (!isValid) {
@@ -89,6 +90,7 @@ class RegisterScreen extends StatelessWidget {
     //decrypted_private_key below is to be stored in local storage. This key is decrpted upon logging in
     String decrypted_private_key = EncryptionHelper.decryptPrivateKey(
         divided_hashed_password[1], encrypted_private_key);
+    Navigator.pushReplacementNamed(context, LoginScreen.routeName);
   }
 
   bool passwordHide = false;
@@ -205,7 +207,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10.0),
                 TextFormField(
-                                    decoration: InputDecoration(
+                  decoration: InputDecoration(
                       hintText: 'Enter OTP',
                       enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -239,7 +241,9 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0)),
-                      onPressed: _submit),
+                      onPressed: () {
+                        _submit(context);
+                      }),
                 )
               ],
             ),

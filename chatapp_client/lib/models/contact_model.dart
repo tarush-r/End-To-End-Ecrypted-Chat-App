@@ -2,10 +2,7 @@ class ContactModel {
   String name;
   String number;
 
-  ContactModel(name, number){
-    this.name = name;
-    this.number = number;
-  }
+  ContactModel({this.name, this.number});
 
 
   Map<String, dynamic> toJson() {

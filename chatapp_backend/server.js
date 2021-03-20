@@ -53,8 +53,12 @@ const userMap = new Map();
 //   onEachUserConnection(socket);
 // });
 
-io.on('connection', () => {
+io.on('connection', (userSocket) => {
   console.log('New WebSocket connection')
+  userSocket.on("send_message", (data) => {
+    console.log(data)
+    userSocket.broadcast.emit("receive_message", data)
+})
 })
 
 function onEachUserConnection(socket) {

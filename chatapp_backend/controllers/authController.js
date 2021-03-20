@@ -17,8 +17,12 @@ router.post("/login", async (req, res) => {
       // tokenPair = generateTokens(req.body.email,doc['id'])
       // console.log("TOKENNNN--",tokenPair)
       user = await generateTokens(req.body.email, doc["id"]);
-      console.log("USERGHERHERHERHEHREHRE")
-      console.log(user)
+      console.log("USER HERE")
+      console.log((user))
+      console.log("USER.USER")
+      console.log((user.user))
+      console.log("USER.TOKEN")
+      console.log((user.token))
       res.status(200).send(user);
       //res.json({'status': "success", 'token_uuid': tokenPair['token_uuid'], 'refresh_uuid':tokenPair['refresh_uuid']});
     } else res.json({ message: "Technical Error", type: "error" });
@@ -52,58 +56,29 @@ async function login(email_id, pass) {
 }
 
 async function generateTokens(email_id, uuid) {
-  const token = jwt.sign(
-    {
-      data: uuid,
-    },
-    "secret",
-    { expiresIn: "1h" }
-  );
-  refresh_uuid = jwt.sign(
-    {
-      data: uuid,
-    },
-    "secret",
-    { expiresIn: "7d" }
-  );
-
-  // var utoken = new Token()
-  // utoken.token = token_uuid
-  // utoken.email = email_id
-  // var rtoken = new Refresh()
-  // rtoken.refresh_token = refresh_uuid
-  // rtoken.email = email_id
-
   try {
+    const token = jwt.sign(
+      {
+        data: uuid,
+      },
+      "secret",
+      { expiresIn: "1h" }
+    );
+    refresh_uuid = jwt.sign(
+      {
+        data: uuid,
+      },
+      "secret",
+      { expiresIn: "7d" }
+    );
     const user = await User.findOne({ email: email_id });
-    console.log("USERRRR-", user);
+    console.log("user")
     user.tokens = user.tokens.concat({ token });
     user.save();
-    // return {"token_uuid":token_uuid,"refresh_uuid":refresh_uuid}
-    return { user };
+    return { user ,token};
   } catch (error) {
     return { error };
   }
-
-  // var result;
-  // utoken.save(function(err, Token){
-  //     if(err){
-  //         result = false
-  //         console.log(err)
-  //     }
-  //     else
-  //         result = true
-  //     });
-  // if(result){
-  //     rtoken.save(function(err, Refresh){
-  //         if(err){
-  //             result = false
-  //             console.log(err)
-  //         }
-  //         else
-  //             result = true
-  //         });
-  // }
 }
 
 module.exports = router;

@@ -7,6 +7,7 @@ import '../helpers/sharedpreferences_helper.dart';
 import '../helpers/contacts_helper.dart';
 import 'contacts_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as client;
+import '../utlis/loading_indicator.dart';
 
 class ChatsListScreen extends StatefulWidget {
   static String routeName = '/chatslist';

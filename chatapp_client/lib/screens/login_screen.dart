@@ -8,6 +8,7 @@ import 'dart:convert';
 import '../helpers/sharedpreferences_helper.dart';
 import './register_screen.dart';
 import 'package:flutter/cupertino.dart';
+import '../utlis/color_themes.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String routeName = '/Login';
@@ -79,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(width: 10.0),
                         Text('Register', style: TextStyle(color: Colors.white)),
                       ]),
-                      color: Colors.red,
+                      color: ColorThemes.primary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40)),
                       onPressed: () {
@@ -119,13 +120,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 60.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      hintText: 'Email',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 2.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.red, width: 2.0))),
+                    hintText: 'Email',
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    // enabledBorder: OutlineInputBorder(
+                    //     borderSide:
+                    //         BorderSide(color: Colors.black, width: 2.0)),
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                    // ),
+                  ),
                   validator: (val) =>
                       val.isEmpty ? 'Enter a valid Email' : null,
                   controller: emailController,
@@ -134,11 +141,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.black, width: 2.0)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 2.0)),
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    // enabledBorder: OutlineInputBorder(
+                    //     borderSide:
+                    //         BorderSide(color: Colors.black, width: 2.0)),
+                    // focusedBorder: OutlineInputBorder(
+                    //     borderSide: BorderSide(color: Colors.red, width: 2.0)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         passwordHide ? Icons.visibility_off : Icons.visibility,
@@ -163,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: 250,
                   child: RaisedButton(
-                      color: Colors.red,
+                      color: ColorThemes.primary,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(

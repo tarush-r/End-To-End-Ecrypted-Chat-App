@@ -62,6 +62,10 @@ class _CallsScreenState extends State<CallsScreen> {
             ),
             Row(
               children: [
+                Icon(Icons.video_call),
+                SizedBox(
+                  width: 15,
+                ),
                 Icon(Icons.call)
               ],
             )

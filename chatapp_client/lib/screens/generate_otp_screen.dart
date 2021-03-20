@@ -5,6 +5,7 @@ import '../api/authentication_api.dart';
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import './register_screen.dart';
+import '../utlis/color_themes.dart';
 
 class GenerateOtpScreen extends StatefulWidget {
   static final String routeName = '/generateOtp';
@@ -93,7 +94,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                         SizedBox(width: 10.0),
                         Text('Login', style: TextStyle(color: Colors.white)),
                       ]),
-                      color: Colors.red,
+                      color: ColorThemes.primary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40)),
                       onPressed: () {
@@ -133,13 +134,19 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                 SizedBox(height: 60.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      hintText: 'Phone Number',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 2.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.red, width: 2.0))),
+                    hintText: 'Phone Number',
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    // enabledBorder: OutlineInputBorder(
+                    //     borderSide:
+                    //         BorderSide(color: Colors.black, width: 2.0)),
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                    // ),
+                  ),
                   keyboardType: TextInputType.phone,
                   controller: phone_numController,
                   validator: (value) {
@@ -151,13 +158,19 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                 SizedBox(height: 10.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      hintText: 'Name',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 2.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.red, width: 2.0))),
+                    hintText: 'Name',
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    // enabledBorder: OutlineInputBorder(
+                    //     borderSide:
+                    //         BorderSide(color: Colors.black, width: 2.0)),
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                    // ),
+                  ),
                   controller: nameController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -168,13 +181,19 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                 SizedBox(height: 10.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      hintText: 'Email',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 2.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.red, width: 2.0))),
+                    hintText: 'Email',
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    // enabledBorder: OutlineInputBorder(
+                    //     borderSide:
+                    //         BorderSide(color: Colors.black, width: 2.0)),
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                    // ),
+                  ),
                   validator: (val) =>
                       val.isEmpty ? 'Enter a valid Email' : null,
                   controller: emailController,
@@ -183,11 +202,17 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.black, width: 2.0)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 2.0)),
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    // enabledBorder: OutlineInputBorder(
+                    //     borderSide:
+                    //         BorderSide(color: Colors.black, width: 2.0)),
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                    // ),
                     suffixIcon: IconButton(
                       icon: Icon(
                         passwordHide ? Icons.visibility_off : Icons.visibility,
@@ -216,7 +241,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                 SizedBox(
                   width: 250,
                   child: RaisedButton(
-                      color: Colors.red,
+                      color: ColorThemes.primary,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(

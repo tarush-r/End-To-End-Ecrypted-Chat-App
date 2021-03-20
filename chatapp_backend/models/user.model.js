@@ -7,6 +7,14 @@ var userSchema = new mongoose.Schema({
     name: {type : String, required : true},
     number: {type : String , unique : true, required : true},
     email: {type : String , unique : true, required : true},
+    profile_pic:{
+      type:String,
+      default:"https://drgsearch.com/wp-content/uploads/2020/01/no-photo.png" 
+    },
+    status:{
+      type:String,
+      default:"Hey there! I am using Cypher." 
+  },
     password: {type : String},
     publicKey: {type : String},
     privateKey: {type: String},
@@ -19,8 +27,6 @@ var userSchema = new mongoose.Schema({
           required:true
       }
   }],
-    // otp: {type : Number},
-    // otp_check: {type : Boolean, required : true}
  });
 
  var otpSchema = new mongoose.Schema({
@@ -30,24 +36,6 @@ var userSchema = new mongoose.Schema({
     createdAt:{type : Number,expires: '600s', default: Date.now},
  });
 
-//  userSchema.pre('remove',async function(next){
-//   const user=this
-//   await Chat.deleteMany({from:user._id})
-//   next()
-// })
-
-//  var tokenSchema = new mongoose.Schema({
-//     email: {type : String , unique : true, required : true},
-//     token: {type : String, required : true},
-//     createdAt:{type : Number,expires: '3000s', default: Date.now},
-//  });
-
-//  var refreshSchema = new mongoose.Schema({
-//     email: {type : String , unique : true, required : true},
-//     refresh_token: {type : String, required : true},
-//     createdAt:{type : Number,expires: '6000s', default: Date.now},
-//  });
 mongoose.model("user", userSchema);
 mongoose.model("otp", otpSchema);
-// mongoose.model("token", tokenSchema);
-// mongoose.model("refresh", refreshSchema);
+

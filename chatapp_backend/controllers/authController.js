@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 var nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const User = mongoose.model("user");
+const {JWT_SECRET} = require('../config/key')
 // const Token = mongoose.model('token');
 // const Refresh = mongoose.model('refresh');
 
@@ -61,18 +62,17 @@ async function generateTokens(email_id, uuid) {
       {
         data: uuid,
       },
-      "secret",
+      JWT_SECRET,
       { expiresIn: "1h" }
     );
     refresh_uuid = jwt.sign(
       {
         data: uuid,
       },
-      "secret",
+      JWT_SECRET,
       { expiresIn: "7d" }
     );
     const user = await User.findOne({ email: email_id });
-    console.log("user")
     user.tokens = user.tokens.concat({ token });
     user.save();
     return { user ,token};

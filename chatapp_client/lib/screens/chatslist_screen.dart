@@ -112,6 +112,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                       backgroundColor: Colors.green,
                       radius: 30,
                     ),
+                    
                     SizedBox(
                       width: 20,
                     ),

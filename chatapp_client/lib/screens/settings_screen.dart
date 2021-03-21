@@ -5,9 +5,10 @@ import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/heading_widget.dart';
+import './profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
-  static String routeName = '/settings';
+  static final String routeName = '/settings';
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -191,7 +192,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 HeadingWidget("Settings"),
                 SizedBox(
-                  height: 20,
+                  height: 15,
+                ),
+                RawMaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[200]),
+                    child: Row(
+                      children: [
+                        Icon(Icons.face),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text(
+                          "Profile",
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 RawMaterialButton(
                   onPressed: () {

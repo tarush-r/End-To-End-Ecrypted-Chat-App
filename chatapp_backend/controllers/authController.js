@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 var nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const User = mongoose.model("user");
+// const {JWT_SECRET} = require('../config/key')
 const {JWT_SECRET} = require('../config/key')
 // const Token = mongoose.model('token');
 // const Refresh = mongoose.model('refresh');
@@ -19,7 +20,7 @@ router.post("/login", async (req, res) => {
       // console.log("TOKENNNN--",tokenPair)
       user = await generateTokens(req.body.email, doc["id"]);
       console.log("USER HERE")
-      console.log((user))
+      console.log(user)
       console.log("USER.USER")
       console.log((user.user))
       console.log("USER.TOKEN")

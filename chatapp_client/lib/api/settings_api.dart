@@ -3,12 +3,11 @@ import "dart:convert";
 import 'dart:io';
 
 class SettingsApi {
-  
   static const BaseUrl = "http://10.0.2.2:3000/";
 
-  static Future resetPassword(String oldPassword, String newPassword, String email, String token) async {
-
-    const url = BaseUrl+"settings/resetPassword";
+  static Future resetPassword(String oldPassword, String newPassword,
+      String email, String token) async {
+    const url = BaseUrl + "settings/resetPassword";
     Map passwords = {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
@@ -22,19 +21,17 @@ class SettingsApi {
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         // 'Authorization': 'Bearer $token',
-      }, 
+      },
     );
     print("====================");
     print(res.body);
     // print(json.decode(res.body)[0]['name']);
     print("====================");
     return json.decode(res.body);
-
   }
 
   static Future deleteAccount(String email) async {
-
-    const url = BaseUrl+"settings/deleteAccount";
+    const url = BaseUrl + "settings/deleteAccount";
     Map emailMap = {
       "email": email,
     };
@@ -46,19 +43,17 @@ class SettingsApi {
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         // 'Authorization': 'Bearer $token',
-      }, 
+      },
     );
     print("====================");
     print(res.body);
     // print(json.decode(res.body)[0]['name']);
     print("====================");
     return json.decode(res.body);
-
   }
 
   static Future otpForgotPassword(String email) async {
-
-    const url = BaseUrl+"settings/sendotpForgetPassword";
+    const url = BaseUrl + "settings/sendotpForgetPassword";
     Map emailMap = {
       "email": email,
     };
@@ -70,19 +65,18 @@ class SettingsApi {
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         // 'Authorization': 'Bearer $token',
-      }, 
+      },
     );
     print("====================");
     print(res.body);
     // print(json.decode(res.body)[0]['name']);
     print("====================");
     return json.decode(res.body);
-
   }
 
-  static Future forgotPassword(String newPassword, int otp, String email) async {
-
-    const url = BaseUrl+"settings/forgetPassword";
+  static Future forgotPassword(
+      String newPassword, int otp, String email) async {
+    const url = BaseUrl + "settings/forgetPassword";
     Map forgotPassword = {
       "email": email,
       "newPassword": newPassword,
@@ -96,14 +90,34 @@ class SettingsApi {
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         // 'Authorization': 'Bearer $token',
-      }, 
+      },
     );
     print("====================");
     print(res.body);
     // print(json.decode(res.body)[0]['name']);
     print("====================");
     return json.decode(res.body);
-
   }
 
+  static Future updateStatus(String status, String token) async {
+    const url = BaseUrl + "settings/statusUpdate";
+    Map data = {
+      'status': status,
+    };
+    print(json.encode(status));
+    print("status update api");
+    http.Response res = await http.post(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("====================");
+    print(res.body);
+    // print(json.decode(res.body)[0]['name']);
+    print("====================");
+    return res;
+  }
 }

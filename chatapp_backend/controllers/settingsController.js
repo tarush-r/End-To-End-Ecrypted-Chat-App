@@ -51,8 +51,11 @@ router.post('/statusUpdate', login_required,async (req, res) => {
                   $set: { status: req.body.status },
                }
             );
+            const user = await User.findOne({ email: req.user.email });
             console.log('SUCCESS')
-            res.json({ data:"success" })
+            res.json({
+               user
+            })
       }
       catch (error) {
          console.log(error)

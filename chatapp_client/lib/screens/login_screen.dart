@@ -31,9 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
         EncryptionHelper.hashPassword(passwordController.text.trim());
     var response = await AuthenticationApi.login(
         hashedPassword[0], emailController.text.trim());
-    print(response.body);
+    print(json.decode(response.body)['token']);
     SharedPreferencesHelper.persistOnLogin(
-        json.encode(json.decode(response.body)['user']));
+        json.encode(json.decode(response.body)['user']), json.encode(json.decode(response.body)['token']));
     var user = await SharedPreferencesHelper.getUser();
     if (user != null) {
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);

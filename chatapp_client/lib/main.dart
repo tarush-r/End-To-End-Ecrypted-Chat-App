@@ -13,6 +13,7 @@ import 'screens/chatslist_screen.dart';
 import './helpers/sharedpreferences_helper.dart';
 import './screens/contacts_screen.dart';
 import 'package:provider/provider.dart';
+import './screens/profile_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
           CallsScreen.routeName: (ctx) => CallsScreen(),
           SettingsScreen.routeName: (ctx) => SettingsScreen(),
           HomeScreen.routeName: (ctx) => HomeScreen(),
+          ProfileScreen.routeName: (ctx) => ProfileScreen(),
           //RegisterScreen.routeName: (ctx) => RegisterScreen(),
         },
       ),

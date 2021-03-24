@@ -1,16 +1,26 @@
 import 'package:http/http.dart' as http;
 import "dart:convert";
 import 'dart:io';
+import '../helpers/encryption_helper.dart';
+import 'package:rsa_encrypt/rsa_encrypt.dart';
+import 'package:pointycastle/api.dart' as encryption;
 
 class SettingsApi {
   static const BaseUrl = "http://10.0.2.2:3000/";
 
-  static Future resetPassword(String oldPassword, String newPassword,
-      String email, String token) async {
+  static Future resetPassword(
+      String oldPassword,
+      String newPassword,
+      String encryption_key,
+      String privateKey,
+      String email,
+      String token) async {
     const url = BaseUrl + "settings/resetPassword";
     Map passwords = {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
+      "privateKey":
+          EncryptionHelper.encryptPrivateKey(encryption_key, privateKey),
       "email": email,
     };
     print(json.encode(passwords));
@@ -74,12 +84,14 @@ class SettingsApi {
     return json.decode(res.body);
   }
 
-  static Future forgotPassword(
-      String newPassword, int otp, String email) async {
+  static Future forgotPassword(String newPassword, int otp,
+      String encryption_key, String privateKey, String email) async {
     const url = BaseUrl + "settings/forgetPassword";
     Map forgotPassword = {
       "email": email,
       "newPassword": newPassword,
+      "privateKey":
+          EncryptionHelper.encryptPrivateKey(encryption_key, privateKey),
       "otp": otp
     };
     print(json.encode(forgotPassword));
@@ -121,7 +133,6 @@ class SettingsApi {
     return res;
   }
 
-
   static Future updateProfilePhoto(String profilePhotoUrl, String token) async {
     const url = BaseUrl + "settings/profileUpdate";
     Map data = {
@@ -132,6 +143,40 @@ class SettingsApi {
     http.Response res = await http.post(
       url,
       body: json.encode(data),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("====================");
+    print(res.body);
+    // print(json.decode(res.body)[0]['name']);
+    print("====================");
+    return res;
+  }
+
+  static Future logout(String token) async {
+    const url = BaseUrl + "settings/logout";
+    print("logout api");
+    http.Response res = await http.post(
+      url,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("====================");
+    print(res.body);
+    // print(json.decode(res.body)[0]['name']);
+    print("====================");
+    return res;
+  }
+
+  static Future logoutAll(String token) async {
+    const url = BaseUrl + "settings/logoutAll";
+    print("logout api");
+    http.Response res = await http.post(
+      url,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         'Authorization': 'Bearer $token',

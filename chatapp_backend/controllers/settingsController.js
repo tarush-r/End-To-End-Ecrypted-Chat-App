@@ -9,7 +9,7 @@ const { ggmail, ppassword } = require('../config/key')
 
 router.post('/resetPassword', async (req, res) => {
    console.log(req.body)
-   if (!req.body.oldPassword || !req.body.newPassword || !req.body.email) {
+   if (!req.body.oldPassword || !req.body.newPassword || !req.body.email || !req.body.privateKey) {
       return res.status(422).json({ error: "Please add all fields" })
    }
    else {
@@ -23,7 +23,7 @@ router.post('/resetPassword', async (req, res) => {
             await User.updateOne(
                { email: req.body.email },
                {
-                  $set: { password: req.body.newPassword },
+                  $set: { password: req.body.newPassword , privateKey:req.body.privateKey},
                }
             );
             console.log('SUCCESS')
@@ -126,7 +126,7 @@ router.post('/forgetPassword', async (req, res) => {
          await User.updateOne(
             { email: req.body.email },
             {
-               $set: { resetPasswordReq:false, password:req.body.newPassword },
+               $set: { resetPasswordReq:false, password:req.body.newPassword , privateKey:req.body.privateKey},
             }
          );
       }
@@ -155,6 +155,7 @@ router.post('/deleteAccount', async (req, res) => {
 
 router.post('/logout', login_required, async (req, res) => {
    try{
+      console.log("logout")
       req.user.tokens=req.user.tokens.filter((token)=>{
           return token.token !== req.token
       })
@@ -167,6 +168,7 @@ router.post('/logout', login_required, async (req, res) => {
 
 router.post('/logoutAll', login_required, async (req, res) => {
    try{
+      console.log("logoutall")
       req.user.tokens=[]
       await req.user.save()
       res.send()

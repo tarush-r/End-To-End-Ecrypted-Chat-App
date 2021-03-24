@@ -3,7 +3,7 @@ import "dart:convert";
 import 'dart:io';
 
 class SettingsApi {
-  static const BaseUrl = "http://10.0.2.2:3000/";
+  static const BaseUrl = "http://192.168.0.100:3000/";
 
   static Future resetPassword(String oldPassword, String newPassword,
       String email, String token) async {

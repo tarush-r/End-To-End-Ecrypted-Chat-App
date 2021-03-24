@@ -64,6 +64,32 @@ router.post('/statusUpdate', login_required,async (req, res) => {
    }
 })
 
+router.post('/profileUpdate', login_required,async (req, res) => {
+   console.log(req.body)
+   if (!req.body.profile_pic) {
+      return res.status(422).json({ error: "Please add all fields" })
+   }
+   else {
+      try {
+            await User.updateOne(
+               { email: req.user.email },
+               {
+                  $set: { status: req.body.profile_pic },
+               }
+            );
+            const user = await User.findOne({ email: req.user.email });
+            console.log('SUCCESS')
+            res.json({
+               user
+            })
+      }
+      catch (error) {
+         console.log(error)
+         res.status(404).send()
+      }
+   }
+})
+
 router.post('/sendotpForgetPassword', async (req, res) => {
 
    var otp = await generateOTP(req.body.email)

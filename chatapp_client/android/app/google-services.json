@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1092970416210",
+    "project_id": "cypher-6d803",
+    "storage_bucket": "cypher-6d803.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092970416210:android:332e0c7c27a9e1cc98b78b",
+        "android_client_info": {
+          "package_name": "com.example.chatapp_client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092970416210-np5n9ad7dllpbe5effnumgup3goppkls.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDneVH5ohOpvNSTiAOFhSosGlmUYRoSihM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092970416210-np5n9ad7dllpbe5effnumgup3goppkls.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

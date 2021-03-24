@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:chatapp_client/api/settings_api.dart';
 import 'package:chatapp_client/widgets/heading_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../helpers/sharedpreferences_helper.dart';
 import 'dart:convert';
 
@@ -37,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    Firebase.initializeApp();
     _getUser();
   }
 
@@ -50,9 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Status"
-                      ),
+                      decoration: InputDecoration(hintText: "Status"),
                       controller: statusController,
                     ),
                   ],
@@ -85,6 +90,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ));
   }
 
+  _pickImage() async {
+    final _storage = FirebaseStorage.instance;
+
+    final _picker = ImagePicker();
+    PickedFile image;
+
+    var permissionStatus;
+    await Permission.photos.request();
+    permissionStatus = await Permission.photos.status;
+    // if(permissionStatus.isGranted) {
+    //   print("permission granted");
+    // }
+    image = await _picker.getImage(source: ImageSource.gallery);
+    var file = File(image.path);
+    String imageName = image.path.split('/')[image.path.split('/').length-1];
+
+    if (image != null) {
+      var snapshot = await _storage
+          .ref()
+          .child('profilePhotos/${imageName}')
+          .putFile(file)
+          .whenComplete(() {
+            // print(snapshot);
+          });
+      String url = await snapshot.ref.getDownloadURL();
+      var res = await SettingsApi.updateProfilePhoto(
+                        url, token);
+                    print("!!!!!!!!!!!!!!");
+                    // print(json.decode(res)["user"]);
+                    setState(() {
+                      SharedPreferencesHelper.persistOnLogin(
+                          json.encode(json.decode(res.body)['user']),
+                          json.encode(token));
+                      _getUser();
+                      // Navigator.of(context).pop();
+                    });
+      print(url);
+    } else {
+      print("no image selected");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return _isLoading == true
@@ -106,22 +153,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 50.0,
-                            child: Text(
-                              user['name'][0],
-                              style: TextStyle(
-                                fontSize: 40,
-                                fontFamily: 'Poiret',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              user["profile_pic"] !=null?
+                              CircleAvatar(
+                                radius: 50.0,
+                                // child: Text(
+                                //   user['name'][0],
+                                //   style: TextStyle(
+                                //     fontSize: 40,
+                                //     fontFamily: 'Poiret',
+                                //     fontWeight: FontWeight.bold,
+                                //     color: Colors.white,
+                                //   ),
+                                // ),
+                                backgroundImage: NetworkImage(user['profile_pic']),
+                                backgroundColor: Colors.grey,
+                              ):
+                              CircleAvatar(
+                                radius: 50.0,
+                                child: Text(
+                                  user['name'][0],
+                                  style: TextStyle(
+                                    fontSize: 40,
+                                    fontFamily: 'Poiret',
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                // backgroundImage: NetworkImage(user['profile_pic']),
+                                backgroundColor: Colors.grey,
                               ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.11,
+                                left: MediaQuery.of(context).size.width * 0.57),
+                            child: InkWell(
+                              onTap: () {
+                                _pickImage();
+                              },
+                              child: Icon(Icons.edit),
                             ),
-                            // backgroundImage: NetworkImage(user['profile_pic']),
-                            backgroundColor: Colors.grey,
                           )
                         ],
                       ),

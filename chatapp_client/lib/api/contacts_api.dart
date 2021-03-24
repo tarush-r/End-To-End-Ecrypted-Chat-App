@@ -4,7 +4,7 @@ import 'dart:io';
 
 class ContactsApi {
   
-  static const BaseUrl = "http://192.168.0.100:3000/";
+  static const BaseUrl = "http://10.0.2.2:3000/";
 
   static Future getVerifiedContacts(contactslist) async {
 

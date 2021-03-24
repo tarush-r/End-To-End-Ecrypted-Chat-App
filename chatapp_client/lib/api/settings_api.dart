@@ -3,7 +3,7 @@ import "dart:convert";
 import 'dart:io';
 
 class SettingsApi {
-  static const BaseUrl = "http://192.168.0.100:3000/";
+  static const BaseUrl = "http://10.0.2.2:3000/";
 
   static Future resetPassword(String oldPassword, String newPassword,
       String email, String token) async {
@@ -105,6 +105,29 @@ class SettingsApi {
       'status': status,
     };
     print(json.encode(status));
+    print("status update api");
+    http.Response res = await http.post(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("====================");
+    print(res.body);
+    // print(json.decode(res.body)[0]['name']);
+    print("====================");
+    return res;
+  }
+
+
+  static Future updateProfilePhoto(String profilePhotoUrl, String token) async {
+    const url = BaseUrl + "settings/profileUpdate";
+    Map data = {
+      'profile_pic': profilePhotoUrl,
+    };
+    print(json.encode(data));
     print("status update api");
     http.Response res = await http.post(
       url,

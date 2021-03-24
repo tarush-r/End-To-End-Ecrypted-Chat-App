@@ -74,7 +74,7 @@ router.post('/profileUpdate', login_required,async (req, res) => {
             await User.updateOne(
                { email: req.user.email },
                {
-                  $set: { status: req.body.profile_pic },
+                  $set: { profile_pic: req.body.profile_pic },
                }
             );
             const user = await User.findOne({ email: req.user.email });

@@ -50,6 +50,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Status"
+                      ),
                       controller: statusController,
                     ),
                   ],
@@ -125,130 +128,140 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey[200]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.face),
-                                    SizedBox(
-                                      width: 15,
+                      Expanded(
+                          flex: 1,
+                          child: ListView(
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey[200]),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.face),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Text(
+                                              user['name'],
+                                              style: TextStyle(fontSize: 20),
+                                            )
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      user['name'],
-                                      style: TextStyle(fontSize: 20),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey[200]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.info_rounded),
-                                    SizedBox(
-                                      width: 15,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey[200]),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.info_rounded),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Text(
+                                              user['status'],
+                                              style: TextStyle(fontSize: 20),
+                                            )
+                                          ],
+                                        ),
+                                        InkWell(
+                                            onTap: () {
+                                              _showUpdateStatusDialog();
+                                            },
+                                            child: Icon(Icons.edit))
+                                      ],
                                     ),
-                                    Text(
-                                      user['status'],
-                                      style: TextStyle(fontSize: 20),
-                                    )
-                                  ],
-                                ),
-                                InkWell(
-                                    onTap: () {
-                                      _showUpdateStatusDialog();
-                                    },
-                                    child: Icon(Icons.edit))
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey[200]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.phone),
-                                    SizedBox(
-                                      width: 15,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey[200]),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.phone),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Text(
+                                              user['number'],
+                                              style: TextStyle(fontSize: 20),
+                                            )
+                                          ],
+                                        ),
+                                        // InkWell(child: Icon(Icons.edit))
+                                      ],
                                     ),
-                                    Text(
-                                      user['number'],
-                                      style: TextStyle(fontSize: 20),
-                                    )
-                                  ],
-                                ),
-                                // InkWell(child: Icon(Icons.edit))
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey[200]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.mail),
-                                    SizedBox(
-                                      width: 15,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey[200]),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.mail),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Text(
+                                              user['email'],
+                                              style: TextStyle(fontSize: 20),
+                                            )
+                                          ],
+                                        ),
+                                        // InkWell(child: Icon(Icons.edit))
+                                      ],
                                     ),
-                                    Text(
-                                      user['email'],
-                                      style: TextStyle(fontSize: 20),
-                                    )
-                                  ],
-                                ),
-                                // InkWell(child: Icon(Icons.edit))
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ))
                     ],
                   ),
 

@@ -56,11 +56,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 100,
                 child: Column(
                   children: [
+                    
                     TextFormField(
                       controller: oldPasswordController,
+                      decoration: InputDecoration(
+                        hintText: "Old Password"
+                      ),
                     ),
                     TextFormField(
                       controller: newPasswordController,
+                      decoration: InputDecoration(
+                        hintText: "New Password"
+                      ),
                     ),
                   ],
                 ),
@@ -150,9 +157,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     TextFormField(
                       controller: otpController,
+                      decoration: InputDecoration(
+                        hintText: "OTP"
+                      ),
                     ),
                     TextFormField(
                       controller: newPasswordController,
+                      decoration: InputDecoration(
+                        hintText: "New Password"
+                      ),
                     ),
                   ],
                 ),
@@ -184,6 +197,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.all(10),
           child: Container(
@@ -194,136 +208,143 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(
                   height: 15,
                 ),
-                RawMaterialButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(ProfileScreen.routeName);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[200]),
-                    child: Row(
-                      children: [
-                        Icon(Icons.face),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          "Profile",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
+                Expanded(
+                  flex: 1,
+                                  child: ListView(
+                    children: [
+                      RawMaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200]),
+                      child: Row(
+                        children: [
+                          Icon(Icons.face),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            "Profile",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                RawMaterialButton(
-                  onPressed: () {
-                    // _showForgotPasswordDialog();
-                    _showGetOtpDialog();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[200]),
-                    child: Row(
-                      children: [
-                        Icon(Icons.lock),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Forgot password",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  RawMaterialButton(
+                    onPressed: () {
+                      // _showForgotPasswordDialog();
+                      _showGetOtpDialog();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200]),
+                      child: Row(
+                        children: [
+                          Icon(Icons.lock),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Forgot password",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                RawMaterialButton(
-                  onPressed: () {
-                    _showResetPasswordDialog();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[200]),
-                    child: Row(
-                      children: [
-                        Icon(Icons.lock_open),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Reset password",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  RawMaterialButton(
+                    onPressed: () {
+                      _showResetPasswordDialog();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200]),
+                      child: Row(
+                        children: [
+                          Icon(Icons.lock_open),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Reset password",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                RawMaterialButton(
-                  onPressed: () {
-                    _showDeleteAccountDialog();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[200]),
-                    child: Row(
-                      children: [
-                        Icon(Icons.delete),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Delete account",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  RawMaterialButton(
+                    onPressed: () {
+                      _showDeleteAccountDialog();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200]),
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Delete account",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                RawMaterialButton(
-                  onPressed: () {
-                    LogoutHelper.Logout();
-                    Navigator.pushReplacementNamed(
-                        context, LoginScreen.routeName);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[200]),
-                    child: Row(
-                      children: [
-                        Icon(Icons.logout),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          "Logout",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  RawMaterialButton(
+                    onPressed: () {
+                      LogoutHelper.Logout();
+                      Navigator.pushReplacementNamed(
+                          context, LoginScreen.routeName);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200]),
+                      child: Row(
+                        children: [
+                          Icon(Icons.logout),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            "Logout",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

@@ -146,154 +146,161 @@ class RegisterScreen extends StatelessWidget {
                 height: 20,
               ),
               HeadingWidget("Verify OTP"),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-                child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 30.0),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Phone Number',
-                            border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(20.0),
-                              ),
-                            ),
-                            // enabledBorder: OutlineInputBorder(
-                            //     borderSide:
-                            //         BorderSide(color: Colors.black, width: 2.0)),
-                            // focusedBorder: OutlineInputBorder(
-                            //   borderSide: BorderSide(color: Colors.red, width: 2.0),
-                            // ),
-                          ),
-                          controller: phone_numController,
-                          keyboardType: TextInputType.phone,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Invalid No";
-                            }
-                          },
-                        ),
-                        SizedBox(height: 10.0),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(20.0),
-                              ),
-                            ),
-                            // enabledBorder: OutlineInputBorder(
-                            //     borderSide:
-                            //         BorderSide(color: Colors.black, width: 2.0)),
-                            // focusedBorder: OutlineInputBorder(
-                            //   borderSide: BorderSide(color: Colors.red, width: 2.0),
-                            // ),
-                          ),
-                          controller: emailController,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Invalid Email";
-                            }
-                          },
-                        ),
-                        SizedBox(height: 10.0),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(20.0),
-                              ),
-                            ),
-                            // enabledBorder: OutlineInputBorder(
-                            //     borderSide:
-                            //         BorderSide(color: Colors.black, width: 2.0)),
-                            // focusedBorder: OutlineInputBorder(
-                            //   borderSide: BorderSide(color: Colors.red, width: 2.0),
-                            // ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                passwordHide
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                // setState(() {
-                                //   passwordHide = !passwordHide;
-                                // });
-                              },
-                            ),
-                          ),
-                          validator: (val) {
-                            if (val.length < 6) {
-                              return 'Enter a password greater than 6 characters.';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: passwordController,
-                          obscureText: passwordHide,
-                          // onChanged: (val) {
-                          //   setState(() => passwordText = val);
-                          // },
-                        ),
-                        SizedBox(height: 10.0),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Enter OTP',
-                            border: new OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(20.0),
-                              ),
-                            ),
-                            // enabledBorder: OutlineInputBorder(
-                            //     borderSide:
-                            //         BorderSide(color: Colors.black, width: 2.0)),
-                            // focusedBorder: OutlineInputBorder(
-                            //   borderSide: BorderSide(color: Colors.red, width: 2.0),
-                            // ),
-                          ),
-                          controller: otpController,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Invalid otp";
-                            }
-                          },
-                        ),
-                        SizedBox(height: 20.0),
-                        SizedBox(
-                          width: 250,
-                          child: RaisedButton(
-                              color: ColorThemes.primary,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                child: Text(
-                                  'Verify OTP',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 3,
+              Expanded(
+                  flex: 1,
+                  child: ListView(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 20.0),
+                        child: Form(
+                          key: _formKey,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(height: 30.0),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Phone Number',
+                                    border: new OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(20.0),
+                                      ),
+                                    ),
+                                    // enabledBorder: OutlineInputBorder(
+                                    //     borderSide:
+                                    //         BorderSide(color: Colors.black, width: 2.0)),
+                                    // focusedBorder: OutlineInputBorder(
+                                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                                    // ),
                                   ),
+                                  controller: phone_numController,
+                                  keyboardType: TextInputType.phone,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Invalid No";
+                                    }
+                                  },
                                 ),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(30.0)),
-                              onPressed: () {
-                                _submit(context);
-                              }),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+                                SizedBox(height: 10.0),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Email',
+                                    border: new OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(20.0),
+                                      ),
+                                    ),
+                                    // enabledBorder: OutlineInputBorder(
+                                    //     borderSide:
+                                    //         BorderSide(color: Colors.black, width: 2.0)),
+                                    // focusedBorder: OutlineInputBorder(
+                                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                                    // ),
+                                  ),
+                                  controller: emailController,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Invalid Email";
+                                    }
+                                  },
+                                ),
+                                SizedBox(height: 10.0),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Password',
+                                    border: new OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(20.0),
+                                      ),
+                                    ),
+                                    // enabledBorder: OutlineInputBorder(
+                                    //     borderSide:
+                                    //         BorderSide(color: Colors.black, width: 2.0)),
+                                    // focusedBorder: OutlineInputBorder(
+                                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                                    // ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        passwordHide
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
+                                      onPressed: () {
+                                        // setState(() {
+                                        //   passwordHide = !passwordHide;
+                                        // });
+                                      },
+                                    ),
+                                  ),
+                                  validator: (val) {
+                                    if (val.length < 6) {
+                                      return 'Enter a password greater than 6 characters.';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  controller: passwordController,
+                                  obscureText: passwordHide,
+                                  // onChanged: (val) {
+                                  //   setState(() => passwordText = val);
+                                  // },
+                                ),
+                                SizedBox(height: 10.0),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter OTP',
+                                    border: new OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(20.0),
+                                      ),
+                                    ),
+                                    // enabledBorder: OutlineInputBorder(
+                                    //     borderSide:
+                                    //         BorderSide(color: Colors.black, width: 2.0)),
+                                    // focusedBorder: OutlineInputBorder(
+                                    //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                                    // ),
+                                  ),
+                                  controller: otpController,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Invalid otp";
+                                    }
+                                  },
+                                ),
+                                SizedBox(height: 20.0),
+                                SizedBox(
+                                  width: 250,
+                                  child: RaisedButton(
+                                      color: ColorThemes.primary,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
+                                        child: Text(
+                                          'Verify OTP',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 3,
+                                          ),
+                                        ),
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(30.0)),
+                                      onPressed: () {
+                                        _submit(context);
+                                      }),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))
             ],
           ),
         ),

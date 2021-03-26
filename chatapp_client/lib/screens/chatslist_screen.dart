@@ -1,3 +1,4 @@
+import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
@@ -20,12 +21,18 @@ class ChatsListScreen extends StatefulWidget {
 class _ChatsListScreenState extends State<ChatsListScreen> {
   List<ChatContactModel> chatContacts = [];
   // final List<Widget> selectedScreen = []
+  String token;
+  _getChats() async {
+    token = await SharedPreferencesHelper.getToken();
+    var response = await ChatApi.getAllChats(token);
+    print(response);
+  }
 
   @override
   void initState() {
     super.initState();
-    
-    //api call
+    _getChats();
+    //api call        
     chatContacts.add(ChatContactModel(
         name: "Rahil",
         number: "8293627343",

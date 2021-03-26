@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
   console.log("login===",req.body);
   if (/\S+@\S+\.\S+/.test(req.body.email)) {
     console.log(req.body.email);
-    console.log(req.body.hashedPassword);
+    console.log(req.body.hashedPassword); 
     doc = await login(req.body.email, req.body.hashedPassword);
     if (doc["status"]) {
       // tokenPair = generateTokens(req.body.email,doc['id'])

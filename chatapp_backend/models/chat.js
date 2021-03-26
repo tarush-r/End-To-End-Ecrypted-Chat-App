@@ -16,8 +16,12 @@ const chatSchema = new mongoose.Schema({
       required: true,
    },
    sentAt: {
-      type: Number,
+      type: Date,
       default: Date.now
+   },
+   seen:{
+      type:Boolean,
+      default:false,
    }
 })
 

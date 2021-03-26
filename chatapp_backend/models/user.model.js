@@ -3,7 +3,6 @@ var uuid = require('node-uuid');
 // const Chat = mongoose.model("Chat");
 
 var userSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v1 },
     name: {type : String, required : true},
     number: {type : String , unique : true, required : true},
     email: {type : String , unique : true, required : true},

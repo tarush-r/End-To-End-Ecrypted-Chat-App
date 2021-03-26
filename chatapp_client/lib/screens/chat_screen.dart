@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
     textController = TextEditingController();
     scrollController = ScrollController();
     socketIO = SocketIOManager().createSocketIO(
-      'http://10.0.2.2:3000/',
+      'http://192.168.0.100:3000/',
       '',
     );
     socketIO.init();

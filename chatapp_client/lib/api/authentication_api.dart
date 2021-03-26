@@ -6,7 +6,7 @@ import 'package:rsa_encrypt/rsa_encrypt.dart';
 import 'package:pointycastle/api.dart' as encryption;
 
 class AuthenticationApi {
-  static const BaseUrl = "http://10.0.2.2:3000/";
+  static const BaseUrl = "http://192.168.0.100:3000/";
 
   static register(hashedPassword, publicKey, privateKey) {
     const url = "registeration_endpoint_here";

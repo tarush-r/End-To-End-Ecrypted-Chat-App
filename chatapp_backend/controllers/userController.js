@@ -234,7 +234,7 @@ async function register(pass, email, phone_num, name, publicKey, privateKey, has
   //         result=false
   //     }
   // });
-  return result;
+  // return result;
 }
 
 

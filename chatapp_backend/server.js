@@ -8,6 +8,7 @@ const path = require('path')
 const userController = require('./controllers/userController')
 const authController = require('./controllers/authController')
 const settingsController = require('./controllers/settingsController')
+const chatController = require('./controllers/chatController')
 const Chat = require("./models/chat");
 const port = 3000;
 
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use('/user',userController)
 app.use('/auth',authController)
 app.use('/settings',settingsController)
+app.use('/chat',chatController)
 
 //sockets
 // const socketio=require('socket.io')

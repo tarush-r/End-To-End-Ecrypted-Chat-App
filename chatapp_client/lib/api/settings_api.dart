@@ -1,3 +1,4 @@
+import 'package:chatapp_client/utlis/urls.dart';
 import 'package:http/http.dart' as http;
 import "dart:convert";
 import 'dart:io';
@@ -6,7 +7,7 @@ import 'package:rsa_encrypt/rsa_encrypt.dart';
 import 'package:pointycastle/api.dart' as encryption;
 
 class SettingsApi {
-  static const BaseUrl = "http://192.168.0.100:3000/";
+  // static const BaseUrl = "http://192.168.0.100:3000/";
 
   static Future resetPassword(
       String oldPassword,
@@ -15,7 +16,7 @@ class SettingsApi {
       String privateKey,
       String email,
       String token) async {
-    const url = BaseUrl + "settings/resetPassword";
+    const url = Urls.baseUrl +"settings/resetPassword";
     Map passwords = {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
@@ -41,7 +42,7 @@ class SettingsApi {
   }
 
   static Future deleteAccount(String email) async {
-    const url = BaseUrl + "settings/deleteAccount";
+    const url = Urls.baseUrl + "settings/deleteAccount";
     Map emailMap = {
       "email": email,
     };
@@ -63,7 +64,7 @@ class SettingsApi {
   }
 
   static Future otpForgotPassword(String email) async {
-    const url = BaseUrl + "settings/sendotpForgetPassword";
+    const url = Urls.baseUrl + "settings/sendotpForgetPassword";
     Map emailMap = {
       "email": email,
     };
@@ -86,7 +87,7 @@ class SettingsApi {
 
   static Future forgotPassword(String newPassword, int otp,
       String encryption_key, String privateKey, String email) async {
-    const url = BaseUrl + "settings/forgetPassword";
+    const url = Urls.baseUrl +"settings/forgetPassword";
     Map forgotPassword = {
       "email": email,
       "newPassword": newPassword,
@@ -112,7 +113,7 @@ class SettingsApi {
   }
 
   static Future updateStatus(String status, String token) async {
-    const url = BaseUrl + "settings/statusUpdate";
+    const url = Urls.baseUrl + "settings/statusUpdate";
     Map data = {
       'status': status,
     };
@@ -134,7 +135,7 @@ class SettingsApi {
   }
 
   static Future updateProfilePhoto(String profilePhotoUrl, String token) async {
-    const url = BaseUrl + "settings/profileUpdate";
+    const url = Urls.baseUrl + "settings/profileUpdate";
     Map data = {
       'profile_pic': profilePhotoUrl,
     };
@@ -156,7 +157,7 @@ class SettingsApi {
   }
 
   static Future logout(String token) async {
-    const url = BaseUrl + "settings/logout";
+    const url = Urls.baseUrl + "settings/logout";
     print("logout api");
     http.Response res = await http.post(
       url,
@@ -173,7 +174,7 @@ class SettingsApi {
   }
 
   static Future logoutAll(String token) async {
-    const url = BaseUrl + "settings/logoutAll";
+    const url = Urls.baseUrl + "settings/logoutAll";
     print("logout api");
     http.Response res = await http.post(
       url,

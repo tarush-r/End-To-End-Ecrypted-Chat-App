@@ -2,6 +2,7 @@ import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
 import 'package:chatapp_client/utlis/color_themes.dart';
+import 'package:chatapp_client/utlis/focus_handler.dart';
 import 'package:flutter/material.dart';
 import '../helpers/sharedpreferences_helper.dart';
 import '../helpers/contacts_helper.dart';
@@ -23,6 +24,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   @override
   void initState() {
     super.initState();
+    
     //api call
     chatContacts.add(ChatContactModel(
         name: "Rahil",
@@ -112,7 +114,6 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                       backgroundColor: Colors.green,
                       radius: 30,
                     ),
-                    
                     SizedBox(
                       width: 20,
                     ),
@@ -211,17 +212,22 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _searchBar(),
-          RawMaterialButton(
-            shape: CircleBorder(),
-            child: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.grey[200]),
-                child: Icon(Icons.contacts)),
-            onPressed: () {
-              Navigator.pushNamed(context, ContactsScreen.routeName);
+          GestureDetector(
+            onTap: () {
+              FocusHandler.unfocus(context);
             },
+            child: RawMaterialButton(
+              shape: CircleBorder(),
+              child: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.grey[200]),
+                  child: Icon(Icons.contacts)),
+              onPressed: () {
+                Navigator.pushNamed(context, ContactsScreen.routeName);
+              },
+            ),
           )
         ],
       ),
@@ -248,13 +254,18 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
             child: Column(
               children: [
                 _topBar(),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  child: ListView.builder(
-                    itemCount: chatContacts.length,
-                    itemBuilder: (context, index) {
-                      return _chatContactContainer(chatContacts[index]);
-                    },
+                GestureDetector(
+                  onTap: () {
+                    FocusHandler.unfocus(context);
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: ListView.builder(
+                      itemCount: chatContacts.length,
+                      itemBuilder: (context, index) {
+                        return _chatContactContainer(chatContacts[index]);
+                      },
+                    ),
                   ),
                 ),
               ],

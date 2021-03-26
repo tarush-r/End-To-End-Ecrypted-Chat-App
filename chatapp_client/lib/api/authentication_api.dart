@@ -1,3 +1,4 @@
+import 'package:chatapp_client/utlis/urls.dart';
 import 'package:http/http.dart' as http;
 import "dart:convert";
 import 'dart:io';
@@ -6,7 +7,7 @@ import 'package:rsa_encrypt/rsa_encrypt.dart';
 import 'package:pointycastle/api.dart' as encryption;
 
 class AuthenticationApi {
-  static const BaseUrl = "http://192.168.0.100:3000/";
+  // static const BaseUrl = "http://192.168.0.100:3000/";
 
   static register(hashedPassword, publicKey, privateKey) {
     const url = "registeration_endpoint_here";
@@ -22,7 +23,7 @@ class AuthenticationApi {
 
   static Future getOtp(name, email, phone_num) async {
     print(name + " " + email + " " + phone_num);
-    const url = BaseUrl + "user/getotp";
+    const url = Urls.baseUrl + "user/getotp";
     print(url);
     http.Response res = await http.post(
       url,
@@ -52,7 +53,7 @@ class AuthenticationApi {
       String hashedPass) async {
     // print(name+" "+email+" "+phone_num+" "+password+" "+otp);
     print(otp);
-    const url = BaseUrl + "user/verifyotp";
+    const url = Urls.baseUrl +"user/verifyotp";
     print(url);
     http.Response res = await http.post(
       url,
@@ -77,7 +78,7 @@ class AuthenticationApi {
   }
 
   static Future login(hashedPassword,encryption_key, email) async {
-    const url = BaseUrl + 'auth/login';
+    const url = Urls.baseUrl + 'auth/login';
     print(url + " " + email);
     var res = await http.post(
       url,

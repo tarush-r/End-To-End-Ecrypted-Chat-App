@@ -1,3 +1,6 @@
+import 'package:chatapp_client/models/chat_model.dart';
+import 'package:chatapp_client/utlis/focus_handler.dart';
+import 'package:chatapp_client/utlis/urls.dart';
 import "package:flutter/material.dart";
 import 'dart:io';
 
@@ -24,15 +27,25 @@ class _ChatScreenState extends State<ChatScreen> {
   double height, width;
   TextEditingController textController;
   ScrollController scrollController;
-  
+  List chats = [];
+
   @override
   void initState() {
     messages = [];
+    chats.add(ChatModel(to: "Rahil", from: 'Tarush', message: "Hey", seen: true));
+    chats.add(ChatModel(to: "Rahil", from: 'Tarush', message: "This is a test", seen: true));
+    chats.add(ChatModel(to: "Tarush", from: 'Rahil', message: "It works", seen: true));
+    chats.add(ChatModel(to: "Rahil", from: 'Tarush', message: "Hey", seen: true));
+    chats.add(ChatModel(to: "Rahil", from: 'Tarush', message: "This is a test", seen: true));
+    chats.add(ChatModel(to: "Tarush", from: 'Rahil', message: "It works", seen: true));
+    chats.add(ChatModel(to: "Rahil", from: 'Tarush', message: "Hey", seen: true));
+    chats.add(ChatModel(to: "Rahil", from: 'Tarush', message: "This is a test", seen: true));
+    chats.add(ChatModel(to: "Tarush", from: 'Rahil', message: "It works", seen: true));
     //Initializing the TextEditingController and ScrollController
     textController = TextEditingController();
     scrollController = ScrollController();
     socketIO = SocketIOManager().createSocketIO(
-      'http://192.168.0.100:3000/',
+      Urls.baseUrl,
       '',
     );
     socketIO.init();
@@ -51,10 +64,9 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
 
     socketIO.sendMessage(
-              'send_message', json.encode({'message': "connection made!!!"}));
+        'send_message', json.encode({'message': "connection made!!!"}));
     // init();
     // print("socket connected");
-    
   }
 
   // _socketOptions() {
@@ -72,36 +84,125 @@ class _ChatScreenState extends State<ChatScreen> {
     // _socket.connect();
   }
 
+  _chatBubble(chat) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        // padding: EdgeInsets.all(10),
+        color: Colors.red,
+        height: 100,
+        width: 50,
+        child: Text(chat.message),
+        
+        
+      ),
+    );
+    
+  }
+
+  _messagesContainer() {
+    return GestureDetector(
+      onTap: () {
+        FocusHandler.unfocus(context);
+      },
+      child: Container(
+          color: Colors.blue,
+          child: ListView.builder(
+            itemCount: chats.length,
+            itemBuilder: (context, index) {
+              return _chatBubble(chats[index]);
+            },
+          )
+          // child: ListView(
+          //   children: [
+
+          //   ],
+          // ),
+          // height: double.infinity,
+          // width: double.infinity,
+          ),
+    );
+  }
+
+  _inputMessage() {
+    return Container(
+      // color: Colors.red,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(
+              child: Icon(Icons.add),
+            ),
+          ),
+          Expanded(
+            flex: 10,
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: '',
+                border: new OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(20.0),
+                  ),
+                ),
+                // enabledBorder: OutlineInputBorder(
+                //     borderSide:
+                //         BorderSide(color: Colors.black, width: 2.0)),
+                // focusedBorder: OutlineInputBorder(
+                //   borderSide: BorderSide(color: Colors.red, width: 2.0),
+                // ),
+              ),
+              validator: (val) => val.isEmpty ? 'Enter a valid Email' : null,
+              // controller: emailController,
+            ),
+          ),
+          Expanded(
+              flex: 2,
+              child: Container(
+                child: Icon(Icons.send),
+              ))
+        ],
+      ),
+      // height: 100,
+      // width: double.infinity,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // final store = Provider.of<MessageStore>(context, listen: false);
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Chat Screen"),
-        ),
-        body: Center(
-          child: Container(
-            height: 500,
-            width: 500,
-            child: Row(
-              children: [
-                Container(
-                  width: 300,
-                  height: 100,
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter a search term'),
+      // appBar: AppBar(
+      //   title: Text("Chat Screen"),
+      // ),
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Container(
+              // height: MediaQuery.of(context).size.height,
+              // width: MediaQuery.of(context).size.width,
+
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: _messagesContainer(),
                   ),
-                ),
-                RaisedButton(onPressed: () {
-                  // store.test();
-                  // sendSingleChatMessage(messageController.text);
-                })
-              ],
+                  Expanded(
+                    flex: 1,
+                    child: _inputMessage(),
+                  ),
+                ],
+              ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   // sendSingleChatMessage(String chatMessageModel) {

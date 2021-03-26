@@ -10,4 +10,4 @@ err =>{
 })
 
 require('./user.model.js');
-// require('./chat.js')
+require('./chat.js')

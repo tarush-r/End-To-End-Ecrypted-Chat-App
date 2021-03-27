@@ -1,20 +1,29 @@
 class ChatContactModel {
+  String id;
   String name;
-  String number;
   String recentMessage;
   int notificationCount;
   String recentMessageTime;
+  String publicKey;
+  bool seen;
+  String email;
+  String profilePic;
 
-  ChatContactModel({this.name, this.number, this.recentMessage, this.notificationCount, this.recentMessageTime});
+  ChatContactModel({this.id, this.name, this.recentMessage, this.notificationCount, this.recentMessageTime, this.publicKey, this.seen, this.email, this.profilePic});
 
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
-      'number': number,
       'recentMessage': recentMessage,
       'notificationCount': notificationCount,
-      'recentMessageTime': recentMessageTime
+      'recentMessageTime': recentMessageTime,
+      'publicKey': publicKey,
+      'seen': seen,
+      'email': email,
+      'profilePic': profilePic
+
       };
   }
 }

@@ -1,5 +1,6 @@
 import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
+import 'package:chatapp_client/models/chat_model.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
 import 'package:chatapp_client/utlis/color_themes.dart';
@@ -19,13 +20,77 @@ class ChatsListScreen extends StatefulWidget {
 }
 
 class _ChatsListScreenState extends State<ChatsListScreen> {
+  List done = [];
+  Map unread = {};
+  
   List<ChatContactModel> chatContacts = [];
   // final List<Widget> selectedScreen = []
   String token;
   _getChats() async {
     token = await SharedPreferencesHelper.getToken();
     var response = await ChatApi.getAllChats(token);
-    print(response);
+    print(response['chats'].length);
+    var user = await SharedPreferencesHelper.getUser();
+    for(int i =0; i<response['chats'].length ;i++){
+      // print(user);
+      if(response['chats'][i]['from']['name']==user['name']){
+        if(done.contains(response['chats'][i]['to']['_id'])){
+          print('if if');
+          // if(response['chats'][i]['seen']==false){
+          //   unread[response['chats'][i]['to']['_id']] = unread[response['chats'][i]['to']['_id']] +1;
+          // }
+          continue;
+        }
+        else{
+          print('if else');
+          done.add(response['chats'][i]['to']['_id']);
+          print(response['chats'][i]['sentAt']);
+          chatContacts.add(ChatContactModel(name: response['chats'][i]['to']['name'], recentMessage: response['chats'][i]['message'], notificationCount: 0, recentMessageTime: response['chats'][i]['sentAt'], publicKey: response['chats'][i]['to']['publicKey'], seen: response['chats'][i]['seen'], email: response['chats'][i]['to']['email'], profilePic: response['chats'][i]['to']['profile_pic']));
+          // if(response['chats'][i]['seen']==false){
+          //   unread[response['chats'][i]['to']['_id']] = 1;
+          // }
+          // response['chats'][i].firstWhere((chat)=>chat['to']['id']==);
+        }
+      }
+      else{
+        if(done.contains(response['chats'][i]['from']['_id'])){
+          print('else if '+i.toString());
+          if(response['chats'][i]['seen']==false){
+            unread[response['chats'][i]['from']['_id']] = unread[response['chats'][i]['from']['_id']] +1;
+          }
+          continue;
+        }
+        else{
+          // print(response['chats'][i]['from']['_id']);
+          done.add(response['chats'][i]['from']['_id']);
+          print(response['chats'][i]['sentAt']);
+          if(response['chats'][i]['seen']==false){
+            unread[response['chats'][i]['from']['_id']] = 1;
+          }
+          chatContacts.add(ChatContactModel(name: response['chats'][i]['from']['name'], recentMessage: response['chats'][i]['message'], notificationCount: 0, recentMessageTime: response['chats'][i]['sentAt'], publicKey: response['chats'][i]['from']['publicKey'], seen: response['chats'][i]['seen'], email: response['chats'][i]['from']['email'], profilePic: response['chats'][i]['from']['profile_pic']));
+          // response['chats'][i].firstWhere((chat)=>chat['to']['id']==);
+        }
+      }
+     
+    }
+    print(done);
+    print(unread);
+    for(int i =0;i<chatContacts.length;i++){
+      print(i);
+      print(chatContacts[i].profilePic);
+    }
+    for(int i =0;i<done.length;i++){
+      if(unread[done[i]]==null){
+        print('returned');
+        continue;
+      }
+      chatContacts[i].notificationCount=unread[done[i]];
+    }
+    setState(() {
+      
+    });
+    // chatContacts.add(ChatContactModel());
+
   }
 
   @override
@@ -33,43 +98,53 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
     super.initState();
     _getChats();
     //api call        
-    chatContacts.add(ChatContactModel(
-        name: "Rahil",
-        number: "8293627343",
-        recentMessage: "Hey this works!!",
-        notificationCount: 5,
-        recentMessageTime: '11:00 pm'));
-    chatContacts.add(ChatContactModel(
-        name: "Sakshi",
-        number: "2343534343",
-        recentMessage:
-            "Did you work on sockets?. We have to show our work on Monday. Please start working on it fast",
-        notificationCount: 0,
-        recentMessageTime: '9:30 am'));
-    chatContacts.add(ChatContactModel(
-        name: "Kunal",
-        number: "2313627343",
-        recentMessage: "Valorant khlega?",
-        notificationCount: 1,
-        recentMessageTime: '11:00 pm'));
-    chatContacts.add(ChatContactModel(
-        name: "Jigyassa",
-        number: "5433454343",
-        recentMessage: "Whats the syllabus for tomorrow?",
-        notificationCount: 0,
-        recentMessageTime: '9:30 am'));
-    chatContacts.add(ChatContactModel(
-        name: "Aaditya",
-        number: "8293627343",
-        recentMessage: "Naruto dekh!!!!",
-        notificationCount: 1,
-        recentMessageTime: '11:00 pm'));
-    chatContacts.add(ChatContactModel(
-        name: "Anina",
-        number: "9143534343",
-        recentMessage: "Kitna padha?",
-        notificationCount: 1,
-        recentMessageTime: '9:30 am'));
+    // chatContacts.add(ChatContactModel(
+    //     name: "Rahil",
+    //     number: "8293627343",
+    //     recentMessage: "Hey this works!!",
+    //     notificationCount: 5,
+    //     recentMessageTime: '11:00 pm'));
+    // chatContacts.add(ChatContactModel(
+    //     name: "Sakshi",
+    //     number: "2343534343",
+    //     recentMessage:
+    //         "Did you work on sockets?. We have to show our work on Monday. Please start working on it fast",
+    //     notificationCount: 0,
+    //     recentMessageTime: '9:30 am'));
+    // chatContacts.add(ChatContactModel(
+    //     name: "Kunal",
+    //     number: "2313627343",
+    //     recentMessage: "Valorant khlega?",
+    //     notificationCount: 1,
+    //     recentMessageTime: '11:00 pm'));
+    // chatContacts.add(ChatContactModel(
+    //     name: "Jigyassa",
+    //     number: "5433454343",
+    //     recentMessage: "Whats the syllabus for tomorrow?",
+    //     notificationCount: 0,
+    //     recentMessageTime: '9:30 am'));
+    // chatContacts.add(ChatContactModel(
+    //     name: "Aaditya",
+    //     number: "8293627343",
+    //     recentMessage: "Naruto dekh!!!!",
+    //     notificationCount: 1,
+    //     recentMessageTime: '11:00 pm'));
+    // chatContacts.add(ChatContactModel(
+    //     name: "Anina",
+    //     number: "9143534343",
+    //     recentMessage: "Kitna padha?",
+    //     notificationCount: 1,
+    //     recentMessageTime: '9:30 am'));
+  }
+
+  _getMinutes(minutes) {
+    List min = ['00', '01', '03', '04', '05', '06', '07', '08', '09']; 
+    if(minutes>9){
+      return minutes.toString();
+    }
+    else{
+      return min[minutes].toString();
+    }
   }
 
   _chatContactContainer(chatContact) {
@@ -118,6 +193,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                 Row(
                   children: [
                     CircleAvatar(
+                      backgroundImage: NetworkImage(chatContact.profilePic),
                       backgroundColor: Colors.green,
                       radius: 30,
                     ),
@@ -151,7 +227,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                     Container(
                       child: Center(
                         child: Text(
-                          chatContact.recentMessageTime.toString(),
+                          DateTime.parse(chatContact.recentMessageTime).hour.toString()+":"+_getMinutes(DateTime.parse(chatContact.recentMessageTime).minute),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: ColorThemes.secondary, fontSize: 12),

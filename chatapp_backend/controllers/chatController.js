@@ -13,10 +13,11 @@ var ObjectId = require('mongodb').ObjectID;
 router.get('/getAllChats', login_required,async (req, res) => {
    console.log(req.user._id)
    Chat.find({$or:[{from:req.user._id},{to:req.user._id}]})
-   .populate("from","_id name email publicKey")
-   .populate("to","_id name email publicKey")
-   // .sort('-sentAt')
+   .populate("from","_id name email publicKey profile_pic")
+   .populate("to","_id name email publicKey profile_pic")
+   .sort('-sentAt')
    .then((chats)=>{
+      console.log(chats)
        res.send({chats})  
    }).catch(err=>{
        console.log(err)

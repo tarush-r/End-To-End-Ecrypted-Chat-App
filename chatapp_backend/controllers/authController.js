@@ -64,7 +64,7 @@ async function generateTokens(email_id, uuid) {
         data: uuid,
       },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
     refresh_uuid = jwt.sign(
       {

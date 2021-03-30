@@ -24,6 +24,19 @@ router.get('/getAllChats', login_required,async (req, res) => {
    })
 })
 
+router.get('/getSelectedUserChat', login_required,async (req, res) => {
+   console.log(req.user._id)
+   Chat.find({$or:[{$and:[{from:req.user._id},{to:req.body._id}]},{$and:[{to:req.user._id},{from:req.body._id}]}]})
+   .populate("from","_id name email publicKey profile_pic")
+   .populate("to","_id name email publicKey profile_pic")
+   .sort('-sentAt')
+   .then((chats)=>{
+       res.send({chats})  
+   }).catch(err=>{
+       console.log(err)
+   })
+})
+
 router.post('/addChat', async (req, res) => {
 
 console.log("HEY=",(typeof( ObjectId(req.body.from))))

@@ -1,4 +1,6 @@
-class ChatContactModel {
+import 'package:flutter/cupertino.dart';
+
+class ChatContactModel{
   String id;
   String name;
   String recentMessage;

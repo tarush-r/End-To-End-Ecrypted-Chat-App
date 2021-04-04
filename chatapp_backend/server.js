@@ -56,12 +56,16 @@ const userMap = new Map();
 // });
 
 io.on('connection', (userSocket) => {
-  console.log('New WebSocket connection')
+  console.log(userSocket.handshake.query.chatID)
+  userSocket.join(userSocket.handshake.query.chatID)
   userSocket.on("send_message", (data) => {
+    console.log("IT WORKS")
     console.log(data)
     userSocket.broadcast.emit("receive_message", data)
 })
 })
+
+
 
 function onEachUserConnection(socket) {
   var query = stringifyJson(socket.handshake.query);
@@ -101,6 +105,8 @@ function onlineCheckHandler(socket, chat_user_details) {
 function sendBackToClient(socket, to_user_socket_id, event, chat_message) {
   socket.emit(event, stringifyJson(chat_message));
 }
+
+
 
 function onMessage(socket) {
   socket.on(EVENT_SINGLE_CHAT_MESSAGE, function (chat_message) {

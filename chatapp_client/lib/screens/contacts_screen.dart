@@ -71,22 +71,31 @@ class _ContactsScreenState extends State<ContactsScreen> {
               children: [
                 Row(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        // color: Colors.blue
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.arrow_back),
                       ),
-                      width: 40,
-                      child: MaterialButton(
-                          shape: CircleBorder(),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Center(child: Icon(Icons.arrow_back))),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(50),
+                    //     // color: Colors.blue
+                    //   ),
+                    //   width: 40,
+                    //   child: MaterialButton(
+                    //       shape: CircleBorder(),
+                    //       onPressed: () {
+                    //         Navigator.of(context).pop();
+                    //       },
+                    //       child: Center(child: Icon(Icons.arrow_back))),
+                    // ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
                     HeadingWidget("Contacts")
                   ],
                 ),

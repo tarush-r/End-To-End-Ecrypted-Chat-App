@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // }
     image = await _picker.getImage(source: ImageSource.gallery);
     var file = File(image.path);
-    String imageName = image.path.split('/')[image.path.split('/').length-1];
+    String imageName = image.path.split('/')[image.path.split('/').length - 1];
 
     if (image != null) {
       var snapshot = await _storage
@@ -112,20 +112,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .child('profilePhotos/${imageName}')
           .putFile(file)
           .whenComplete(() {
-            // print(snapshot);
-          });
+        // print(snapshot);
+      });
       String url = await snapshot.ref.getDownloadURL();
-      var res = await SettingsApi.updateProfilePhoto(
-                        url, token);
-                    print("!!!!!!!!!!!!!!");
-                    // print(json.decode(res)["user"]);
-                    setState(() {
-                      SharedPreferencesHelper.persistOnLogin(
-                          json.encode(json.decode(res.body)['user']),
-                          json.encode(token));
-                      _getUser();
-                      // Navigator.of(context).pop();
-                    });
+      var res = await SettingsApi.updateProfilePhoto(url, token);
+      print("!!!!!!!!!!!!!!");
+      // print(json.decode(res)["user"]);
+      setState(() {
+        SharedPreferencesHelper.persistOnLogin(
+            json.encode(json.decode(res.body)['user']), json.encode(token));
+        _getUser();
+        // Navigator.of(context).pop();
+      });
       print(url);
     } else {
       print("no image selected");
@@ -147,6 +145,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Row(
                         children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 20),
+                              child: Icon(Icons.arrow_back),
+                            ),
+                          ),
                           HeadingWidget("Profile"),
                         ],
                       ),
@@ -158,35 +165,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              user["profile_pic"] !=null?
-                              CircleAvatar(
-                                radius: 50.0,
-                                // child: Text(
-                                //   user['name'][0],
-                                //   style: TextStyle(
-                                //     fontSize: 40,
-                                //     fontFamily: 'Poiret',
-                                //     fontWeight: FontWeight.bold,
-                                //     color: Colors.white,
-                                //   ),
-                                // ),
-                                backgroundImage: NetworkImage(user['profile_pic']),
-                                backgroundColor: Colors.grey,
-                              ):
-                              CircleAvatar(
-                                radius: 50.0,
-                                child: Text(
-                                  user['name'][0],
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    fontFamily: 'Poiret',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                // backgroundImage: NetworkImage(user['profile_pic']),
-                                backgroundColor: Colors.grey,
-                              ),
+                              user["profile_pic"] != null
+                                  ? CircleAvatar(
+                                      radius: 50.0,
+                                      // child: Text(
+                                      //   user['name'][0],
+                                      //   style: TextStyle(
+                                      //     fontSize: 40,
+                                      //     fontFamily: 'Poiret',
+                                      //     fontWeight: FontWeight.bold,
+                                      //     color: Colors.white,
+                                      //   ),
+                                      // ),
+                                      backgroundImage:
+                                          NetworkImage(user['profile_pic']),
+                                      backgroundColor: Colors.grey,
+                                    )
+                                  : CircleAvatar(
+                                      radius: 50.0,
+                                      child: Text(
+                                        user['name'][0],
+                                        style: TextStyle(
+                                          fontSize: 40,
+                                          fontFamily: 'Poiret',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      // backgroundImage: NetworkImage(user['profile_pic']),
+                                      backgroundColor: Colors.grey,
+                                    ),
                             ],
                           ),
                           Padding(

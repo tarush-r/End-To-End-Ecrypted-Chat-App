@@ -8,7 +8,7 @@ import 'dart:convert';
 import '../helpers/sharedpreferences_helper.dart';
 import './register_screen.dart';
 import 'package:flutter/cupertino.dart';
-import '../utlis/color_themes.dart';
+import '../utils/color_themes.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String routeName = '/Login';

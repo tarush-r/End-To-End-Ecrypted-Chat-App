@@ -1,4 +1,4 @@
-import 'package:chatapp_client/utlis/urls.dart';
+import 'package:chatapp_client/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import "dart:convert";
 import 'dart:io';
@@ -12,6 +12,26 @@ class ChatApi {
     const url = Urls.baseUrl +"chat/getAllChats/";
     print(token);
     print("asdasda");
+    http.Response res = await http.get(
+      url,
+      // body: json.encode(contactslist),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      }, 
+    );
+    print("====================");
+    print(json.decode(res.body));
+    print("====================");
+    return json.decode(res.body);
+
+  }
+
+  static Future getSelectedUserChat(token) async {
+   
+    const url = Urls.baseUrl +"chat/getSelectedUserChat/";
+    print(token);
+    print(url);
     http.Response res = await http.get(
       url,
       // body: json.encode(contactslist),

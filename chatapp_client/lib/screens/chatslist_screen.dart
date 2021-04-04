@@ -3,21 +3,21 @@ import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
-import 'package:chatapp_client/utlis/color_themes.dart';
-import 'package:chatapp_client/utlis/focus_handler.dart';
+import 'package:chatapp_client/utils/color_themes.dart';
+import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:flutter/material.dart';
 import '../helpers/sharedpreferences_helper.dart';
 import '../helpers/contacts_helper.dart';
 import 'contacts_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as client;
-import '../utlis/loading_indicator.dart';
+import '../utils/loading_indicator.dart';
 
 class ChatsListScreen extends StatefulWidget {
   static String routeName = '/chatslist';
 
   @override
   _ChatsListScreenState createState() => _ChatsListScreenState();
-}
+}   
 
 class _ChatsListScreenState extends State<ChatsListScreen> {
   List done = [];
@@ -28,6 +28,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   String token;
   _getChats() async {
     token = await SharedPreferencesHelper.getToken();
+    print("TOKEN@@@@@@@@@@@@@@@@@@@@@@@@@@@: "+token);
     var response = await ChatApi.getAllChats(token);
     print(response['chats'].length);
     var user = await SharedPreferencesHelper.getUser();

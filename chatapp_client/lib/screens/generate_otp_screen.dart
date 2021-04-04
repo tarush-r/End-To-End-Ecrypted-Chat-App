@@ -5,7 +5,7 @@ import '../api/authentication_api.dart';
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import './register_screen.dart';
-import '../utlis/color_themes.dart';
+import '../utils/color_themes.dart';
 
 class GenerateOtpScreen extends StatefulWidget {
   static final String routeName = '/generateOtp';

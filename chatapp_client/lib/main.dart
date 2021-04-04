@@ -1,9 +1,10 @@
+import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/screens/calls_screen.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/home_screen.dart';
 import 'package:chatapp_client/screens/settings_screen.dart';
-import 'package:chatapp_client/utlis/color_themes.dart';
-import 'package:chatapp_client/utlis/message_store.dart';
+import 'package:chatapp_client/utils/color_themes.dart';
+import 'package:chatapp_client/utils/message_store.dart';
 import 'package:flutter/material.dart';
 import './screens/register_screen.dart';
 import './screens/generate_otp_screen.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<ChatContactModel>(
+          create: (_) => ChatContactModel(),
+        ),
         Provider<MessageStore>(
           create: (_) => MessageStore(),
           dispose: (_, store) => store.dispose(),

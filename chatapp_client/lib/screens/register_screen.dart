@@ -15,8 +15,8 @@ import 'package:asn1lib/asn1lib.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-import '../utlis/color_themes.dart';
-import '../utlis/loading_indicator.dart';
+import '../utils/color_themes.dart';
+import '../utils/loading_indicator.dart';
 
 // import 'package:crypto/crypto.dart';
 // import 'dart:convert';

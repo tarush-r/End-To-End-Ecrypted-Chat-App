@@ -1,4 +1,4 @@
-import 'package:chatapp_client/utlis/urls.dart';
+import 'package:chatapp_client/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import "dart:convert";
 import 'dart:io';

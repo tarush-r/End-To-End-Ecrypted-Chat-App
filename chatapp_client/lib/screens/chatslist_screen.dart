@@ -30,7 +30,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
     token = await SharedPreferencesHelper.getToken();
     print("TOKEN@@@@@@@@@@@@@@@@@@@@@@@@@@@: "+token);
     var response = await ChatApi.getAllChats(token);
-    print(response['chats'].length);
+   // print(response['chats'].length);
     var user = await SharedPreferencesHelper.getUser();
     for(int i =0; i<response['chats'].length ;i++){
       // print(user);

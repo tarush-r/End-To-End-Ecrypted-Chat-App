@@ -10,6 +10,7 @@ const authController = require('./controllers/authController')
 const settingsController = require('./controllers/settingsController')
 const chatController = require('./controllers/chatController')
 const Chat = require("./models/chat");
+const axios = require("axios");
 const port = 3000;
 
 
@@ -58,9 +59,16 @@ const userMap = new Map();
 io.on('connection', (userSocket) => {
   console.log(userSocket.handshake.query.chatID)
   userSocket.join(userSocket.handshake.query.chatID)
-  userSocket.on("send_message", (data) => {
+  userSocket.on("send_message",async (data) => {
     console.log("IT WORKS")
     console.log(data)
+    const newChat = new Chat({
+        "to":data.receiverChatID,
+        "from":data.senderChatID,
+        "message":data.content
+    })
+     await newChat.save().then(res=> console.log(res)).catch(err => console.log(err))
+
     userSocket.broadcast.emit("receive_message", data)
 })
 })

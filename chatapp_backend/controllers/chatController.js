@@ -37,9 +37,42 @@ router.get('/getSelectedUserChat', login_required,async (req, res) => {
    })
 })
 
+router.post('/readSelectedUserChat', login_required,async (req, res) => {
+    console.log(req.user._id)
+
+    Chat.updateMany({$or:[{$and:[{from:req.user._id},{to:req.body._id}]},{$and:[{to:req.user._id},{from:req.body._id}]}]}, 
+        {seen:true}, function (err, chats) {
+        if (err){
+            console.log(err)
+            res,send({err})
+        }
+        else{
+            console.log("Updated chats : ", chats);
+            res.send({chats}) 
+        }
+    });
+
+ })
+
+ exports.chatpost = async (parameters) => {
+    const options = {
+      headers: {
+        Accept: "*/*",
+        "Content-type": "application/json",
+      },
+    };
+    const result = await axios.post(
+      parameters.url,
+      options
+    );
+    console.log("HEY")
+    console.log("CHECK",result.data.length);
+    return result;
+  };
+
 router.post('/addChat', async (req, res) => {
 
-console.log("HEY=",(typeof( ObjectId(req.body.from))))
+   console.log("HEY=",(typeof( ObjectId(req.body.from))))
    var from=mongoose.Types.ObjectId(req.body.from)
    var to=mongoose.Types.ObjectId(req.body.to)
    var message=req.body.message

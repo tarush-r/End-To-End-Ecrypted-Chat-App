@@ -38,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
     print(user['_id']);
 
     socketIO = SocketIOManager().createSocketIO(
-        'http://10.0.2.2:3000', '/',
+        Urls.baseUrl, '/',
         query: 'chatID=${user['_id']}');
     socketIO.init();
 
@@ -64,7 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
     await socketIO.sendMessage(
       'send_message',
       json.encode({
-        'receiverChatID': 'randomID',
+        'receiverChatID': '605e18cf979825bdc9f6c165',
         'senderChatID': user['_id'],
         'content': text,
       }),
@@ -479,6 +479,7 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Colors.black,
       appBar: ChatAppBar(
         height: MediaQuery.of(context).size.height * 0.7,
+
       ),
       // AppBar(
       //   title: Text("Chat Screen"),

@@ -1,8 +1,10 @@
 import 'package:chatapp_client/api/authentication_api.dart';
+import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/generate_otp_screen.dart';
 import 'package:chatapp_client/screens/home_screen.dart';
 import 'package:chatapp_client/screens/register_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../helpers/encryption_helper.dart';
 import 'dart:convert';
 import '../helpers/sharedpreferences_helper.dart';
@@ -22,7 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
-
+  var user;
+  bool _isInit = true;
   _submit() async {
     List<String> hashedPassword;
     // print("HEllo");
@@ -32,9 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
     var response = await AuthenticationApi.login(
         hashedPassword[0], hashedPassword[1], emailController.text.trim());
     print(json.decode(response)['token']);
-    SharedPreferencesHelper.persistOnLogin(
+    await SharedPreferencesHelper.persistOnLogin(
         json.encode(json.decode(response)['user']), json.encode(json.decode(response)['token']));
     var user = await SharedPreferencesHelper.getUser();
+    print("--------------user-----------------");
+    print(user['name']);
+    Provider.of<UserProvider>(context, listen: false).initUser(user);
     if (user != null) {
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     }
@@ -47,9 +53,11 @@ class _LoginScreenState extends State<LoginScreen> {
   // String email = '';
   // String password = '';
   void checkLogin() async {
-    var user = await SharedPreferencesHelper.getUser();
+    user = await SharedPreferencesHelper.getUser();
+    
     if (user != null) {
       print("hello");
+      Provider.of<UserProvider>(context, listen: false).initUser(user);
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     }
   }
@@ -60,6 +68,17 @@ class _LoginScreenState extends State<LoginScreen> {
     checkLogin();
     super.initState();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   if (_isInit) {
+  //     // _getChats();
+  //     Provider.of<UserProvider>(context).initUser(user);
+  //   }
+  //   _isInit = false;
+  //   super.didChangeDependencies();
+  // }
 
   Widget build(BuildContext context) {
     return Scaffold(

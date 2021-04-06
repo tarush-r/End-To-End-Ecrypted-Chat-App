@@ -1,9 +1,13 @@
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
+import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
+import 'package:chatapp_client/providers/chats_provider.dart';
+import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:chatapp_client/utils/urls.dart';
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
 import 'dart:io';
 import '../widgets/chat_screen_appbar.dart';
 import 'dart:convert';
@@ -22,51 +26,39 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   // SocketIO _socket;
   // SocketIOManager _manager;
+
+  String selectedUserId;
+  ChatContactModel selectedUser;
   SocketIO socketIO;
-  bool _isLoading = true;
+  bool _isLoading;
   TextEditingController messageController = new TextEditingController();
   final _scrollController = ScrollController();
-
+  bool _isInit = true;
   List<String> messages;
   double height, width;
   TextEditingController textController;
   ScrollController scrollController;
-  List chats = [];
+  List<ChatModel> chats = [];
   var user;
   _getUser() async {
-    user = await SharedPreferencesHelper.getUser();
-    print(user['_id']);
+    // user = await SharedPreferencesHelper.getUser();
+    // print(user['_id']);
 
-    socketIO = SocketIOManager().createSocketIO(
-        Urls.baseUrl, '/',
-        query: 'chatID=${user['_id']}');
-    socketIO.init();
-
-    socketIO.subscribe('receive_message', (jsonData) {
-      Map<String, dynamic> data = json.decode(jsonData);
-      print(data);
-      // messages.add(Message(
-      //     data['content'], data['senderChatID'], data['receiverChatID']));
-      // notifyListeners();
-    });
-
-    socketIO.connect();
-
-    setState(() {
-      _isLoading = false;
-      print("scrolling");
-    });
+    // setState(() {
+    //   _isLoading = false;
+    //   print("scrolling");
+    // });
   }
 
-  void sendMessage(String text, String receiverChatID) async {
+  void sendMessage(String message, String receiverId, String senderId) async {
     // messages.add(Message(text, currentUser.chatID, receiverChatID));
-    print(text);
+    print(message);
     await socketIO.sendMessage(
       'send_message',
       json.encode({
-        'receiverChatID': '605e18cf979825bdc9f6c165',
-        'senderChatID': user['_id'],
-        'content': text,
+        'receiverId': receiverId,
+        'senderId': senderId,
+        'message': message,
       }),
     );
     print("done");
@@ -77,71 +69,68 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     _getUser();
 
-
-    
-
     messages = [];
-    chats.add(ChatModel(
-        to: "Rahil",
-        from: 'Tarush',
-        message: "Hey",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Rahil",
-        from: 'Tarush',
-        message: "This is a test",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Tarush",
-        from: 'Rahil',
-        message: "It works",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Rahil",
-        from: 'Tarush',
-        message: "Hey",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Rahil",
-        from: 'Tarush',
-        message: "This is a test",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Tarush",
-        from: 'Rahil',
-        message: "It works",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Rahil",
-        from: 'Tarush',
-        message: "Hey",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Rahil",
-        from: 'Tarush',
-        message: "This is a test",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Tarush",
-        from: 'Rahil',
-        message:
-            "It works asdasdasd a sdasfda fasdfsds dgsdfsdfsdf sfdfsdfsefsda sdasdasdasdasda sdsdfszef",
-        seen: true,
-        time: DateTime.now()));
-    chats.add(ChatModel(
-        to: "Rahil",
-        from: 'Tarush',
-        message: "Hey",
-        seen: false,
-        time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Rahil",
+    //     from: 'Tarush',
+    //     message: "Hey",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Rahil",
+    //     from: 'Tarush',
+    //     message: "This is a test",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Tarush",
+    //     from: 'Rahil',
+    //     message: "It works",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Rahil",
+    //     from: 'Tarush',
+    //     message: "Hey",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Rahil",
+    //     from: 'Tarush',
+    //     message: "This is a test",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Tarush",
+    //     from: 'Rahil',
+    //     message: "It works",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Rahil",
+    //     from: 'Tarush',
+    //     message: "Hey",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Rahil",
+    //     from: 'Tarush',
+    //     message: "This is a test",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Tarush",
+    //     from: 'Rahil',
+    //     message:
+    //         "It works asdasdasd a sdasfda fasdfsds dgsdfsdfsdf sfdfsdfsefsda sdasdasdasdasda sdsdfszef",
+    //     seen: true,
+    //     time: DateTime.now()));
+    // chats.add(ChatModel(
+    //     to: "Rahil",
+    //     from: 'Tarush',
+    //     message: "Hey",
+    //     seen: false,
+    //     time: DateTime.now()));
     //Initializing the TextEditingController and ScrollController
     // textController = TextEditingController();
     // scrollController = ScrollController();
@@ -176,6 +165,39 @@ class _ChatScreenState extends State<ChatScreen> {
     //     'send_message', json.encode({'message': "connection made!!!"}));
     // init();
     // print("socket connected");
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      // _getChats();
+      print("ARGUMENTS HERE");
+      Map arguments = ModalRoute.of(context).settings.arguments as Map;
+      selectedUserId = arguments['id'];
+      print(selectedUserId);
+      Provider.of<ChatsProvider>(context).initSelectedUserChats(selectedUserId);
+      // Provider.of<UserProvider>(context).initSelectedUser(selectedUserId);
+      user = Provider.of<UserProvider>(context).user;
+      print("PRINTING USER");
+      print(user['_id']);
+      socketIO = SocketIOManager()
+          .createSocketIO(Urls.baseUrl, '/', query: 'senderId=${user['_id']}');
+      socketIO.init();
+
+      socketIO.subscribe('receive_message', (jsonData) {
+        Map<String, dynamic> data = json.decode(jsonData);
+        print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
+        print(data);
+        // messages.add(Message(
+        //     data['content'], data['senderChatID'], data['receiverChatID']));
+        // notifyListeners();
+      });
+      print("SOCKET CONNECTED@@@@");
+      socketIO.connect();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   // _socketOptions() {
@@ -381,7 +403,7 @@ class _ChatScreenState extends State<ChatScreen> {
             itemCount: chats.length,
             itemBuilder: (context, index) {
               return _chatBubble(
-                  chats[index], chats[index].from == user['name']);
+                  chats[index], chats[index].from == user['_id']);
             },
           )
           // child: ListView(
@@ -399,11 +421,12 @@ class _ChatScreenState extends State<ChatScreen> {
     socketIO.sendMessage(
         'single_chat_message',
         json.encode({
-            "to": "Rahil",
-            "from": "Tarush",
-            "message": message,
-            "seen": false,
-            "time": DateTime.now().toString()}));
+          "to": "Rahil",
+          "from": "Tarush",
+          "message": message,
+          "seen": false,
+          "time": DateTime.now().toString()
+        }));
   }
 
   _inputMessage() {
@@ -457,7 +480,14 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Container(
                 child: IconButton(
                   onPressed: () {
-                    sendMessage(messageController.text, "randomId");
+                    if (messageController.text.isEmpty) {
+                      return;
+                    }
+                    sendMessage(
+                        messageController.text, selectedUserId, user['_id']);
+                    Provider.of<ChatsProvider>(context, listen: false)
+                        .addChat(messageController.text, user, selectedUser);
+                    messageController.clear();
                   },
                   icon: Icon(Icons.send),
                   // icon: Icons.send,
@@ -473,50 +503,53 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    chats = Provider.of<ChatsProvider>(context).getSelectedChats;
+    selectedUser = Provider.of<UserProvider>(context).selectedUser;
     // final store = Provider.of<MessageStore>(context, listen: false);
     return Scaffold(
       // appBar: Container(),
       backgroundColor: Colors.black,
       appBar: ChatAppBar(
         height: MediaQuery.of(context).size.height * 0.7,
-
       ),
       // AppBar(
       //   title: Text("Chat Screen"),
       // ),
       body: SingleChildScrollView(
         // controller: _scrollController,
-        child: _isLoading
-            ? CircularProgressIndicator()
-            : ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height - 80),
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    // height: MediaQuery.of(context).size.height,
-                    // width: MediaQuery.of(context).size.width,
+        child:
+            //  _isLoading
+            //     ? CircularProgressIndicator()
+            // :
+            ConstrainedBox(
+          constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height - 80),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Container(
+              // height: MediaQuery.of(context).size.height,
+              // width: MediaQuery.of(context).size.width,
 
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          flex: 10,
-                          child: _messagesContainer(),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            // color: Colors.grey[800],
-                            // padding: EdgeInsets.only(top:5),
-                            child: _inputMessage(),
-                          ),
-                        ),
-                      ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: _messagesContainer(),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      // color: Colors.grey[800],
+                      // padding: EdgeInsets.only(top:5),
+                      child: _inputMessage(),
                     ),
                   ),
-                ),
+                ],
               ),
+            ),
+          ),
+        ),
       ),
     );
   }

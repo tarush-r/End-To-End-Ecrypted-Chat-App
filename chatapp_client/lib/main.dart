@@ -1,4 +1,6 @@
 import 'package:chatapp_client/models/chat_contact_model.dart';
+import 'package:chatapp_client/providers/chats_provider.dart';
+import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/calls_screen.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/home_screen.dart';
@@ -17,6 +19,8 @@ import 'package:provider/provider.dart';
 import './screens/profile_screen.dart';
 
 void main() {
+  Provider.debugCheckInvalidValueType = null;
+
   runApp(MyApp());
 }
 
@@ -25,13 +29,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<ChatContactModel>(
-          create: (_) => ChatContactModel(),
+        ChangeNotifierProvider(
+          create: (context) =>ChatsProvider(),
+          // child: ,
         ),
-        Provider<MessageStore>(
-          create: (_) => MessageStore(),
-          dispose: (_, store) => store.dispose(),
+        ChangeNotifierProvider(
+          create: (context) =>UserProvider(),
+          // child: ,
         ),
+        // Provider<ChatsProvider>(
+        //   create: (_) => ChatsProvider(),
+        // ),
+        // Provider<MessageStore>(
+        //   create: (_) => MessageStore(),
+        //   dispose: (_, store) => store.dispose(),
+        // ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

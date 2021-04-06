@@ -1,4 +1,7 @@
+import 'package:chatapp_client/models/chat_contact_model.dart';
+import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
   final double height;
@@ -10,9 +13,13 @@ class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ChatAppBarState extends State<ChatAppBar> {
+
+  ChatContactModel selectedUser;
+
   // double hheight = 50;
   @override
   Widget build(BuildContext context) {
+    selectedUser = Provider.of<UserProvider>(context).selectedUser;
     return SafeArea(
       child: GestureDetector(
         // onVerticalDragUpdate: (details) {
@@ -56,7 +63,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
                   child: CircleAvatar(
-                    // backgroundImage: NetworkImage(chatContact.profilePic),
+                    backgroundImage: NetworkImage(selectedUser.profilePic),
                     backgroundColor: Colors.green,
                     radius: 20,
                   ),
@@ -64,7 +71,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
                 Container(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    "Rahil",
+                    selectedUser.name,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),

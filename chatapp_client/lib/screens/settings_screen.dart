@@ -115,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Text('Yes'),
                   onPressed: () {
                     _deleteAccountSubmit();
-                    LogoutHelper.Logout();
+                    LogoutHelper.Logout(context);
                     print("Loggwed out");
                     Navigator.of(context).pop();
 
@@ -181,7 +181,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Text('Yes'),
                   onPressed: () {
                     _forgotPasswordSubmit();
-                    LogoutHelper.Logout();
+                    LogoutHelper.Logout(context);
                     print("Loggwed out");
                     Navigator.of(context).pop();
 
@@ -321,7 +321,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       RawMaterialButton(
                         onPressed: () async {
                           var res = await SettingsApi.logout(token);
-                          LogoutHelper.Logout();
+                          LogoutHelper.Logout(context);
                           Navigator.pushReplacementNamed(
                               context, LoginScreen.routeName);
                         },
@@ -350,7 +350,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       RawMaterialButton(
                         onPressed: () async {
                           var res = await SettingsApi.logoutAll(token);
-                          LogoutHelper.Logout();
+                          LogoutHelper.Logout(context);
                           Navigator.pushReplacementNamed(
                               context, LoginScreen.routeName);
                         },

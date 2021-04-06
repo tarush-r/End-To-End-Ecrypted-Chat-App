@@ -2,7 +2,7 @@ const express = require('express')
 var router = express.Router()
 const mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
-
+const login_required = require('../middleware/login_required')
 const User = mongoose.model('user');
 const OTP = mongoose.model('otp');
 
@@ -238,7 +238,7 @@ async function register(pass, email, phone_num, name, publicKey, privateKey, has
 }
 
 
-router.post('/getverifiedcontacts', async (req, res)=>{
+router.post('/getverifiedcontacts', login_required, async (req, res)=>{
   console.log(req.body)
   var result = false
   var verifiedContacts = []
@@ -246,31 +246,61 @@ router.post('/getverifiedcontacts', async (req, res)=>{
     req.body['contactlist'][i]['number'] = req.body['contactlist'][i]['number'].replace(/\s/g, '')
     req.body['contactlist'][i]['number'] = req.body['contactlist'][i]['number'].replace('+91', '')
     console.log("!!!!"+req.body['contactlist'][1]['number'])
-    await User.findOne({number : req.body['contactlist'][i]['number']}, function (err, res) {
-      if(!err){
-        if(res!=null){
-          // console.log(res)
-          // verifiedContacts.push(res)
-          verifiedContacts.push({
-            'name' : res['name'],
-            'email' : res['email'],
-            'number': res['number']
-
-          }) 
-        }
-      }
-      else{
-        console.log("Error occured while getting contacts")
-        result = false
-      }
-    }).exec()
+    await User.findOne({number : req.body['contactlist'][i]['number']})
+    .then((verifiedUser)=>{
+       console.log(verifiedUser.profile_pic)
+       verifiedContacts.push({
+         'profile_pic': verifiedUser.profile_pic,
+         '_id': verifiedUser._id,
+         'name': verifiedUser.name,
+         'number': verifiedUser.number,
+         'email': verifiedUser.email,
+         'publicKey': verifiedUser.publicKey,
+       }) 
+    }).catch(err=>{
+        console.log(err)
+    })
   }
-  // console.log(req.body)
-  console.log("sjdf skjnvjosfov sfjv"+verifiedContacts[0]['name'])
+  console.log(verifiedContacts)
   res.send(verifiedContacts)
   // return verifiedContacts;
   // console.log(req.body['contactlist'][0]['number'].replace(/\s/g, ''));
   // str = str.replace(' ', '');
 })
+
+// router.post('/getverifiedcontacts', async (req, res)=>{
+//   console.log(req.body)
+//   var result = false
+//   var verifiedContacts = []
+//   for(var i =0; i<req.body['contactlist'].length ;i++) {
+//     req.body['contactlist'][i]['number'] = req.body['contactlist'][i]['number'].replace(/\s/g, '')
+//     req.body['contactlist'][i]['number'] = req.body['contactlist'][i]['number'].replace('+91', '')
+//     console.log("!!!!"+req.body['contactlist'][1]['number'])
+//     await User.findOne({number : req.body['contactlist'][i]['number']}, function (err, res) {
+//       if(!err){
+//         if(res!=null){
+//           // console.log(res)
+//           // verifiedContacts.push(res)
+//           verifiedContacts.push({
+//             'name' : res['name'],
+//             'email' : res['email'],
+//             'number': res['number']
+
+//           }) 
+//         }
+//       }
+//       else{
+//         console.log("Error occured while getting contacts")
+//         result = false
+//       }
+//     }).exec()
+//   }
+//   // console.log(req.body)
+//   console.log("sjdf skjnvjosfov sfjv"+verifiedContacts[0]['name'])
+//   res.send(verifiedContacts)
+//   // return verifiedContacts;
+//   // console.log(req.body['contactlist'][0]['number'].replace(/\s/g, ''));
+//   // str = str.replace(' ', '');
+// })
 
 module.exports = router 

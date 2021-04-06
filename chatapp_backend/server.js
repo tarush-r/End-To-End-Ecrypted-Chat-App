@@ -57,15 +57,15 @@ const userMap = new Map();
 // });
 
 io.on('connection', (userSocket) => {
-  console.log(userSocket.handshake.query.chatID)
-  userSocket.join(userSocket.handshake.query.chatID)
+  console.log(userSocket.handshake.query.senderId)
+  userSocket.join(userSocket.handshake.query.senderId)
   userSocket.on("send_message",async (data) => {
     console.log("IT WORKS")
     console.log(data)
     const newChat = new Chat({
-        "to":data.receiverChatID,
-        "from":data.senderChatID,
-        "message":data.content
+        "to":data.receiverId,
+        "from":data.senderId,
+        "message":data.message
     })
      await newChat.save().then(res=> console.log(res)).catch(err => console.log(err))
 

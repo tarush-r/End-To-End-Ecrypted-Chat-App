@@ -1,11 +1,14 @@
 import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
+import 'package:chatapp_client/providers/chats_provider.dart';
+import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../helpers/sharedpreferences_helper.dart';
 import '../helpers/contacts_helper.dart';
 import 'contacts_screen.dart';
@@ -17,88 +20,102 @@ class ChatsListScreen extends StatefulWidget {
 
   @override
   _ChatsListScreenState createState() => _ChatsListScreenState();
-}   
+}
 
 class _ChatsListScreenState extends State<ChatsListScreen> {
-  List done = [];
-  Map unread = {};
-  
+  // List done = [];
+  // Map unread = {};
+
   List<ChatContactModel> chatContacts = [];
   // final List<Widget> selectedScreen = []
   String token;
-  _getChats() async {
-    token = await SharedPreferencesHelper.getToken();
-    print("TOKEN@@@@@@@@@@@@@@@@@@@@@@@@@@@: "+token);
-    var response = await ChatApi.getAllChats(token);
-   // print(response['chats'].length);
-    var user = await SharedPreferencesHelper.getUser();
-    for(int i =0; i<response['chats'].length ;i++){
-      // print(user);
-      if(response['chats'][i]['from']['name']==user['name']){
-        if(done.contains(response['chats'][i]['to']['_id'])){
-          print('if if');
-          // if(response['chats'][i]['seen']==false){
-          //   unread[response['chats'][i]['to']['_id']] = unread[response['chats'][i]['to']['_id']] +1;
-          // }
-          continue;
-        }
-        else{
-          print('if else');
-          done.add(response['chats'][i]['to']['_id']);
-          print(response['chats'][i]['sentAt']);
-          chatContacts.add(ChatContactModel(name: response['chats'][i]['to']['name'], recentMessage: response['chats'][i]['message'], notificationCount: 0, recentMessageTime: response['chats'][i]['sentAt'], publicKey: response['chats'][i]['to']['publicKey'], seen: response['chats'][i]['seen'], email: response['chats'][i]['to']['email'], profilePic: response['chats'][i]['to']['profile_pic']));
-          // if(response['chats'][i]['seen']==false){
-          //   unread[response['chats'][i]['to']['_id']] = 1;
-          // }
-          // response['chats'][i].firstWhere((chat)=>chat['to']['id']==);
-        }
-      }
-      else{
-        if(done.contains(response['chats'][i]['from']['_id'])){
-          print('else if '+i.toString());
-          if(response['chats'][i]['seen']==false){
-            unread[response['chats'][i]['from']['_id']] = unread[response['chats'][i]['from']['_id']] +1;
-          }
-          continue;
-        }
-        else{
-          // print(response['chats'][i]['from']['_id']);
-          done.add(response['chats'][i]['from']['_id']);
-          print(response['chats'][i]['sentAt']);
-          if(response['chats'][i]['seen']==false){
-            unread[response['chats'][i]['from']['_id']] = 1;
-          }
-          chatContacts.add(ChatContactModel(name: response['chats'][i]['from']['name'], recentMessage: response['chats'][i]['message'], notificationCount: 0, recentMessageTime: response['chats'][i]['sentAt'], publicKey: response['chats'][i]['from']['publicKey'], seen: response['chats'][i]['seen'], email: response['chats'][i]['from']['email'], profilePic: response['chats'][i]['from']['profile_pic']));
-          // response['chats'][i].firstWhere((chat)=>chat['to']['id']==);
-        }
-      }
-     
-    }
-    print(done);
-    print(unread);
-    for(int i =0;i<chatContacts.length;i++){
-      print(i);
-      print(chatContacts[i].profilePic);
-    }
-    for(int i =0;i<done.length;i++){
-      if(unread[done[i]]==null){
-        print('returned');
-        continue;
-      }
-      chatContacts[i].notificationCount=unread[done[i]];
-    }
-    setState(() {
-      
-    });
-    // chatContacts.add(ChatContactModel());
+  bool _isInit = true;
 
+  _getChats() async {
+    Future.delayed(Duration.zero)
+        .then((value) => {Provider.of<ChatsProvider>(context).getAllChats()});
+    // chatContacts = await  Provider.of<ChatsProvider>(context).allChats;
+    print(chatContacts);
+    //   token = await SharedPreferencesHelper.getToken();
+    //   print("TOKEN@@@@@@@@@@@@@@@@@@@@@@@@@@@: "+token);
+    //   var response = await ChatApi.getAllChats(token);
+    //  // print(response['chats'].length);
+    //   var user = await SharedPreferencesHelper.getUser();
+    //   for(int i =0; i<response['chats'].length ;i++){
+    //     // print(user);
+    //     if(response['chats'][i]['from']['name']==user['name']){
+    //       if(done.contains(response['chats'][i]['to']['_id'])){
+    //         print('if if');
+    //         // if(response['chats'][i]['seen']==false){
+    //         //   unread[response['chats'][i]['to']['_id']] = unread[response['chats'][i]['to']['_id']] +1;
+    //         // }
+    //         continue;
+    //       }
+    //       else{
+    //         print('if else');
+    //         done.add(response['chats'][i]['to']['_id']);
+    //         print(response['chats'][i]['sentAt']);
+    //         chatContacts.add(ChatContactModel(name: response['chats'][i]['to']['name'], recentMessage: response['chats'][i]['message'], notificationCount: 0, recentMessageTime: response['chats'][i]['sentAt'], publicKey: response['chats'][i]['to']['publicKey'], seen: response['chats'][i]['seen'], email: response['chats'][i]['to']['email'], profilePic: response['chats'][i]['to']['profile_pic']));
+    //         // if(response['chats'][i]['seen']==false){
+    //         //   unread[response['chats'][i]['to']['_id']] = 1;
+    //         // }
+    //         // response['chats'][i].firstWhere((chat)=>chat['to']['id']==);
+    //       }
+    //     }
+    //     else{
+    //       if(done.contains(response['chats'][i]['from']['_id'])){
+    //         print('else if '+i.toString());
+    //         if(response['chats'][i]['seen']==false){
+    //           unread[response['chats'][i]['from']['_id']] = unread[response['chats'][i]['from']['_id']] +1;
+    //         }
+    //         continue;
+    //       }
+    //       else{
+    //         // print(response['chats'][i]['from']['_id']);
+    //         done.add(response['chats'][i]['from']['_id']);
+    //         print(response['chats'][i]['sentAt']);
+    //         if(response['chats'][i]['seen']==false){
+    //           unread[response['chats'][i]['from']['_id']] = 1;
+    //         }
+    //         chatContacts.add(ChatContactModel(name: response['chats'][i]['from']['name'], recentMessage: response['chats'][i]['message'], notificationCount: 0, recentMessageTime: response['chats'][i]['sentAt'], publicKey: response['chats'][i]['from']['publicKey'], seen: response['chats'][i]['seen'], email: response['chats'][i]['from']['email'], profilePic: response['chats'][i]['from']['profile_pic']));
+    //         // response['chats'][i].firstWhere((chat)=>chat['to']['id']==);
+    //       }
+    //     }
+
+    //   }
+    //   print(done);
+    //   print(unread);
+    //   for(int i =0;i<chatContacts.length;i++){
+    //     print(i);
+    //     print(chatContacts[i].profilePic);
+    //   }
+    //   for(int i =0;i<done.length;i++){
+    //     if(unread[done[i]]==null){
+    //       print('returned');
+    //       continue;
+    //     }
+    //     chatContacts[i].notificationCount=unread[done[i]];
+    //   }
+    setState(() {});
+    // chatContacts.add(ChatContactModel());
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      // _getChats();
+      Provider.of<ChatsProvider>(context).getAllChats();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
   void initState() {
     super.initState();
-    _getChats();
-    //api call        
+    // _getChats();
+    //api call
     // chatContacts.add(ChatContactModel(
     //     name: "Rahil",
     //     number: "8293627343",
@@ -139,19 +156,26 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   }
 
   _getMinutes(minutes) {
-    List min = ['00', '01', '03', '04', '05', '06', '07', '08', '09']; 
-    if(minutes>9){
+    List min = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09'];
+    if (minutes > 9) {
       return minutes.toString();
-    }
-    else{
+    } else {
       return min[minutes].toString();
     }
   }
 
-  _chatContactContainer(chatContact) {
+  _chatContactContainer(ChatContactModel chatContact) {
     return RawMaterialButton(
-      onPressed: () {
-        Navigator.pushNamed(context, ChatScreen.routeName);
+      onPressed: () async {
+        print(chatContact.id);
+        Provider.of<UserProvider>(context, listen: false).initSelectedUser(chatContact);
+        Navigator.pushNamed(
+          context,
+          ChatScreen.routeName,
+          arguments: <String, String>{
+            'id': chatContact.id,
+          },
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -228,7 +252,13 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                     Container(
                       child: Center(
                         child: Text(
-                          DateTime.parse(chatContact.recentMessageTime).hour.toString()+":"+_getMinutes(DateTime.parse(chatContact.recentMessageTime).minute),
+                          DateTime.parse(chatContact.recentMessageTime)
+                                  .hour
+                                  .toString() +
+                              ":" +
+                              _getMinutes(
+                                  DateTime.parse(chatContact.recentMessageTime)
+                                      .minute),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: ColorThemes.secondary, fontSize: 12),
@@ -320,6 +350,9 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // chatContacts = Provider.of<ChatsProvider>(context).allChats;
+    // print("PRINTING CHAT CONTSACTS");
+    // print(chatContacts);
     return Scaffold(
       // appBar: AppBar(
       //   actions: [
@@ -342,14 +375,18 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                   onTap: () {
                     FocusHandler.unfocus(context);
                   },
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    child: ListView.builder(
-                      itemCount: chatContacts.length,
-                      itemBuilder: (context, index) {
-                        return _chatContactContainer(chatContacts[index]);
-                      },
+                  child: Consumer<ChatsProvider>(
+                    builder: (ctx, chatsProvider, child) => Container(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: ListView.builder(
+                        itemCount: chatsProvider.allChatContacts.length,
+                        itemBuilder: (context, index) {
+                          return _chatContactContainer(
+                              chatsProvider.allChatContacts[index]);
+                        },
+                      ),
                     ),
+                    // child:
                   ),
                 ),
               ],

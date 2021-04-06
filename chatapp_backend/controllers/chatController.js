@@ -15,7 +15,7 @@ router.get('/getAllChats', login_required,async (req, res) => {
    Chat.find({$or:[{from:req.user._id},{to:req.user._id}]})
    .populate("from","_id name email publicKey profile_pic")
    .populate("to","_id name email publicKey profile_pic")
-   .sort('-sentAt')
+  //  .sort('-sentAt')
    .then((chats)=>{
       console.log(chats)
        res.send({chats})  

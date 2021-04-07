@@ -23,7 +23,7 @@ class ChatsProvider with ChangeNotifier {
     _allChats = trueRes['chats'];
     response['chats'] = trueRes['chats'].reversed.toList();
     print(response['chats'].length);
-    
+
     var user = await SharedPreferencesHelper.getUser();
     // tempChatContacts = ;
     for (int i = 0; i < response['chats'].length; i++) {
@@ -141,7 +141,7 @@ class ChatsProvider with ChangeNotifier {
     return temp;
   }
 
-  void addChat(String message, Map user, ChatContactModel selectedUser) {
+  void addChat(String message, Map user, var selectedUser) {
     print(message);
     print(user);
     print(selectedUser);
@@ -175,7 +175,7 @@ class ChatsProvider with ChangeNotifier {
 
     _allChats.add(chatMap);
     _selectedChats.add(newSelectedChat);
-    updateAllChatContacts(selectedUser.id, message);
+    updateAllChatContacts(selectedUser.id, message, selectedUser);
     print(chatMap);
     // _allChats.add()
 
@@ -183,17 +183,34 @@ class ChatsProvider with ChangeNotifier {
     print("LISTENERS NOTIFIED");
   }
 
-  void updateAllChatContacts(String id, String message){
+  void updateAllChatContacts(String id, String message, selectedUser) {
     print(_allChatContacts);
-    ChatContactModel chatContact = _allChatContacts.firstWhere((chatContact) => chatContact.id ==id);
-    _allChatContacts.removeWhere((chatContact) => chatContact.id==id);
-    chatContact.recentMessage = message;
-    chatContact.recentMessageTime = DateTime.now().toString();
-    chatContact.seen = false;
-    chatContact.notificationCount = 0;
-    _allChatContacts.insert(0, chatContact);
-    print(_allChatContacts);
+    ChatContactModel chatContact = _allChatContacts
+        .firstWhere((chatContact) => chatContact.id == id, orElse: () => null);
+    if (chatContact != null) {
+      _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
+      chatContact.recentMessage = message;
+      chatContact.recentMessageTime = DateTime.now().toString();
+      chatContact.seen = false;
+      chatContact.notificationCount = 0;
+      _allChatContacts.insert(0, chatContact);
+    }
+    else{
+      ChatContactModel freshChatContact = ChatContactModel(
+        id: id,
+        email: selectedUser.email,
+        name: selectedUser.name,
+        notificationCount: 0,
+        profilePic: selectedUser.profilePic,
+        publicKey: selectedUser.publicKey,
+        seen: false,
+        recentMessage: message,
+        recentMessageTime: DateTime.now().toString());
+        _allChatContacts.insert(0, freshChatContact);
+    }
+    
 
+    print(_allChatContacts);
   }
 
   void logout() {
@@ -201,5 +218,4 @@ class ChatsProvider with ChangeNotifier {
     _allChats = [];
     _selectedChats = [];
   }
-
 }

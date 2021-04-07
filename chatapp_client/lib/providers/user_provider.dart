@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class UserProvider with ChangeNotifier{
 
   Map _user;  
-  ChatContactModel _selectedUser;
+  var _selectedUser;
 
   void initUser(user) {
     _user = user;
@@ -25,8 +25,8 @@ class UserProvider with ChangeNotifier{
     return temp;
   }
 
-  ChatContactModel get selectedUser {
-    ChatContactModel temp;
+  get selectedUser {
+    var temp;
     temp = _selectedUser;
     return temp;
   }

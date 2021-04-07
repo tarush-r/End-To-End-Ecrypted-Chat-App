@@ -83,16 +83,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // print(contact.id);
-                    // Provider.of<UserProvider>(context, listen: false)
-                    //     .initSelectedUser(chatContact);
-                    // Navigator.pushNamed(
-                    //   context,
-                    //   ChatScreen.routeName,
-                    //   arguments: <String, String>{
-                    //     'id': chatContact.id,
-                    //   },
-                    // );
+                    print(contact.id);
+                    Provider.of<UserProvider>(context, listen: false)
+                        .initSelectedUser(contact);
+                    Navigator.pushNamed(
+                      context,
+                      ChatScreen.routeName,
+                      arguments: <String, String>{
+                        'id': contact.id,
+                      },
+                    );
                   },
                   child: Icon(Icons.add),
                 )

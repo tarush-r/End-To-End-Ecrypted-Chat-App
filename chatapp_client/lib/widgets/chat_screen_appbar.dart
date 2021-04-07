@@ -14,7 +14,7 @@ class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _ChatAppBarState extends State<ChatAppBar> {
 
-  ChatContactModel selectedUser;
+  var selectedUser;
 
   // double hheight = 50;
   @override

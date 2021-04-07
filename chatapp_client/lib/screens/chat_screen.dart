@@ -28,7 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // SocketIOManager _manager;
 
   String selectedUserId;
-  ChatContactModel selectedUser;
+  var selectedUser;
   SocketIO socketIO;
   bool _isLoading;
   TextEditingController messageController = new TextEditingController();
@@ -483,6 +483,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     if (messageController.text.isEmpty) {
                       return;
                     }
+                    print(selectedUserId);
                     sendMessage(
                         messageController.text, selectedUserId, user['_id']);
                     Provider.of<ChatsProvider>(context, listen: false)

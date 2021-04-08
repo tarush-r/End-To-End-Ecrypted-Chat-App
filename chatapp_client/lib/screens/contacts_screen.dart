@@ -38,7 +38,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       // print(element is Map);
       contacts.add(ContactModel.fromJson(element));
     });
-    print(contacts[0].name);
+    //print(contacts[0].name);
     setState(() {
       _isLoading = false;
     });

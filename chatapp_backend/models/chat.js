@@ -15,6 +15,14 @@ const chatSchema = new mongoose.Schema({
       type: String,
       required: true,
    },
+   isImage:{
+      type:Boolean,
+      default:false,
+   },
+   isLocation:{
+      type:Boolean,
+      default:false,
+   },
    sentAt: {
       type: Date,
       default: Date.now

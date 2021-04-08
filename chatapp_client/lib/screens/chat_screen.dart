@@ -1,3 +1,4 @@
+import 'package:chatapp_client/api/settings_api.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
@@ -6,11 +7,16 @@ import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:chatapp_client/utils/urls.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../widgets/chat_screen_appbar.dart';
 import 'dart:convert';
+import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
 // import 'package:provider/provider.dart';
@@ -39,15 +45,24 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController textController;
   ScrollController scrollController;
   List<ChatModel> chats = [];
-  var user;
-  _getUser() async {
-    // user = await SharedPreferencesHelper.getUser();
-    // print(user['_id']);
+  String token;
 
-    // setState(() {
-    //   _isLoading = false;
-    //   print("scrolling");
-    // });
+  var user;
+  void _getUser() async {
+    _isLoading = true;
+    user = await SharedPreferencesHelper.getUser();
+    print('&&&&&&&&&');
+    print(user);
+    print('&&&&&&&&&');
+    token = await SharedPreferencesHelper.getToken();
+    print('&&&&&&&&&');
+    print(token);
+    print('&&&&&&&&&');
+
+    setState(() {
+      _isLoading = false;
+    });
+    print(user['profile_pic']);
   }
 
   void sendMessage(String message, String receiverId, String senderId) async {
@@ -65,10 +80,51 @@ class _ChatScreenState extends State<ChatScreen> {
     // notifyListeners();
   }
 
+  _pickImage() async {
+    print("HEY");
+    final _storage = FirebaseStorage.instance;
+
+    final _picker = ImagePicker();
+    PickedFile image;
+
+    var permissionStatus;
+    await Permission.photos.request();
+    permissionStatus = await Permission.photos.status;
+    // if(permissionStatus.isGranted) {
+    //   print("permission granted");
+    // }
+    image = await _picker.getImage(source: ImageSource.gallery);
+    var file = File(image.path);
+    String imageName = image.path.split('/')[image.path.split('/').length - 1];
+
+    if (image != null) {
+      var snapshot = await _storage
+          .ref()
+          .child('profilePhotos/${imageName}')
+          .putFile(file)
+          .whenComplete(() {
+        // print(snapshot);
+      });
+      String url = await snapshot.ref.getDownloadURL();
+      var res = await SettingsApi.updateProfilePhoto(url, token);
+      print("!!!!!!!!!!!!!!");
+      // print(json.decode(res)["user"]);
+      setState(() {
+        SharedPreferencesHelper.persistOnLogin(
+            json.encode(json.decode(res.body)['user']), json.encode(token));
+        _getUser();
+        // Navigator.of(context).pop();
+      });
+      print(url);
+    } else {
+      print("no image selected");
+    }
+  }
+
   @override
   void initState() {
     _getUser();
-
+    Firebase.initializeApp();
     messages = [];
     // chats.add(ChatModel(
     //     to: "Rahil",
@@ -435,14 +491,27 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
-            child: Container(
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            ),
-          ),
+              flex: 2,
+              child: Container(
+                child: Row(children: <Widget>[
+                  new IconButton(
+                    iconSize: 18.0,
+                    icon: new Icon(Icons.attach_file),
+                    onPressed: () {
+                      _pickImage();
+                    },
+                    color: Colors.blueGrey,
+                  ),
+                  new IconButton(
+                    iconSize: 18.0,
+                    icon: new Icon(Icons.attach_file),
+                    onPressed: () {
+                      _pickImage();
+                    },
+                    color: Colors.blueGrey,
+                  ),
+                ]),
+              )),
           Expanded(
             flex: 10,
             child: TextFormField(
@@ -513,24 +582,13 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: ChatAppBar(
         height: MediaQuery.of(context).size.height * 0.7,
       ),
-      // AppBar(
-      //   title: Text("Chat Screen"),
-      // ),
       body: SingleChildScrollView(
-        // controller: _scrollController,
-        child:
-            //  _isLoading
-            //     ? CircularProgressIndicator()
-            // :
-            ConstrainedBox(
+        child: ConstrainedBox(
           constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height - 80),
           child: Padding(
             padding: EdgeInsets.all(10),
             child: Container(
-              // height: MediaQuery.of(context).size.height,
-              // width: MediaQuery.of(context).size.width,
-
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

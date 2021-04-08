@@ -58,8 +58,8 @@ class ChatsProvider with ChangeNotifier {
         if (done.contains(response['chats'][i]['from']['_id'])) {
           print('else if ' + i.toString());
           if (response['chats'][i]['seen'] == false) {
-            unread[response['chats'][i]['from']['_id']] =
-                unread[response['chats'][i]['from']['_id']] + 1;
+      //      unread[response['chats'][i]['from']['_id']] =
+          //      unread[response['chats'][i]['from']['_id']] + 1;
           }
           continue;
         } else {

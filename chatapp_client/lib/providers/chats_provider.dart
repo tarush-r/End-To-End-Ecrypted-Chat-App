@@ -220,6 +220,7 @@ class ChatsProvider with ChangeNotifier {
   }
 
   void initSocket(id) {
+    print(id);
     socketIO = SocketIOManager()
           .createSocketIO(Urls.baseUrl, '/', query: 'senderId=$id');
       socketIO.init();

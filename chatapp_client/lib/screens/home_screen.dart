@@ -28,7 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     Future.delayed(Duration.zero).then((value) {
       user = Provider.of<UserProvider>(context, listen: false).user;
-      Provider.of<ChatsProvider>(context, listen: false).initSocket(user['id']);
+      print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+            print(user['_id']);
+      Provider.of<ChatsProvider>(context, listen: false).initSocket(user['_id']);
     });
     super.initState();
   }

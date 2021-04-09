@@ -17,7 +17,7 @@ router.get('/getAllChats', login_required,async (req, res) => {
    .populate("to","_id name email publicKey profile_pic")
   //  .sort('-sentAt')
    .then((chats)=>{
-      console.log(chats)
+      // console.log(chats)
        res.send({chats})  
    }).catch(err=>{
        console.log(err)

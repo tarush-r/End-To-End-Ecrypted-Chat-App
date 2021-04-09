@@ -57,8 +57,9 @@ const userMap = new Map();
 // });
 
 io.on('connection', (userSocket) => {
-  console.log(userSocket.handshake.query.senderId)
+  console.log("CHECK-",userSocket.handshake.query.senderId)
   userSocket.join(userSocket.handshake.query.senderId)
+  // console.log(io.sockets.clients().length)
   userSocket.on("send_message",async (data) => {
     console.log("IT WORKS")
     console.log(data)
@@ -68,8 +69,10 @@ io.on('connection', (userSocket) => {
         "message":data.message
     })
      await newChat.save().then(res=> console.log(res)).catch(err => console.log(err))
-
-    userSocket.broadcast.emit("receive_message", data)
+    console.log("BROADCAST-"+data.receiverId)
+    userSocket.broadcast.to(data.receiverId).emit("receive_message", data)
+    //broadcast.to('ID')
+    //io.in(data.receiverId).emit('receive_message', data)
 })
 })
 

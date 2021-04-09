@@ -1,6 +1,9 @@
+import 'package:chatapp_client/providers/chats_provider.dart';
+import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/chatslist_screen.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'settings_screen.dart';
 import 'calls_screen.dart';
 
@@ -18,6 +21,17 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsScreen()
   ];
   int _navigationIndex = 1;
+
+  var user;
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero).then((value) {
+      user = Provider.of<UserProvider>(context, listen: false).user;
+      Provider.of<ChatsProvider>(context, listen: false).initSocket(user['id']);
+    });
+    super.initState();
+  }
 
   _navigate(index) {
     setState(() {

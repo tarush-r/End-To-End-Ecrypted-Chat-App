@@ -232,25 +232,26 @@ class _ChatScreenState extends State<ChatScreen> {
       Map arguments = ModalRoute.of(context).settings.arguments as Map;
       selectedUserId = arguments['id'];
       print(selectedUserId);
+      socketIO = Provider.of<ChatsProvider>(context, listen: false).socketIO;
       Provider.of<ChatsProvider>(context).initSelectedUserChats(selectedUserId);
       // Provider.of<UserProvider>(context).initSelectedUser(selectedUserId);
       user = Provider.of<UserProvider>(context).user;
       print("PRINTING USER");
       print(user['_id']);
-      socketIO = SocketIOManager()
-          .createSocketIO(Urls.baseUrl, '/', query: 'senderId=${user['_id']}');
-      socketIO.init();
+      // socketIO = SocketIOManager()
+      //     .createSocketIO(Urls.baseUrl, '/', query: 'senderId=${user['_id']}');
+      // socketIO.init();
 
-      socketIO.subscribe('receive_message', (jsonData) {
-        Map<String, dynamic> data = json.decode(jsonData);
-        print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
-        print(data);
-        // messages.add(Message(
-        //     data['content'], data['senderChatID'], data['receiverChatID']));
-        // notifyListeners();
-      });
-      print("SOCKET CONNECTED@@@@");
-      socketIO.connect();
+      // socketIO.subscribe('receive_message', (jsonData) {
+      //   Map<String, dynamic> data = json.decode(jsonData);
+      //   print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
+      //   print(data);
+      //   // messages.add(Message(
+      //   //     data['content'], data['senderChatID'], data['receiverChatID']));
+      //   // notifyListeners();
+      // });
+      // print("SOCKET CONNECTED@@@@");
+      // socketIO.connect();
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -502,14 +503,14 @@ class _ChatScreenState extends State<ChatScreen> {
                     },
                     color: Colors.blueGrey,
                   ),
-                  new IconButton(
-                    iconSize: 18.0,
-                    icon: new Icon(Icons.attach_file),
-                    onPressed: () {
-                      _pickImage();
-                    },
-                    color: Colors.blueGrey,
-                  ),
+                  // new IconButton(
+                  //   iconSize: 18.0,
+                  //   icon: new Icon(Icons.attach_file),
+                  //   onPressed: () {
+                  //     _pickImage();
+                  //   },
+                  //   color: Colors.blueGrey,
+                  // ),
                 ]),
               )),
           Expanded(

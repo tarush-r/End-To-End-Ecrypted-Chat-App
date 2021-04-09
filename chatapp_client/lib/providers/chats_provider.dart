@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
+import 'package:chatapp_client/utils/urls.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_socket_io/flutter_socket_io.dart';
+import 'package:flutter_socket_io/socket_io_manager.dart';
 import 'package:provider/provider.dart';
 
 class ChatsProvider with ChangeNotifier {
@@ -10,7 +15,8 @@ class ChatsProvider with ChangeNotifier {
   List _allChats;
 
   List<ChatModel> _selectedChats = [];
-
+  SocketIO socketIO;
+  
   Future<void> getAllChats() async {
     List done = [];
     Map unread = {};
@@ -211,6 +217,23 @@ class ChatsProvider with ChangeNotifier {
     
 
     print(_allChatContacts);
+  }
+
+  void initSocket(id) {
+    socketIO = SocketIOManager()
+          .createSocketIO(Urls.baseUrl, '/', query: 'senderId=$id');
+      socketIO.init();
+
+      socketIO.subscribe('receive_message', (jsonData) {
+        Map<String, dynamic> data = json.decode(jsonData);
+        print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
+        print(data);
+        // messages.add(Message(
+        //     data['content'], data['senderChatID'], data['receiverChatID']));
+        // notifyListeners();
+      });
+      print("SOCKET CONNECTED@@@@");
+      socketIO.connect();
   }
 
   void logout() {

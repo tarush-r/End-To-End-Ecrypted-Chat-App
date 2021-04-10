@@ -4,12 +4,13 @@ const app = express()
 const bodyParser = require('body-parser');
 const { options } = require('./app');
 const path = require('path')
-
+const cron = require('node-cron');
 const userController = require('./controllers/userController')
 const authController = require('./controllers/authController')
 const settingsController = require('./controllers/settingsController')
 const chatController = require('./controllers/chatController')
 const Chat = require("./models/chat");
+const Schedule = require("./models/schedule");
 const axios = require("axios");
 const port = 3000;
 
@@ -21,10 +22,30 @@ app.use(bodyParser.json());
 //   console.log(`Example app listening at http://localhost:${port}`)
 // })
 
-app.use('/user',userController)
-app.use('/auth',authController)
-app.use('/settings',settingsController)
-app.use('/chat',chatController)
+app.use('/user', userController)
+app.use('/auth', authController)
+app.use('/settings', settingsController)
+app.use('/chat', chatController)
+
+
+// Schedule tasks to be run on the server.
+cron.schedule('* * * * *', function () {
+  console.log('running a task every minute:',new Date().toISOString());
+  Schedule.find({ toSendAt: Date.now() })
+    .then(async (chats) => {
+      console.log(chats)
+      for (var i = 0; i < chats.length; i++) {
+        const newChat = new Chat({
+          "to": chats[i].to,
+          "from": chats[i].from,
+          "message": chats[i].message,
+        })
+        await newChat.save().then(res => console.log(res)).catch(err => console.log(err))
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+});
 
 //sockets
 // const socketio=require('socket.io')
@@ -57,23 +78,29 @@ const userMap = new Map();
 // });
 
 io.on('connection', (userSocket) => {
-  console.log("CHECK-",userSocket.handshake.query.senderId)
+  console.log("CHECK-", userSocket.handshake.query.senderId)
   userSocket.join(userSocket.handshake.query.senderId)
   // console.log(io.sockets.clients().length)
-  userSocket.on("send_message",async (data) => {
+  userSocket.on("send_message", async (data) => {
     console.log("IT WORKS")
     console.log(data)
     const newChat = new Chat({
-        "to":data.receiverId,
-        "from":data.senderId,
-        "message":data.message
+      "to": data.receiverId,
+      "from": data.senderId,
+      "message": data.message
     })
-     await newChat.save().then(res=> console.log(res)).catch(err => console.log(err))
-    console.log("BROADCAST-"+data.receiverId)
-    userSocket.broadcast.to(data.receiverId).emit("receive_message", data)
+    await newChat.save()
+      .then(res => {
+        console.log(res),
+        console.log("BROADCAST-" + data.receiverId)
+        userSocket.broadcast.to(data.receiverId).emit("receive_message", res)
+      })
+      .catch(
+        err => console.log(err)
+      )
     //broadcast.to('ID')
     //io.in(data.receiverId).emit('receive_message', data)
-})
+  })
 })
 
 

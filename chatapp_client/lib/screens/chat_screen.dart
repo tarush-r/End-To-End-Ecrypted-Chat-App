@@ -19,6 +19,7 @@ import 'dart:convert';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
+import '../widgets/chat_bubble.dart';
 // import 'package:provider/provider.dart';
 // import '../utlis/message_store.dart';
 // import 'package:adhara_socket_io/adhara_socket_io.dart';
@@ -121,6 +122,21 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+      print("hello");
+      _scrollController.jumpTo(
+        _scrollController.position.maxScrollExtent,
+        // duration: Duration(milliseconds: 600),
+        // curve: Curves.ease,
+      );
+      // _scrollController.jumpTo(2000);
+    }
+    });
+    
+  }
+
   @override
   void initState() {
     _getUser();
@@ -206,10 +222,17 @@ class _ChatScreenState extends State<ChatScreen> {
     //   );
     // });
     // // print(_scrollController.);
+    _scrollToBottom();
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   if (_scrollController.hasClients) {
     //     print("hello");
-    //     _scrollController.jumpTo(0);
+    //     _scrollToBottom();
+    //     // _scrollController.jumpTo(
+    //     //   _scrollController.position.maxScrollExtent,
+    //     //   // duration: Duration(milliseconds: 600),
+    //     //   // curve: Curves.ease,
+    //     // );
+    //     // _scrollController.jumpTo(2000);
     //   }
     // });
 
@@ -459,8 +482,12 @@ class _ChatScreenState extends State<ChatScreen> {
             controller: _scrollController,
             itemCount: chats.length,
             itemBuilder: (context, index) {
-              return _chatBubble(
-                  chats[index], chats[index].from == user['_id']);
+              return ChatBubble(
+                isMe: chats[index].from == user['_id'],
+                chat: chats[index],
+              );
+              // _chatBubble(
+              //     chats[index], chats[index].from == user['_id']);
             },
           )
           // child: ListView(
@@ -474,18 +501,6 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  _sendMessage(message) {
-    socketIO.sendMessage(
-        'single_chat_message',
-        json.encode({
-          "to": "Rahil",
-          "from": "Tarush",
-          "message": message,
-          "seen": false,
-          "time": DateTime.now().toString()
-        }));
-  }
-
   _inputMessage() {
     return Container(
       // color: Colors.red,
@@ -495,13 +510,13 @@ class _ChatScreenState extends State<ChatScreen> {
               flex: 2,
               child: Container(
                 child: Row(children: <Widget>[
-                  new IconButton(
-                    iconSize: 18.0,
-                    icon: new Icon(Icons.attach_file),
+                  IconButton(
+                    // iconSize: 18.0,
+                    icon: Icon(Icons.add),
                     onPressed: () {
                       _pickImage();
                     },
-                    color: Colors.blueGrey,
+                    color: Colors.white,
                   ),
                   // new IconButton(
                   //   iconSize: 18.0,
@@ -559,6 +574,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Provider.of<ChatsProvider>(context, listen: false)
                         .addChat(messageController.text, user, selectedUser);
                     messageController.clear();
+                    _scrollToBottom();
                   },
                   icon: Icon(Icons.send),
                   // icon: Icons.send,

@@ -148,6 +148,8 @@ class ChatsProvider with ChangeNotifier {
   }
 
   void addChat(String message, Map user, var selectedUser) {
+   
+    // print(NavigatorState._history);
     print(message);
     print(user);
     print(selectedUser);
@@ -229,6 +231,7 @@ class ChatsProvider with ChangeNotifier {
         Map<String, dynamic> data = json.decode(jsonData);
         print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
         print(data);
+        addChat(data['message'], data['from'], data['to']);
         // messages.add(Message(
         //     data['content'], data['senderChatID'], data['receiverChatID']));
         // notifyListeners();

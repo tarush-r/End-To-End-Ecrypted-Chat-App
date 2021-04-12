@@ -4,6 +4,7 @@ import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
+import 'package:chatapp_client/utils/context_util.dart';
 import 'package:chatapp_client/utils/urls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
@@ -16,7 +17,7 @@ class ChatsProvider with ChangeNotifier {
 
   List<ChatModel> _selectedChats = [];
   SocketIO socketIO;
-  
+
   Future<void> getAllChats() async {
     List done = [];
     Map unread = {};
@@ -64,8 +65,8 @@ class ChatsProvider with ChangeNotifier {
         if (done.contains(response['chats'][i]['from']['_id'])) {
           print('else if ' + i.toString());
           if (response['chats'][i]['seen'] == false) {
-      //      unread[response['chats'][i]['from']['_id']] =
-          //      unread[response['chats'][i]['from']['_id']] + 1;
+            //      unread[response['chats'][i]['from']['_id']] =
+            //      unread[response['chats'][i]['from']['_id']] + 1;
           }
           continue;
         } else {
@@ -147,32 +148,56 @@ class ChatsProvider with ChangeNotifier {
     return temp;
   }
 
-  void addChat(String message, Map user, var selectedUser) {
-   
+  void addChat(String message, Map user, var selectedUser, bool isReceived) {
+    Map chatMap;
     // print(NavigatorState._history);
+    print("received heree_----------------------------------");
     print(message);
     print(user);
     print(selectedUser);
-    Map chatMap = {
-      '_id': 'idfromnode',
-      'seen': false,
-      'from': {
-        'profile_pic': user['profile_pic'],
-        '_id': user['_id'],
-        'name': user['name'],
-        'email': user['email'],
-        'publicKey': user['publicKey']
-      },
-      'to': {
-        'profile_pic': selectedUser.profilePic,
-        '_id': selectedUser.id,
-        'name': selectedUser.name,
-        'email': selectedUser.email,
-        'publicKey': selectedUser.publicKey
-      },
-      'sentAt': DateTime.now(),
-      'message': message
-    };
+    if (isReceived) {
+      chatMap = {
+        '_id': 'idfromnode',
+        'seen': false,
+        'from': {
+          'profile_pic': user['profile_pic'],
+          '_id': user['_id'],
+          'name': user['name'],
+          'email': user['email'],
+          'publicKey': user['publicKey']
+        },
+        'to': {
+          'profile_pic': selectedUser['profilePic'],
+          '_id': selectedUser['id'],
+          'name': selectedUser['name'],
+          'email': selectedUser['email'],
+          'publicKey': selectedUser['publicKey']
+        },
+        'sentAt': DateTime.now(),
+        'message': message
+      };
+    } else {
+      chatMap = {
+        '_id': 'idfromnode',
+        'seen': false,
+        'from': {
+          'profile_pic': user['profile_pic'],
+          '_id': user['_id'],
+          'name': user['name'],
+          'email': user['email'],
+          'publicKey': user['publicKey']
+        },
+        'to': {
+          'profile_pic': selectedUser.profilePic,
+          '_id': selectedUser.id,
+          'name': selectedUser.name,
+          'email': selectedUser.email,
+          'publicKey': selectedUser.publicKey
+        },
+        'sentAt': DateTime.now(),
+        'message': message
+      };
+    }
 
     ChatModel newSelectedChat = ChatModel(
         to: chatMap['to']['_id'],
@@ -183,7 +208,14 @@ class ChatsProvider with ChangeNotifier {
 
     _allChats.add(chatMap);
     _selectedChats.add(newSelectedChat);
-    updateAllChatContacts(selectedUser.id, message, selectedUser);
+    print("ADDED");
+    if (isReceived) {
+      print(user['_id']);
+      updateAllChatContacts(user['_id'], message, selectedUser, user, true);
+    } else {
+      updateAllChatContacts(
+          selectedUser.id, message, selectedUser, user, false);
+    }
     print(chatMap);
     // _allChats.add()
 
@@ -191,32 +223,60 @@ class ChatsProvider with ChangeNotifier {
     print("LISTENERS NOTIFIED");
   }
 
-  void updateAllChatContacts(String id, String message, selectedUser) {
+  void updateAllChatContacts(
+      String id, String message, selectedUser, Map user, bool isReceived) {
+    ChatContactModel freshChatContact;
+    print("inside chat contacts" + id);
     print(_allChatContacts);
     ChatContactModel chatContact = _allChatContacts
         .firstWhere((chatContact) => chatContact.id == id, orElse: () => null);
     if (chatContact != null) {
-      _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
-      chatContact.recentMessage = message;
-      chatContact.recentMessageTime = DateTime.now().toString();
-      chatContact.seen = false;
-      chatContact.notificationCount = 0;
-      _allChatContacts.insert(0, chatContact);
+      if (ContextUtil.buildContext.last != null) {
+        print("buildcontext is not null");
+        _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
+
+        chatContact.recentMessage = message;
+        chatContact.recentMessageTime = DateTime.now().toString();
+        chatContact.seen = true;
+        chatContact.notificationCount = 0;
+        _allChatContacts.insert(0, chatContact);
+      } else {
+        print("buildcontext is null");
+        _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
+
+        chatContact.recentMessage = message;
+        chatContact.recentMessageTime = DateTime.now().toString();
+        chatContact.seen = false;
+        chatContact.notificationCount = chatContact.notificationCount + 1;
+        _allChatContacts.insert(0, chatContact);
+      }
+    } else {
+      if (isReceived) {
+        print("is received chat contact");
+        freshChatContact = ChatContactModel(
+            id: id,
+            email: user['email'],
+            name: user['name'],
+            notificationCount: 1,
+            profilePic: user['profile_pic'],
+            publicKey: user['publicKey'],
+            seen: false,
+            recentMessage: message,
+            recentMessageTime: DateTime.now().toString());
+      } else {
+        freshChatContact = ChatContactModel(
+            id: id,
+            email: selectedUser.email,
+            name: selectedUser.name,
+            notificationCount: 0,
+            profilePic: selectedUser.profilePic,
+            publicKey: selectedUser.publicKey,
+            seen: false,
+            recentMessage: message,
+            recentMessageTime: DateTime.now().toString());
+      }
+      _allChatContacts.insert(0, freshChatContact);
     }
-    else{
-      ChatContactModel freshChatContact = ChatContactModel(
-        id: id,
-        email: selectedUser.email,
-        name: selectedUser.name,
-        notificationCount: 0,
-        profilePic: selectedUser.profilePic,
-        publicKey: selectedUser.publicKey,
-        seen: false,
-        recentMessage: message,
-        recentMessageTime: DateTime.now().toString());
-        _allChatContacts.insert(0, freshChatContact);
-    }
-    
 
     print(_allChatContacts);
   }
@@ -224,20 +284,23 @@ class ChatsProvider with ChangeNotifier {
   void initSocket(id) {
     print(id);
     socketIO = SocketIOManager()
-          .createSocketIO(Urls.baseUrl, '/', query: 'senderId=$id');
-      socketIO.init();
+        .createSocketIO(Urls.baseUrl, '/', query: 'senderId=$id');
+    socketIO.init();
 
-      socketIO.subscribe('receive_message', (jsonData) {
-        Map<String, dynamic> data = json.decode(jsonData);
-        print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
-        print(data);
-        addChat(data['message'], data['from'], data['to']);
-        // messages.add(Message(
-        //     data['content'], data['senderChatID'], data['receiverChatID']));
-        // notifyListeners();
-      });
-      print("SOCKET CONNECTED@@@@");
-      socketIO.connect();
+    socketIO.subscribe('receive_message', (jsonData) {
+      Map<String, dynamic> data = json.decode(jsonData);
+      print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
+      print(data);
+      print("-------------------");
+      // print(ContextUtil.buildContext.last);
+      addChat(data['message'], data['from'], data['to'], true);
+
+      // messages.add(Message(
+      //     data['content'], data['senderChatID'], data['receiverChatID']));
+      // notifyListeners();
+    });
+    print("SOCKET CONNECTED@@@@");
+    socketIO.connect();
   }
 
   void logout() {

@@ -1,5 +1,6 @@
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
+import 'package:chatapp_client/utils/context_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +53,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
                   padding: EdgeInsets.only(left: 10),
                   child: GestureDetector(
                     onTap: () {
+                      ContextUtil.buildContext.add(null);
                       Navigator.of(context).pop();
                     },
                     child: Icon(

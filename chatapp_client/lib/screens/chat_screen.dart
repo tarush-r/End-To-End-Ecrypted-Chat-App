@@ -5,6 +5,7 @@ import 'package:chatapp_client/models/chat_model.dart';
 import 'package:chatapp_client/providers/chats_provider.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
+import 'package:chatapp_client/utils/context_util.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:chatapp_client/utils/urls.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -572,7 +573,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     sendMessage(
                         messageController.text, selectedUserId, user['_id']);
                     Provider.of<ChatsProvider>(context, listen: false)
-                        .addChat(messageController.text, user, selectedUser);
+                        .addChat(messageController.text, user, selectedUser, false);
                     messageController.clear();
                     _scrollToBottom();
                   },
@@ -590,38 +591,46 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ContextUtil.buildContext.add(context);
     chats = Provider.of<ChatsProvider>(context).getSelectedChats;
     selectedUser = Provider.of<UserProvider>(context).selectedUser;
     // final store = Provider.of<MessageStore>(context, listen: false);
-    return Scaffold(
-      // appBar: Container(),
-      backgroundColor: Colors.black,
-      appBar: ChatAppBar(
-        height: MediaQuery.of(context).size.height * 0.7,
-      ),
-      body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height - 80),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: _messagesContainer(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      // color: Colors.grey[800],
-                      // padding: EdgeInsets.only(top:5),
-                      child: _inputMessage(),
+    return WillPopScope(
+      onWillPop: () async {
+        ContextUtil.buildContext.add(null);
+        print(ContextUtil.buildContext.last);
+        return true;
+      },
+          child: Scaffold(
+        // appBar: Container(),
+        backgroundColor: Colors.black,
+        appBar: ChatAppBar(
+          height: MediaQuery.of(context).size.height * 0.7,
+        ),
+        body: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height - 80),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: _messagesContainer(),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        // color: Colors.grey[800],
+                        // padding: EdgeInsets.only(top:5),
+                        child: _inputMessage(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -9,6 +9,7 @@ err =>{
     }
 })
 
-require('./user.model.js');
+require('./user.js');
 require('./chat.js')
 require('./schedule.js')
+require('./otp.js')

@@ -28,13 +28,19 @@ var userSchema = new mongoose.Schema({
   }],
  });
 
- var otpSchema = new mongoose.Schema({
-    email: {type : String , unique : true, required : true},
-    otp: {type : Number},
-    otp_check: {type : Boolean, required : true},
-    createdAt:{type : Number,expires: '600s', default: Date.now},
- });
+//  var otpSchema = new mongoose.Schema({
+//     email: {type : String , unique : true, required : true},
+//     otp: {type : Number},
+//     otp_check: {type : Boolean, required : true},
+//     createdAt:{type : Number,expires: '600s', default: Date.now},
+//  });
 
-mongoose.model("user", userSchema);
-mongoose.model("otp", otpSchema);
+// mongoose.model("user", userSchema);
+// mongoose.model("otp", otpSchema);
+
+const User = mongoose.model('User', userSchema)
+module.exports = User
+
+// const OTP = mongoose.model('OTP', otpSchema)
+// module.exports = OTP
 

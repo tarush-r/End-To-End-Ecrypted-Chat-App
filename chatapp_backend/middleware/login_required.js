@@ -1,7 +1,6 @@
 const jwt=require('jsonwebtoken')
-const User1=require('../models/user.model')
 const mongoose = require("mongoose");
-const User = mongoose.model('user');
+const User = require("../models/user");
 const {JWT_SECRET} = require('../config/key')
 
 const auth =async(req,res,next)=>{

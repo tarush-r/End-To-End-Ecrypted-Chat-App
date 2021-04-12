@@ -11,6 +11,7 @@ const settingsController = require('./controllers/settingsController')
 const chatController = require('./controllers/chatController')
 const Chat = require("./models/chat");
 const Schedule = require("./models/schedule");
+const User = require("./models/user");
 const axios = require("axios");
 const port = 3000;
 
@@ -30,7 +31,7 @@ app.use('/chat', chatController)
 
 // Schedule tasks to be run on the server.
 cron.schedule('* * * * *', function () {
-  console.log('running a task every minute:',new Date().toISOString());
+  console.log('running a task every minute:', new Date().toISOString());
   Schedule.find({ toSendAt: Date.now() })
     .then(async (chats) => {
       console.log(chats)
@@ -93,7 +94,18 @@ io.on('connection', (userSocket) => {
       .then(res => {
         console.log(res),
         console.log("BROADCAST-" + data.receiverId)
-        userSocket.broadcast.to(data.receiverId).emit("receive_message", res)
+        Chat.find({ $and: [{ to: res.to }, { from: res.from }] })
+        .populate("from", "_id name email publicKey profile_pic",User)
+        .populate("to", "_id name email publicKey profile_pic",User)
+        .sort('-sentAt')
+        .then((chats) => {
+          console.log("Chheck receive")
+          console.log(chats[0])
+          userSocket.broadcast.to(data.receiverId).emit("receive_message", chats[0])
+        }).catch(err => {
+          console.log(err)
+        })
+        
       })
       .catch(
         err => console.log(err)

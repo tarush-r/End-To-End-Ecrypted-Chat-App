@@ -3,8 +3,8 @@ var router = express.Router()
 const mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
 const login_required = require('../middleware/login_required')
-const User = mongoose.model('user');
-const OTP = mongoose.model('otp');
+const User = require("../models/user");
+const OTP = require("../models/otp");
 
 const { ggmail, ppassword } = require('../config/key')
 

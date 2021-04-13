@@ -254,7 +254,8 @@ class ChatsProvider with ChangeNotifier {
     ChatContactModel chatContact = _allChatContacts
         .firstWhere((chatContact) => chatContact.id == id, orElse: () => null);
     if (chatContact != null) {
-      if (ContextUtil.buildContext.last != null) {
+      print("CHAT CONTACT NOT NULL");
+      if (ContextUtil.buildContext.last != null && ContextUtil.selectedUserIds.last==selectedUser.id) {
         print("buildcontext is not null");
         _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
 
@@ -332,8 +333,10 @@ class ChatsProvider with ChangeNotifier {
       print("-------------------");
       // print(ContextUtil.buildContext.last);
       addChat(data['message'], data['from'], data['to'], true);
-      if(ContextUtil.buildContext.last!=null){
+      print("before function");
+      if(ContextUtil.buildContext.last!=null && ContextUtil.selectedUserIds.last==data['from']['_id']){
         //call read message
+        print("INSIDE@@@@@@@@@@@@@@");
         readMessage(data['to']['_id'],data['from']['_id']);
         setSeenTrue(data['from']['_id'], data['to']['_id']);
       }
@@ -344,7 +347,7 @@ class ChatsProvider with ChangeNotifier {
 
     socketIO.subscribe('read_message', (jsonData) {
       Map<String, dynamic> data = json.decode(jsonData);
-      setSeenTrue(data['from']['_id'], data['to']['_id']);
+      setSeenTrue(data['senderId'], data['receiverId']);
     });
     print("SOCKET CONNECTED@@@@");
     socketIO.connect();

@@ -6,6 +6,7 @@ import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
+import 'package:chatapp_client/utils/context_util.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -113,6 +114,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
   @override
   void initState() {
+    ContextUtil.buildContext.add(null);
     super.initState();
     // _getChats();
     //api call

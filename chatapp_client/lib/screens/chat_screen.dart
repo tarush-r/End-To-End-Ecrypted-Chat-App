@@ -63,8 +63,9 @@ class _ChatScreenState extends State<ChatScreen> {
     print(token);
     print('&&&&&&&&&');
     ChatApi.setSeenTrue(token, selectedUserId);
-    
+    ContextUtil.selectedUserIds.add(selectedUserId);
     _isLoading = false;
+    Provider.of<ChatsProvider>(context, listen: false).readMessage(user['_id'], selectedUserId);
     Provider.of<ChatsProvider>(context, listen: false).setSeenTrue(selectedUserId, user['_id']);
     // setState(() {
     //   _isLoading = false;

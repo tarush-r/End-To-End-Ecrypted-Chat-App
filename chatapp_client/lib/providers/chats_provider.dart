@@ -255,24 +255,39 @@ class ChatsProvider with ChangeNotifier {
         .firstWhere((chatContact) => chatContact.id == id, orElse: () => null);
     if (chatContact != null) {
       print("CHAT CONTACT NOT NULL");
-      if (ContextUtil.buildContext.last != null && ContextUtil.selectedUserIds.last==selectedUser.id) {
-        print("buildcontext is not null");
-        _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
 
-        chatContact.recentMessage = message;
-        chatContact.recentMessageTime = DateTime.now().toString();
-        chatContact.seen = true;
-        chatContact.notificationCount = 0;
-        _allChatContacts.insert(0, chatContact);
+      if (isReceived) {
+        if (ContextUtil.buildContext.last != null &&
+            ContextUtil.selectedUserIds.last == selectedUser['_id']) {
+          print("buildcontext is not null");
+          _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
+
+          chatContact.recentMessage = message;
+          chatContact.recentMessageTime = DateTime.now().toString();
+          chatContact.seen = true;
+          chatContact.notificationCount = 0;
+          _allChatContacts.insert(0, chatContact);
+        } else {
+          print("buildcontext is null");
+          _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
+
+          chatContact.recentMessage = message;
+          chatContact.recentMessageTime = DateTime.now().toString();
+          chatContact.seen = false;
+          chatContact.notificationCount = chatContact.notificationCount + 1;
+          _allChatContacts.insert(0, chatContact);
+        }
       } else {
-        print("buildcontext is null");
-        _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
+          print("buildcontext is null");
+          _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
 
-        chatContact.recentMessage = message;
-        chatContact.recentMessageTime = DateTime.now().toString();
-        chatContact.seen = false;
-        chatContact.notificationCount = chatContact.notificationCount + 1;
-        _allChatContacts.insert(0, chatContact);
+          chatContact.recentMessage = message;
+          chatContact.recentMessageTime = DateTime.now().toString();
+          chatContact.seen = false;
+          chatContact.notificationCount = 0;
+          _allChatContacts.insert(0, chatContact);
+        
+
       }
     } else {
       if (isReceived) {
@@ -334,10 +349,11 @@ class ChatsProvider with ChangeNotifier {
       // print(ContextUtil.buildContext.last);
       addChat(data['message'], data['from'], data['to'], true);
       print("before function");
-      if(ContextUtil.buildContext.last!=null && ContextUtil.selectedUserIds.last==data['from']['_id']){
+      if (ContextUtil.buildContext.last != null &&
+          ContextUtil.selectedUserIds.last == data['from']['_id']) {
         //call read message
         print("INSIDE@@@@@@@@@@@@@@");
-        readMessage(data['to']['_id'],data['from']['_id']);
+        readMessage(data['to']['_id'], data['from']['_id']);
         setSeenTrue(data['from']['_id'], data['to']['_id']);
       }
       // messages.add(Message(

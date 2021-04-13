@@ -53,7 +53,8 @@ cron.schedule('* * * * *', function () {
 
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
-const http = require('http')
+const http = require('http');
+const { error } = require('console');
 let ON_CONNECTION = "connection";
 let ON_DISCONNECT = "disconnect";
 
@@ -88,7 +89,8 @@ io.on('connection', (userSocket) => {
     const newChat = new Chat({
       "to": data.receiverId,
       "from": data.senderId,
-      "message": data.message
+      "message": data.message,
+
     })
     await newChat.save()
       .then(res => {
@@ -120,15 +122,14 @@ io.on('connection', (userSocket) => {
     Chat.updateMany({ $and: [{ to: data.receiverId }, { from: data.senderId }] },
       { seen: true }, function (err, doc) {
         if (err) {
-          console.log(err)
-          res.send(err)
+          console.log(error)
         }
         else {
           console.log(doc)
-          res.send(doc)
         }
       });
-      userSocket.broadcast.to(data.senderId).emit("read_message", chats[0])
+      console.log("broadcasting read message==",data)
+      userSocket.broadcast.to(data.senderId).emit("read_message", data)
   })
 })
 

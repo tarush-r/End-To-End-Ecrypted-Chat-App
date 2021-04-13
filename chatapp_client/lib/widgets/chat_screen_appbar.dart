@@ -54,6 +54,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
                   child: GestureDetector(
                     onTap: () {
                       ContextUtil.buildContext.add(null);
+                      ContextUtil.selectedUserIds.add(null);
                       Navigator.of(context).pop();
                     },
                     child: Icon(

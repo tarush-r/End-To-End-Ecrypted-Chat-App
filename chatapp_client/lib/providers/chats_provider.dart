@@ -156,7 +156,9 @@ class ChatsProvider with ChangeNotifier {
     print(user);
     print(selectedUser);
     if (isReceived) {
-      if (ContextUtil.buildContext.last != null) {
+      if (ContextUtil.buildContext.last != null &&
+          user['_id'] == ContextUtil.selectedUserIds.last) {
+        print("inside iff");
         chatMap = {
           '_id': 'idfromnode',
           'seen': true,
@@ -178,6 +180,7 @@ class ChatsProvider with ChangeNotifier {
           'message': message
         };
       } else {
+        print("inside else");
         chatMap = {
           '_id': 'idfromnode',
           'seen': false,
@@ -230,7 +233,15 @@ class ChatsProvider with ChangeNotifier {
         time: chatMap['sentAt']);
 
     _allChats.add(chatMap);
-    _selectedChats.add(newSelectedChat);
+    if (isReceived) {
+      if (ContextUtil.buildContext.last != null &&
+          user['_id'] == ContextUtil.selectedUserIds.last) {
+        _selectedChats.add(newSelectedChat);
+      }
+    }
+    else{
+       _selectedChats.add(newSelectedChat);
+    }
     print("ADDED");
     if (isReceived) {
       print(user['_id']);
@@ -269,6 +280,7 @@ class ChatsProvider with ChangeNotifier {
           _allChatContacts.insert(0, chatContact);
         } else {
           print("buildcontext is null");
+          print("notification increment");
           _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
 
           chatContact.recentMessage = message;
@@ -278,16 +290,14 @@ class ChatsProvider with ChangeNotifier {
           _allChatContacts.insert(0, chatContact);
         }
       } else {
-          print("buildcontext is null");
-          _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
+        print("buildcontext is null");
+        _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
 
-          chatContact.recentMessage = message;
-          chatContact.recentMessageTime = DateTime.now().toString();
-          chatContact.seen = false;
-          chatContact.notificationCount = 0;
-          _allChatContacts.insert(0, chatContact);
-        
-
+        chatContact.recentMessage = message;
+        chatContact.recentMessageTime = DateTime.now().toString();
+        chatContact.seen = false;
+        chatContact.notificationCount = 0;
+        _allChatContacts.insert(0, chatContact);
       }
     } else {
       if (isReceived) {
@@ -317,7 +327,7 @@ class ChatsProvider with ChangeNotifier {
       _allChatContacts.insert(0, freshChatContact);
     }
 
-    print(_allChatContacts);
+    print(_allChatContacts[0].notificationCount);
   }
 
   void readMessage(String receiverId, String senderId) async {
@@ -349,6 +359,8 @@ class ChatsProvider with ChangeNotifier {
       // print(ContextUtil.buildContext.last);
       addChat(data['message'], data['from'], data['to'], true);
       print("before function");
+      print(ContextUtil.buildContext.last != null);
+      print(ContextUtil.selectedUserIds.last == data['from']['_id']);
       if (ContextUtil.buildContext.last != null &&
           ContextUtil.selectedUserIds.last == data['from']['_id']) {
         //call read message

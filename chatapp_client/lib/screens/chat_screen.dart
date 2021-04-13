@@ -606,6 +606,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return WillPopScope(
       onWillPop: () async {
         ContextUtil.buildContext.add(null);
+        ContextUtil.selectedUserIds.add(null);
         print(ContextUtil.buildContext.last);
         return true;
       },

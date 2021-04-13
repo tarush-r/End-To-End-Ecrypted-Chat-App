@@ -103,7 +103,7 @@ io.on('connection', (userSocket) => {
         .then((chats) => {
           console.log("Chheck receive")
           console.log(chats[0])
-          userSocket.broadcast.to(data.receiverId).emit("receive_message", chats[0])
+          userSocket.to(data.receiverId).emit("receive_message", chats[0])
         }).catch(err => {
           console.log(err)
         })

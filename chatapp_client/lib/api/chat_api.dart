@@ -48,4 +48,27 @@ class ChatApi {
 
   }
 
+  static Future setSeenTrue(token, id) async {
+   
+    const url = Urls.baseUrl +"chat/setSeen/";
+    print(token);
+    print(url);
+    Map data = {
+      '_id': id, 
+    };
+    http.Response res = await http.post(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      }, 
+    );
+    print("====================");
+    print(json.decode(res.body));
+    print("====================");
+    return json.decode(res.body);
+
+  }
+
 }

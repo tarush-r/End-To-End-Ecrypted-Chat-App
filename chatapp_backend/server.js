@@ -113,6 +113,23 @@ io.on('connection', (userSocket) => {
     //broadcast.to('ID')
     //io.in(data.receiverId).emit('receive_message', data)
   })
+
+  userSocket.on('read_message', async (data) => {
+    console.log("inside on read message")
+    console.log(data)
+    Chat.updateMany({ $and: [{ to: data.receiverId }, { from: data.senderId }] },
+      { seen: true }, function (err, doc) {
+        if (err) {
+          console.log(err)
+          res.send(err)
+        }
+        else {
+          console.log(doc)
+          res.send(doc)
+        }
+      });
+      userSocket.broadcast.to(data.senderId).emit("read_message", chats[0])
+  })
 })
 
 

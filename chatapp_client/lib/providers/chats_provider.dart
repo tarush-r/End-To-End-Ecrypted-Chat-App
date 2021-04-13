@@ -65,8 +65,8 @@ class ChatsProvider with ChangeNotifier {
         if (done.contains(response['chats'][i]['from']['_id'])) {
           print('else if ' + i.toString());
           if (response['chats'][i]['seen'] == false) {
-            //      unread[response['chats'][i]['from']['_id']] =
-            //      unread[response['chats'][i]['from']['_id']] + 1;
+            unread[response['chats'][i]['from']['_id']] =
+                unread[response['chats'][i]['from']['_id']] + 1;
           }
           continue;
         } else {
@@ -156,26 +156,49 @@ class ChatsProvider with ChangeNotifier {
     print(user);
     print(selectedUser);
     if (isReceived) {
-      chatMap = {
-        '_id': 'idfromnode',
-        'seen': false,
-        'from': {
-          'profile_pic': user['profile_pic'],
-          '_id': user['_id'],
-          'name': user['name'],
-          'email': user['email'],
-          'publicKey': user['publicKey']
-        },
-        'to': {
-          'profile_pic': selectedUser['profilePic'],
-          '_id': selectedUser['id'],
-          'name': selectedUser['name'],
-          'email': selectedUser['email'],
-          'publicKey': selectedUser['publicKey']
-        },
-        'sentAt': DateTime.now(),
-        'message': message
-      };
+      if (ContextUtil.buildContext.last != null) {
+        chatMap = {
+          '_id': 'idfromnode',
+          'seen': true,
+          'from': {
+            'profile_pic': user['profile_pic'],
+            '_id': user['_id'],
+            'name': user['name'],
+            'email': user['email'],
+            'publicKey': user['publicKey']
+          },
+          'to': {
+            'profile_pic': selectedUser['profilePic'],
+            '_id': selectedUser['id'],
+            'name': selectedUser['name'],
+            'email': selectedUser['email'],
+            'publicKey': selectedUser['publicKey']
+          },
+          'sentAt': DateTime.now(),
+          'message': message
+        };
+      } else {
+        chatMap = {
+          '_id': 'idfromnode',
+          'seen': false,
+          'from': {
+            'profile_pic': user['profile_pic'],
+            '_id': user['_id'],
+            'name': user['name'],
+            'email': user['email'],
+            'publicKey': user['publicKey']
+          },
+          'to': {
+            'profile_pic': selectedUser['profilePic'],
+            '_id': selectedUser['id'],
+            'name': selectedUser['name'],
+            'email': selectedUser['email'],
+            'publicKey': selectedUser['publicKey']
+          },
+          'sentAt': DateTime.now(),
+          'message': message
+        };
+      }
     } else {
       chatMap = {
         '_id': 'idfromnode',
@@ -281,6 +304,21 @@ class ChatsProvider with ChangeNotifier {
     print(_allChatContacts);
   }
 
+  void readMessage(String receiverId, String senderId) async {
+    // messages.add(Message(text, currentUser.chatID, receiverChatID));
+    // print(message);
+    await socketIO.sendMessage(
+      'read_message',
+      json.encode({
+        'receiverId': receiverId,
+        'senderId': senderId,
+        // 'message': message,
+      }),
+    );
+    print("done");
+    // notifyListeners();
+  }
+
   void initSocket(id) {
     print(id);
     socketIO = SocketIOManager()
@@ -294,13 +332,43 @@ class ChatsProvider with ChangeNotifier {
       print("-------------------");
       // print(ContextUtil.buildContext.last);
       addChat(data['message'], data['from'], data['to'], true);
-
+      if(ContextUtil.buildContext.last!=null){
+        //call read message
+        readMessage(data['to']['_id'],data['from']['_id']);
+        setSeenTrue(data['from']['_id'], data['to']['_id']);
+      }
       // messages.add(Message(
       //     data['content'], data['senderChatID'], data['receiverChatID']));
       // notifyListeners();
     });
+
+    socketIO.subscribe('read_message', (jsonData) {
+      Map<String, dynamic> data = json.decode(jsonData);
+      setSeenTrue(data['from']['_id'], data['to']['_id']);
+    });
     print("SOCKET CONNECTED@@@@");
     socketIO.connect();
+  }
+
+  void setSeenTrue(String from, String to) {
+    _allChats.forEach((chat) {
+      if (chat['from']['_id'] == from && chat['to']['_id'] == to) {
+        chat['seen'] = true;
+      }
+    });
+
+    _allChatContacts.forEach((chatContact) {
+      if (chatContact.id == from) {
+        chatContact.notificationCount = 0;
+      }
+    });
+
+    _selectedChats.forEach((selectedChat) {
+      if (selectedChat.from == from) {
+        selectedChat.seen = true;
+      }
+    });
+    notifyListeners();
   }
 
   void logout() {

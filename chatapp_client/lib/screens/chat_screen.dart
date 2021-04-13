@@ -1,3 +1,4 @@
+import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/api/settings_api.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
@@ -57,13 +58,17 @@ class _ChatScreenState extends State<ChatScreen> {
     print(user);
     print('&&&&&&&&&');
     token = await SharedPreferencesHelper.getToken();
+
     print('&&&&&&&&&');
     print(token);
     print('&&&&&&&&&');
-
-    setState(() {
-      _isLoading = false;
-    });
+    ChatApi.setSeenTrue(token, selectedUserId);
+    
+    _isLoading = false;
+    Provider.of<ChatsProvider>(context, listen: false).setSeenTrue(selectedUserId, user['_id']);
+    // setState(() {
+    //   _isLoading = false;
+    // });
     print(user['profile_pic']);
   }
 
@@ -140,6 +145,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    
     _getUser();
     Firebase.initializeApp();
     messages = [];
@@ -256,6 +262,7 @@ class _ChatScreenState extends State<ChatScreen> {
       Map arguments = ModalRoute.of(context).settings.arguments as Map;
       selectedUserId = arguments['id'];
       print(selectedUserId);
+      
       socketIO = Provider.of<ChatsProvider>(context, listen: false).socketIO;
       Provider.of<ChatsProvider>(context).initSelectedUserChats(selectedUserId);
       // Provider.of<UserProvider>(context).initSelectedUser(selectedUserId);

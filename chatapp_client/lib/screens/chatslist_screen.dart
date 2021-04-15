@@ -5,9 +5,11 @@ import 'package:chatapp_client/providers/chats_provider.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
+import 'package:chatapp_client/screens/schedule_screen.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:chatapp_client/utils/context_util.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
+import 'package:chatapp_client/utils/show_message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../helpers/sharedpreferences_helper.dart';
@@ -26,7 +28,8 @@ class ChatsListScreen extends StatefulWidget {
 class _ChatsListScreenState extends State<ChatsListScreen> {
   // List done = [];
   // Map unread = {};
-
+  TextEditingController searchController = new TextEditingController();
+  String searchContact = "";
   List<ChatContactModel> chatContacts = [];
   // final List<Widget> selectedScreen = []
   String token;
@@ -167,10 +170,16 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   }
 
   _chatContactContainer(ChatContactModel chatContact) {
+    if (!chatContact.name
+        .toLowerCase()
+        .startsWith(searchContact.toLowerCase())) {
+      return Container();
+    }
     return RawMaterialButton(
       onPressed: () async {
         print(chatContact.id);
-        Provider.of<UserProvider>(context, listen: false).initSelectedUser(chatContact);
+        Provider.of<UserProvider>(context, listen: false)
+            .initSelectedUser(chatContact);
         Navigator.pushNamed(
           context,
           ChatScreen.routeName,
@@ -183,8 +192,26 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Dismissible(
           key: UniqueKey(),
-          direction: DismissDirection.endToStart,
-          background: Container(
+          // direction: DismissDirection.endToStart,
+          confirmDismiss: (direction) {
+            // setState(() {
+
+            //   });
+            if (DismissDirection.startToEnd == direction) {
+              ShowMessage.show("Schedule a message",
+                  "Schedule a message for ${chatContact.name}", () {
+                Navigator.pushNamed(context, ScheduleScreen.routeName);
+              }, context);
+              return Future.delayed(Duration.zero, () {
+                return false;
+              });
+            } else {
+              return ShowMessage.show("DELETE", "del", () {
+                
+              }, context);
+            }
+          },
+          secondaryBackground: Container(
             padding: EdgeInsets.all(10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -197,6 +224,20 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
             ),
             decoration: BoxDecoration(
                 color: Colors.red, borderRadius: BorderRadius.circular(20)),
+          ),
+          background: Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.alarm,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(20)),
           ),
           child: Container(
             // decoration: ShapeDecoration(
@@ -303,6 +344,13 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
         // color: Colors.red,
         // width: double.infinity,
         child: TextField(
+          controller: searchController,
+          onChanged: (value) {
+            searchContact = value;
+            setState(() {});
+            // print(searchController.text);
+          },
+          textInputAction: TextInputAction.search,
           decoration: new InputDecoration(
               border: new OutlineInputBorder(
                 borderRadius: BorderRadius.all(

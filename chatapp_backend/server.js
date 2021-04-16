@@ -37,12 +37,20 @@ cron.schedule('* * * * *', function () {
   // var ISTOffset = 330;   // IST offset UTC +5:30 
   // var t=new Date(currentTime.getTime() + (ISTOffset + currentOffset)*60000)
   // var t=new Date().toISOString()
-  var x= moment.tz(Date.now(), "Asia/Calcutta");
-  var t= x.format()
+  var dateTime= moment.tz(Date.now(), "Asia/Calcutta");
+  var t= dateTime.format()
   console.log("t=",t)
-  console.log('running a task every minute:', t.split("T")[0]);
-  console.log(x.format("HH:mm"))
-  Schedule.find({ toSendAt: Date.now() })
+  console.log('running a task every minute:', dateTime.format().split("T")[0]);
+  console.log(dateTime.format("HH:mm"))
+  // Schedule.find({})
+  // .then((chats) => {
+  //   console.log([chats[1]])
+  //   // res.send({ chats })
+  // }).catch(err => {
+  //   console.log(err)
+  // })
+
+  Schedule.find({ $and: [{ toSendAtDate: dateTime.format().split("T")[0] }, { toSendAtTime: dateTime.format("HH:mm") }] })
     .then(async (chats) => {
       console.log(chats)
       for (var i = 0; i < chats.length; i++) {
@@ -51,7 +59,12 @@ cron.schedule('* * * * *', function () {
           "from": chats[i].from,
           "message": chats[i].message,
         })
-        await newChat.save().then(res => console.log(res)).catch(err => console.log(err))
+        await newChat.save().then(res => 
+          console.log(res),
+          Schedule.deleteOne({ _id: chats[i]._id }, function (err) {
+            console.log(err)
+          })
+          ).catch(err => console.log(err))
       }
     }).catch(err => {
       console.log(err)

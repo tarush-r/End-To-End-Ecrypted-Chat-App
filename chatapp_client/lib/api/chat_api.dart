@@ -77,11 +77,12 @@ class ChatApi {
     print(token);
     print(url);
     print(message);
-    print(toSendAt);
+    print(toSendAt is String);
     Map data = {
       'to': id, 
       'message':message,
-      'toSendAt':toSendAt
+      'toSendAt':toSendAt.toString()
+
     };
     http.Response res = await http.post(
       url,

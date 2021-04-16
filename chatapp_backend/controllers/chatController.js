@@ -2,6 +2,7 @@ const express = require("express");
 var router = express.Router();
 const mongoose = require("mongoose");
 var nodemailer = require("nodemailer");
+const moment = require('moment-timezone');
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Chat = require('../models/chat');
@@ -114,11 +115,18 @@ router.post('/schedule', login_required, async (req, res) => {
   var to = mongoose.Types.ObjectId(req.body.to)
   var message = req.body.message
   var toSendAt=req.body.toSendAt
+  var dateTime= moment(toSendAt)
+  console.log(typeof(dateTime))
+  console.log(toSendAt)
+  var date=toSendAt.split(" ")[0]
+  var time=dateTime.format("HH:mm")
+  console.log(date)
   const newChat = new Schedule({
     from: from,
     to: to,
     message: message,
-    toSendAt:toSendAt
+    toSendAtDate:date,
+    toSendAtTime:time,
   })
   try {
     await newChat.save()

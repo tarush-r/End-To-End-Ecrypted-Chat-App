@@ -18,21 +18,16 @@ const scheduleSchema = new mongoose.Schema({
       type: String,
       required: true,
    },
-   isImage:{
-      type:Boolean,
-      default:false,
+   toSendAtDate: {
+      type: String,
    },
-   isLocation:{
-      type:Boolean,
-      default:false,
+   toSendAtTime: {
+      type: String,
    },
-   toSendAt: {
-      type: Date,
-   },
-   sentAt: {
-      type: Date,
-      default: dateIndia
-   },
+   // sentAt: {
+   //    type: Date,
+   //    default: dateIndia
+   // },
    seen:{
       type:Boolean,
       default:false,

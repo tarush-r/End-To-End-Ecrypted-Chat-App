@@ -32,7 +32,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
 
-  _resetPasswordSubmit() async {
+  _scheduleSubmit() async {
 
     Map arguments = ModalRoute.of(context).settings.arguments as Map;
     selectedUserId = arguments['id'];
@@ -43,7 +43,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       token,
       selectedUserId,
        textController.text.trim(),
-       "2021-04-16"
+       toSendAt
     );
   }
 
@@ -200,9 +200,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           print(selectedDate);
                           print("selected time");
                           print(selectedTime);
+                          toSendAt=new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+                          print(toSendAt.toString());
+                          var toSend=toSendAt.toString();
+                          print(toSend is String);
                           //  toSendAt=DateTime.of(selectedDate,selectedTime);
-                          _resetPasswordSubmit();
-                          Navigator.of(context).pop();
+                          _scheduleSubmit();
+                           Navigator.of(context).pop();
                         },
                         color: ColorThemes.primary,
                         child: Padding(

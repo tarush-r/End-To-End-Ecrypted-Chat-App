@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 var nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const Chat = require('../models/chat')
+const Chat = require('../models/chat');
+const Schedule = require('../models/schedule')
 const login_required = require('../middleware/login_required')
 const { ggmail, ppassword } = require('../config/key');
 var ObjectId = require('mongodb').ObjectID;
@@ -86,7 +87,6 @@ exports.chatpost = async (parameters) => {
 };
 
 router.post('/addChat', async (req, res) => {
-
   console.log("HEY=", (typeof (ObjectId(req.body.from))))
   var from = mongoose.Types.ObjectId(req.body.from)
   var to = mongoose.Types.ObjectId(req.body.to)
@@ -97,6 +97,28 @@ router.post('/addChat', async (req, res) => {
     from: from,
     to: to,
     message: message,
+  })
+  try {
+    await newChat.save()
+    res.send({ newChat })
+  } catch (error) {
+
+    res.send({ error })
+  }
+})
+
+
+router.post('/schedule', login_required, async (req, res) => {
+  console.log("HEY=", (typeof (ObjectId(req.body.to))))
+  var from = mongoose.Types.ObjectId(req.user._id)
+  var to = mongoose.Types.ObjectId(req.body.to)
+  var message = req.body.message
+  var toSendAt=req.body.toSendAt
+  const newChat = new Schedule({
+    from: from,
+    to: to,
+    message: message,
+    toSendAt:toSendAt
   })
   try {
     await newChat.save()

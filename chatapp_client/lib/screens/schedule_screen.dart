@@ -1,3 +1,5 @@
+import 'package:chatapp_client/api/chat_api.dart';
+import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:chatapp_client/widgets/heading_widget.dart';
@@ -13,6 +15,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   DateTime selectedDate;
   DateTime currentDate;
   TimeOfDay selectedTime;
+  DateTime toSendAt;
+  String selectedUserId;
+  var token;
+  TextEditingController textController = new TextEditingController();
 
   @override
   void initState() {
@@ -23,6 +29,22 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     // selectedTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 00, 00);
     selectedTime = TimeOfDay(hour: 0, minute: 0);
     super.initState();
+  }
+
+
+  _resetPasswordSubmit() async {
+
+    Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    selectedUserId = arguments['id'];
+    token = await SharedPreferencesHelper.getToken();
+    print("Selecteddddddddddddd");
+    print(token);
+    ChatApi.schedule(
+      token,
+      selectedUserId,
+       textController.text.trim(),
+       "2021-04-16"
+    );
   }
 
   Future<Null> _selectDate(BuildContext context) async {
@@ -153,7 +175,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       padding: EdgeInsets.fromLTRB(10, 30, 10, 10),
                       child: TextFormField(
                         keyboardType: TextInputType.multiline,
-
                         maxLines: null,
                         decoration: InputDecoration(
                           hintText: 'Enter your message',
@@ -162,15 +183,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               const Radius.circular(20.0),
                             ),
                           ),
-                          // enabledBorder: OutlineInputBorder(
-                          //     borderSide:
-                          //         BorderSide(color: Colors.black, width: 2.0)),
-                          // focusedBorder: OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.red, width: 2.0),
-                          // ),
                         ),
-
-                        // controller: emailController,
+                        validator: (val) =>
+                            val.isEmpty ? 'Enter a valid Email' : null,
+                        controller: textController,
                       ),
                     ),
                     SizedBox(
@@ -179,7 +195,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     SizedBox(
                       width: 150,
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          print("selected date");
+                          print(selectedDate);
+                          print("selected time");
+                          print(selectedTime);
+                          //  toSendAt=DateTime.of(selectedDate,selectedTime);
+                          _resetPasswordSubmit();
+                          Navigator.of(context).pop();
+                        },
                         color: ColorThemes.primary,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16),

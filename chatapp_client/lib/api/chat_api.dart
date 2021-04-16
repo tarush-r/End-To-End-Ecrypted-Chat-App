@@ -71,4 +71,31 @@ class ChatApi {
 
   }
 
+    static Future schedule(token, id, message, toSendAt) async {
+   
+    const url = Urls.baseUrl +"chat/schedule/";
+    print(token);
+    print(url);
+    print(message);
+    print(toSendAt);
+    Map data = {
+      'to': id, 
+      'message':message,
+      'toSendAt':toSendAt
+    };
+    http.Response res = await http.post(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      }, 
+    );
+    print("====================");
+    print(json.decode(res.body));
+    print("====================");
+    return json.decode(res.body);
+
+  }
+
 }

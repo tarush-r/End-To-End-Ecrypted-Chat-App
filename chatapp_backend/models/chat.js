@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema.Types
+const moment = require('moment-timezone');
+const dateIndia = moment.tz(Date.now(), "Asia/Calcutta");
+
 const chatSchema = new mongoose.Schema({
    from: {
       type: ObjectId,
@@ -25,7 +28,7 @@ const chatSchema = new mongoose.Schema({
    },
    sentAt: {
       type: Date,
-      default: Date.now
+      default: dateIndia
    },
    seen:{
       type:Boolean,

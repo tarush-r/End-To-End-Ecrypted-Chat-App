@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const { options } = require('./app');
 const path = require('path')
 const cron = require('node-cron');
+const moment = require('moment-timezone');
 const userController = require('./controllers/userController')
 const authController = require('./controllers/authController')
 const settingsController = require('./controllers/settingsController')
@@ -31,7 +32,16 @@ app.use('/chat', chatController)
 
 // Schedule tasks to be run on the server.
 cron.schedule('* * * * *', function () {
-  console.log('running a task every minute:', new Date().toISOString());
+  // var currentTime = new Date();
+  // var currentOffset = currentTime.getTimezoneOffset();
+  // var ISTOffset = 330;   // IST offset UTC +5:30 
+  // var t=new Date(currentTime.getTime() + (ISTOffset + currentOffset)*60000)
+  // var t=new Date().toISOString()
+  var x= moment.tz(Date.now(), "Asia/Calcutta");
+  var t= x.format()
+  console.log("t=",t)
+  console.log('running a task every minute:', t.split("T")[0]);
+  console.log(x.format("HH:mm"))
   Schedule.find({ toSendAt: Date.now() })
     .then(async (chats) => {
       console.log(chats)

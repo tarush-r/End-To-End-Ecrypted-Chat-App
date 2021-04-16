@@ -119,45 +119,6 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   void initState() {
     ContextUtil.buildContext.add(null);
     super.initState();
-    // _getChats();
-    //api call
-    // chatContacts.add(ChatContactModel(
-    //     name: "Rahil",
-    //     number: "8293627343",
-    //     recentMessage: "Hey this works!!",
-    //     notificationCount: 5,
-    //     recentMessageTime: '11:00 pm'));
-    // chatContacts.add(ChatContactModel(
-    //     name: "Sakshi",
-    //     number: "2343534343",
-    //     recentMessage:
-    //         "Did you work on sockets?. We have to show our work on Monday. Please start working on it fast",
-    //     notificationCount: 0,
-    //     recentMessageTime: '9:30 am'));
-    // chatContacts.add(ChatContactModel(
-    //     name: "Kunal",
-    //     number: "2313627343",
-    //     recentMessage: "Valorant khlega?",
-    //     notificationCount: 1,
-    //     recentMessageTime: '11:00 pm'));
-    // chatContacts.add(ChatContactModel(
-    //     name: "Jigyassa",
-    //     number: "5433454343",
-    //     recentMessage: "Whats the syllabus for tomorrow?",
-    //     notificationCount: 0,
-    //     recentMessageTime: '9:30 am'));
-    // chatContacts.add(ChatContactModel(
-    //     name: "Aaditya",
-    //     number: "8293627343",
-    //     recentMessage: "Naruto dekh!!!!",
-    //     notificationCount: 1,
-    //     recentMessageTime: '11:00 pm'));
-    // chatContacts.add(ChatContactModel(
-    //     name: "Anina",
-    //     number: "9143534343",
-    //     recentMessage: "Kitna padha?",
-    //     notificationCount: 1,
-    //     recentMessageTime: '9:30 am'));
   }
 
   _getMinutes(minutes) {
@@ -200,15 +161,22 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
             if (DismissDirection.startToEnd == direction) {
               ShowMessage.show("Schedule a message",
                   "Schedule a message for ${chatContact.name}", () {
-                Navigator.pushNamed(context, ScheduleScreen.routeName);
+                Provider.of<UserProvider>(context, listen: false)
+                    .initSelectedUser(chatContact);
+
+                Navigator.pushNamed(
+                  context,
+                  ScheduleScreen.routeName,
+                  arguments: <String, String>{
+                    'id': chatContact.id,
+                  },
+                );
               }, context);
               return Future.delayed(Duration.zero, () {
                 return false;
               });
             } else {
-              return ShowMessage.show("DELETE", "del", () {
-                
-              }, context);
+              return ShowMessage.show("DELETE", "del", () {}, context);
             }
           },
           secondaryBackground: Container(

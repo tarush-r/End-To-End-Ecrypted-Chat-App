@@ -20,7 +20,7 @@ const chatSchema = new mongoose.Schema({
    },
    sentAt: {
       type: Date,
-      default: dateIndia
+      default: Date.now
    },
    seen:{
       type:Boolean,

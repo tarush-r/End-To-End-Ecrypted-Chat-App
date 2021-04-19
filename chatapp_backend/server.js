@@ -113,7 +113,7 @@ io.on('connection', (userSocket) => {
       "to": data.receiverId,
       "from": data.senderId,
       "message": data.message,
-
+      "sentAt": data.sentAt,
     })
     await newChat.save()
       .then(res => {
@@ -124,6 +124,7 @@ io.on('connection', (userSocket) => {
         .populate("to", "_id name email publicKey profile_pic",User)
         .sort('-sentAt')
         .then((chats) => {
+      //    console.log(chats)
           console.log("Chheck receive")
           console.log(chats[0])
           userSocket.to(data.receiverId).emit("receive_message", chats[0])

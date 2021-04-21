@@ -29,7 +29,8 @@ dependencies:
   asn1lib: ^0.8.1
   pointycastle: ^2.0.1
   encrypt: ^4.1.0
-  sqflite:
+  sqflite: ^2.0.0+3
+  path_provider:
   shared_preferences: ^0.5.12+4
   contacts_service: ^0.4.6
   adhara_socket_io: ^0.4.2+1

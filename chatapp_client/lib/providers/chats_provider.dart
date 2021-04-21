@@ -111,7 +111,7 @@ class ChatsProvider with ChangeNotifier {
     // return [..._allChats];
   }
 
-  List<ChatModel> initSelectedUserChats(String id) {
+  void initSelectedUserChats(String id) {
     _selectedChats = [];
     _allChats.forEach((chat) {
       if (chat['to']['_id'] == id || chat['from']['_id'] == id) {
@@ -238,9 +238,8 @@ class ChatsProvider with ChangeNotifier {
           user['_id'] == ContextUtil.selectedUserIds.last) {
         _selectedChats.add(newSelectedChat);
       }
-    }
-    else{
-       _selectedChats.add(newSelectedChat);
+    } else {
+      _selectedChats.add(newSelectedChat);
     }
     print("ADDED");
     if (isReceived) {

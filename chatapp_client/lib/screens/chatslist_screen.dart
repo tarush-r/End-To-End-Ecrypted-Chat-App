@@ -1,4 +1,5 @@
 import 'package:chatapp_client/api/chat_api.dart';
+import 'package:chatapp_client/helpers/database_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
 import 'package:chatapp_client/providers/chats_provider.dart';
@@ -34,6 +35,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   // final List<Widget> selectedScreen = []
   String token;
   bool _isInit = true;
+  var databaseHelper;
 
   _getChats() async {
     Future.delayed(Duration.zero)
@@ -118,6 +120,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   @override
   void initState() {
     ContextUtil.buildContext.add(null);
+    databaseHelper = DatabaseHelper();
     super.initState();
   }
 
@@ -388,6 +391,32 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
+                GestureDetector(
+                  onTap: () {
+                    print("DaTABASE CLEARED");
+                    databaseHelper.dropTable();
+                    // DatabaseHelper.instance.dropTable();
+                  },
+                  child: Container(
+                    color: Colors.blue,
+                    width: 500,
+                    height: 50,
+                    child: Text("Clear Database"),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    print("PRINTING DATABASE");
+                    databaseHelper.getValues();
+                    // DatabaseHelper.instance.dropTable();
+                  },
+                  child: Container(
+                    color: Colors.blue,
+                    width: 500,
+                    height: 50,
+                    child: Text("PRINT DATABASE"),
+                  ),
+                ),
                 _topBar(),
                 GestureDetector(
                   onTap: () {

@@ -3,44 +3,133 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DatabaseHelper {
-  static final _dbName = 'chats.db';
-  static final _dbVersion = 1;
-  static final _tableName = 'all_chats';
-  DatabaseHelper._privateConstructor();
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+// import "package:path_provider/path_provider.dart";
+// import "package:flutter/material.dart";
+// import 'package:flutter/foundation.dart';
+// import 'package:sms/contact.dart';
+// import "dart:async";
+import "dart:io" as io;
+// import 'package:sqflite/sqflite.dart';
+// import 'package:sqflite/sqlite_api.dart';
+// import 'package:path/path.dart';
+// import '../models/contactModel.dart';
 
-  static Database _database;
 
-  Future<Database> get database async {
-    if (database != null) {
-      return database;
+class DatabaseHelper{
+
+  static Database _db;
+  // static const String NUMBER = 'number';
+  static const String TABLE = 'all_chats';
+  static const String DB_NAME = 'local.db';
+
+  Future<Database> get db async {
+    if(_db!=null){
+      print("DATABASE ALREADY EXISTS");
+      return _db;
     }
-
-    _database = await _initiateDatabase();
-    return _database;
+    print("CREATING NEW DATABASE");
+    _db = await initDb();
+    return _db;
   }
 
-  _initiateDatabase() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, _dbName);
-
-    return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
+  initDb() async {
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, DB_NAME);
+    var db = await openDatabase(path, version: 1, onCreate: _onCreate);
+    return db;
   }
 
-  Future _onCreate(Database db, int version) {
-    db.query('''
-      CREATE TABLE $_tableName (
-      id INTEGER PRIMARY KEY,
-      to TEXT NOT NULL,
-      from TEXT NOT NULL,
-      message TEXT, 
-      sentAt TEXT NOT NULL)    
+  _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE $TABLE (id INTEGER PRIMARY KEY, toId TEXT NOT NULL, fromId TEXT NOT NULL, message TEXT, sentAt TEXT NOT NULL, seen BIT NOT NULL);    
     ''');
   }
 
-  Future<int> insert(Map<String, dynamic> row) async {
-    Database db = await instance.database;
-    return await db.insert(_tableName, row);
+  Future insert(Map<String, dynamic> row) async {
+    print("BEFORE DB");
+    var dbClient = await db;
+    print("AFTER DB");
+    // var res = await db.rawInsert('''
+    // INSERT INTO contacts (number) VALUES (?)
+    // ''', [newContact.number]);
+
+    // return res;
+    var res = await dbClient.insert(TABLE, row);
+    // return newContact;
   }
+  
+  Future getValues() async {
+    var dbClient = await db;
+    var res = await dbClient.query(TABLE, columns: ["toId", "fromId", "message", "sentAt", "seen"]);
+    print("DATABASE VALUES");
+    print(res);
+  }
+
+  Future dropTable() async {
+    var dbClient = await db;
+    var res = await dbClient.rawQuery("DROP TABLE $TABLE");
+    print("DATABASE VALUES");
+    print(res);
+  }
+
+
+  Future close() async {
+    var dbClient = await db;
+    dbClient.close();
+  }
+
 }
+// class DatabaseHelper {
+//   static final _dbName = 'chats.db';
+//   static final _dbVersion = 1;
+//   static final _tableName = 'all_chats';
+//   DatabaseHelper._privateConstructor();
+//   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+
+//   static Database _database;
+
+//   Future<Database> get database async {
+//     if (database != null) {
+//       print("DATABASE ALREADY PRESENT");
+//       return database;
+//     }
+
+//     _database = await _initiateDatabase();
+//     return _database;
+//   }
+
+//   _initiateDatabase() async {
+//     Directory directory = await getApplicationDocumentsDirectory();
+//     String path = join(directory.path, _dbName);
+
+//     return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
+//   }
+
+//   Future _onCreate(Database db, int version) {
+//     print("CREATED DATABASE");
+    // db.execute('''
+    //   CREATE TABLE $_tableName (
+    //   id INTEGER PRIMARY KEY,
+    //   to TEXT NOT NULL,
+    //   from TEXT NOT NULL,
+    //   message TEXT, 
+    //   sentAt TEXT NOT NULL,
+    //   seen BIT NOT NULL,
+    //   )    
+    // ''');
+//   }
+
+//   Future<void> dropTable() async{
+//     Database db = await instance.database;
+//     print("BEFORE DROP QUERy");
+//     db.execute("DROP TABLE $_tableName");
+//     print("DROPED THE TABLE");
+//   }
+
+
+
+//   Future<int> insert(Map<String, dynamic> row) async {
+//     Database db = await instance.database;
+//     return await db.insert(_tableName, row);
+//   }
+// }

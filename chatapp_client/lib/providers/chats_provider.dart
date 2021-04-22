@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chatapp_client/api/chat_api.dart';
+import 'package:chatapp_client/helpers/database_helper.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
@@ -17,6 +18,7 @@ class ChatsProvider with ChangeNotifier {
 
   List<ChatModel> _selectedChats = [];
   SocketIO socketIO;
+  var databaseHelper;
 
   Future<void> getAllChats() async {
     List done = [];
@@ -148,7 +150,8 @@ class ChatsProvider with ChangeNotifier {
     return temp;
   }
 
-  void addChat(String message, Map user, var selectedUser, bool isReceived) {
+  void addChat(
+      String message, Map user, var selectedUser, bool isReceived) async {
     Map chatMap;
     // print(NavigatorState._history);
     print("received heree_----------------------------------");
@@ -159,6 +162,17 @@ class ChatsProvider with ChangeNotifier {
       if (ContextUtil.buildContext.last != null &&
           user['_id'] == ContextUtil.selectedUserIds.last) {
         print("inside iff");
+        await databaseHelper.insert({
+          'toId': selectedUser['id'],
+          'toName': selectedUser['name'],
+          'toEmail': selectedUser['email'],
+          'toPublicKey': selectedUser['publicKey'],
+          'toProfilePic': selectedUser['profilePic'],
+          'fromId': user['_id'],
+          'message': message,
+          'sentAt': DateTime.now().toString(),
+          'seen': 1,
+        });
         chatMap = {
           '_id': 'idfromnode',
           'seen': true,
@@ -181,6 +195,13 @@ class ChatsProvider with ChangeNotifier {
         };
       } else {
         print("inside else");
+        await databaseHelper.insert({
+          'toId': selectedUser['id'],
+          'fromId': user['_id'],
+          'message': message,
+          'sentAt': DateTime.now().toString(),
+          'seen': 0,
+        });
         chatMap = {
           '_id': 'idfromnode',
           'seen': false,
@@ -203,6 +224,17 @@ class ChatsProvider with ChangeNotifier {
         };
       }
     } else {
+      // try {
+      await databaseHelper.insert({
+        'toId': selectedUser.id,
+        'fromId': user['_id'],
+        'message': message,
+        'sentAt': DateTime.now().toString(),
+        'seen': 0,
+      });
+      // } catch (error) {
+      //   print(error.toString());
+      // }
       chatMap = {
         '_id': 'idfromnode',
         'seen': false,
@@ -378,6 +410,7 @@ class ChatsProvider with ChangeNotifier {
     });
     print("SOCKET CONNECTED@@@@");
     socketIO.connect();
+    databaseHelper = DatabaseHelper();
   }
 
   void setSeenTrue(String from, String to) {

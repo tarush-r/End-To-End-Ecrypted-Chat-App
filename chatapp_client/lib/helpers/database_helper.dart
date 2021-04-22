@@ -14,16 +14,14 @@ import "dart:io" as io;
 // import 'package:path/path.dart';
 // import '../models/contactModel.dart';
 
-
-class DatabaseHelper{
-
+class DatabaseHelper {
   static Database _db;
   // static const String NUMBER = 'number';
   static const String TABLE = 'all_chats';
   static const String DB_NAME = 'local.db';
 
   Future<Database> get db async {
-    if(_db!=null){
+    if (_db != null) {
       print("DATABASE ALREADY EXISTS");
       return _db;
     }
@@ -41,7 +39,20 @@ class DatabaseHelper{
 
   _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE $TABLE (id INTEGER PRIMARY KEY, toId TEXT NOT NULL, fromId TEXT NOT NULL, message TEXT, sentAt TEXT NOT NULL, seen BIT NOT NULL);    
+      CREATE TABLE $TABLE (id INTEGER PRIMARY KEY, 
+      toId TEXT NOT NULL, 
+      toName TEXT NOT NULL, 
+      toEmail TEXT NOT NULL, 
+      toPublicKey TEXT NOT NULL, 
+      toProfilePic TEXT NOT NULL, 
+      fromId TEXT NOT NULL, 
+      fromName TEXT NOT NULL, 
+      fromEmail TEXT NOT NULL, 
+      fromPublicKey TEXT NOT NULL, 
+      fromProfilePic TEXT NOT NULL, 
+      message TEXT, 
+      sentAt TEXT NOT NULL, 
+      seen BIT NOT NULL);    
     ''');
   }
 
@@ -57,27 +68,41 @@ class DatabaseHelper{
     var res = await dbClient.insert(TABLE, row);
     // return newContact;
   }
-  
+
   Future getValues() async {
     var dbClient = await db;
-    var res = await dbClient.query(TABLE, columns: ["toId", "fromId", "message", "sentAt", "seen"]);
+    var res = await dbClient.query(TABLE, columns: [
+      "toId",
+      "toName",
+      "toEmail",
+      "toPublicKey",
+      "toProfilePic",
+      "fromId",
+      "fromName",
+      "fromEmail",
+      "fromPublicKey",
+      "fromProfilePic",
+      "message",
+      "sentAt",
+      "seen"
+    ]);
     print("DATABASE VALUES");
     print(res);
   }
 
   Future dropTable() async {
     var dbClient = await db;
-    var res = await dbClient.rawQuery("DROP TABLE $TABLE");
+    var res = await dbClient.rawDelete("DELETE FROM $TABLE");
+    print("res here");
+    print(res);
     print("DATABASE VALUES");
     print(res);
   }
-
 
   Future close() async {
     var dbClient = await db;
     dbClient.close();
   }
-
 }
 // class DatabaseHelper {
 //   static final _dbName = 'chats.db';
@@ -107,16 +132,16 @@ class DatabaseHelper{
 
 //   Future _onCreate(Database db, int version) {
 //     print("CREATED DATABASE");
-    // db.execute('''
-    //   CREATE TABLE $_tableName (
-    //   id INTEGER PRIMARY KEY,
-    //   to TEXT NOT NULL,
-    //   from TEXT NOT NULL,
-    //   message TEXT, 
-    //   sentAt TEXT NOT NULL,
-    //   seen BIT NOT NULL,
-    //   )    
-    // ''');
+// db.execute('''
+//   CREATE TABLE $_tableName (
+//   id INTEGER PRIMARY KEY,
+//   to TEXT NOT NULL,
+//   from TEXT NOT NULL,
+//   message TEXT,
+//   sentAt TEXT NOT NULL,
+//   seen BIT NOT NULL,
+//   )
+// ''');
 //   }
 
 //   Future<void> dropTable() async{
@@ -125,8 +150,6 @@ class DatabaseHelper{
 //     db.execute("DROP TABLE $_tableName");
 //     print("DROPED THE TABLE");
 //   }
-
-
 
 //   Future<int> insert(Map<String, dynamic> row) async {
 //     Database db = await instance.database;

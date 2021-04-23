@@ -407,7 +407,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                 GestureDetector(
                   onTap: () {
                     print("PRINTING DATABASE");
-                    databaseHelper.getValues();
+                    databaseHelper.getChats();
                     // DatabaseHelper.instance.dropTable();
                   },
                   child: Container(

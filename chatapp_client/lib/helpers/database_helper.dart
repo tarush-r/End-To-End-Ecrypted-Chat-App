@@ -69,7 +69,7 @@ class DatabaseHelper {
     // return newContact;
   }
 
-  Future getValues() async {
+  Future getChats() async {
     var dbClient = await db;
     var res = await dbClient.query(TABLE, columns: [
       "toId",
@@ -87,7 +87,17 @@ class DatabaseHelper {
       "seen"
     ]);
     print("DATABASE VALUES");
-    print(res);
+    print(res.length);
+    return res;
+  }
+
+  Future updateSeen(senderId, receiverId) async {
+    var dbClient = await db;
+    var res = await dbClient.rawUpdate('''
+    UPDATE $TABLE SET seen=? WHERE fromId=? AND toId=?
+    ''', [true, senderId, receiverId]);
+    print("UPDATED SEEN IN LOCAL STORAGE");
+    return res;
   }
 
   Future dropTable() async {

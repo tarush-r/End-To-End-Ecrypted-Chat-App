@@ -18,7 +18,7 @@ class ChatsProvider with ChangeNotifier {
 
   List<ChatModel> _selectedChats = [];
   SocketIO socketIO;
-  var databaseHelper;
+  DatabaseHelper databaseHelper;
 
   Future<void> getAllChats() async {
     List done = [];
@@ -29,9 +29,11 @@ class ChatsProvider with ChangeNotifier {
     print("TOKEN@@@@@@@@@@@@@@@@@@@@@@@@@@@: " + token);
     var trueRes = await ChatApi.getAllChats(token);
     var response = trueRes;
-    _allChats = trueRes['chats'];
-    response['chats'] = trueRes['chats'].reversed.toList();
-    print(response['chats'].length);
+    // _allChats = trueRes['chats'];
+    await _setAllChats();
+    // response['chats'] = trueRes['chats'].reversed.toList();
+    response['chats'] = _allChats.reversed.toList();
+    print(response['chats']);
 
     var user = await SharedPreferencesHelper.getUser();
     // tempChatContacts = ;
@@ -111,6 +113,37 @@ class ChatsProvider with ChangeNotifier {
     notifyListeners();
     print("NOTIFIED LISTENERS");
     // return [..._allChats];
+  }
+
+  Future _setAllChats() async {
+    List databaseChats = await databaseHelper.getChats();
+    print("DATABASE CHATS");
+    print(databaseChats);
+    databaseChats.forEach((databaseChat) {
+      bool seenStatus = databaseChat['seen'] == 1;
+      _allChats.add({
+        '_id': 'idfromnode',
+        'seen': seenStatus,
+        'from': {
+          'profile_pic': databaseChat['fromProfilePic'],
+          '_id': databaseChat['fromId'],
+          'name': databaseChat['fromName'],
+          'email': databaseChat['fromEmail'],
+          'publicKey': databaseChat['fromPublicKey']
+        },
+        'to': {
+          'profile_pic': databaseChat['toProfilePic'],
+          '_id': databaseChat['toId'],
+          'name': databaseChat['toName'],
+          'email': databaseChat['toEmail'],
+          'publicKey': databaseChat['toPublicKey']
+        },
+        'sentAt': databaseChat['sentAt'],
+        'message': databaseChat['message']
+      });
+    });
+    print("FOCUS");
+    print(_allChats);
   }
 
   void initSelectedUserChats(String id) {
@@ -427,6 +460,7 @@ class ChatsProvider with ChangeNotifier {
     socketIO.subscribe('read_message', (jsonData) {
       Map<String, dynamic> data = json.decode(jsonData);
       setSeenTrue(data['senderId'], data['receiverId']);
+      databaseHelper.updateSeen(data['senderId'], data['receiverId']);
     });
     print("SOCKET CONNECTED@@@@");
     socketIO.connect();

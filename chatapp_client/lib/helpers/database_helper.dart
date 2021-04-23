@@ -95,7 +95,7 @@ class DatabaseHelper {
     var dbClient = await db;
     var res = await dbClient.rawUpdate('''
     UPDATE $TABLE SET seen=? WHERE fromId=? AND toId=?
-    ''', [true, senderId, receiverId]);
+    ''', [1, senderId, receiverId]);
     print("UPDATED SEEN IN LOCAL STORAGE");
     return res;
   }

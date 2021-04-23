@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class ChatsProvider with ChangeNotifier {
   List<ChatContactModel> _allChatContacts = [];
-  List _allChats;
+  List _allChats = [];
 
   List<ChatModel> _selectedChats = [];
   SocketIO socketIO;
@@ -32,7 +32,12 @@ class ChatsProvider with ChangeNotifier {
     // _allChats = trueRes['chats'];
     await _setAllChats();
     // response['chats'] = trueRes['chats'].reversed.toList();
-    response['chats'] = _allChats.reversed.toList();
+    if (_allChats == null) {
+      response['chats'] = [];
+    } else {
+      response['chats'] = _allChats.reversed.toList();
+    }
+    // response['chats'] = _allChats.reversed.toList();
     print(response['chats']);
 
     var user = await SharedPreferencesHelper.getUser();
@@ -148,6 +153,9 @@ class ChatsProvider with ChangeNotifier {
 
   void initSelectedUserChats(String id) {
     _selectedChats = [];
+    if (_allChats == null) {
+      return;
+    }
     _allChats.forEach((chat) {
       if (chat['to']['_id'] == id || chat['from']['_id'] == id) {
         if (chat['sentAt'] is DateTime) {
@@ -196,11 +204,11 @@ class ChatsProvider with ChangeNotifier {
           user['_id'] == ContextUtil.selectedUserIds.last) {
         print("inside iff");
         await databaseHelper.insert({
-          'toId': selectedUser['id'],
+          'toId': selectedUser['_id'],
           'toName': selectedUser['name'],
           'toEmail': selectedUser['email'],
           'toPublicKey': selectedUser['publicKey'],
-          'toProfilePic': selectedUser['profilePic'],
+          'toProfilePic': selectedUser['profile_pic'],
           'fromId': user['_id'],
           'fromName': user['name'],
           'fromEmail': user['email'],
@@ -221,8 +229,8 @@ class ChatsProvider with ChangeNotifier {
             'publicKey': user['publicKey']
           },
           'to': {
-            'profile_pic': selectedUser['profilePic'],
-            '_id': selectedUser['id'],
+            'profile_pic': selectedUser['profile_pic'],
+            '_id': selectedUser['_id'],
             'name': selectedUser['name'],
             'email': selectedUser['email'],
             'publicKey': selectedUser['publicKey']
@@ -233,11 +241,11 @@ class ChatsProvider with ChangeNotifier {
       } else {
         print("inside else");
         await databaseHelper.insert({
-          'toId': selectedUser['id'],
+          'toId': selectedUser['_id'],
           'toName': selectedUser['name'],
           'toEmail': selectedUser['email'],
           'toPublicKey': selectedUser['publicKey'],
-          'toProfilePic': selectedUser['profilePic'],
+          'toProfilePic': selectedUser['profile_pic'],
           'fromId': user['_id'],
           'fromName': user['name'],
           'fromEmail': user['email'],
@@ -258,8 +266,8 @@ class ChatsProvider with ChangeNotifier {
             'publicKey': user['publicKey']
           },
           'to': {
-            'profile_pic': selectedUser['profilePic'],
-            '_id': selectedUser['id'],
+            'profile_pic': selectedUser['profile_pic'],
+            '_id': selectedUser['_id'],
             'name': selectedUser['name'],
             'email': selectedUser['email'],
             'publicKey': selectedUser['publicKey']
@@ -352,8 +360,12 @@ class ChatsProvider with ChangeNotifier {
       print("CHAT CONTACT NOT NULL");
 
       if (isReceived) {
+        print("CONRTEXT AND ID");
+        print(ContextUtil.buildContext.last);
+        print(ContextUtil.selectedUserIds.last);
+        print(selectedUser['_id']);
         if (ContextUtil.buildContext.last != null &&
-            ContextUtil.selectedUserIds.last == selectedUser['_id']) {
+            ContextUtil.selectedUserIds.last == id) {
           print("buildcontext is not null");
           _allChatContacts.removeWhere((chatContact) => chatContact.id == id);
 
@@ -460,14 +472,19 @@ class ChatsProvider with ChangeNotifier {
     socketIO.subscribe('read_message', (jsonData) {
       Map<String, dynamic> data = json.decode(jsonData);
       setSeenTrue(data['senderId'], data['receiverId']);
-      databaseHelper.updateSeen(data['senderId'], data['receiverId']);
+      // databaseHelper.updateSeen(data['senderId'], data['receiverId']);
     });
     print("SOCKET CONNECTED@@@@");
     socketIO.connect();
+
     databaseHelper = DatabaseHelper();
   }
 
   void setSeenTrue(String from, String to) {
+    if (_allChats == null) {
+      return;
+    }
+    databaseHelper.updateSeen(from, to);
     _allChats.forEach((chat) {
       if (chat['from']['_id'] == from && chat['to']['_id'] == to) {
         chat['seen'] = true;
@@ -492,5 +509,7 @@ class ChatsProvider with ChangeNotifier {
     _allChatContacts = [];
     _allChats = [];
     _selectedChats = [];
+    socketIO.disconnect();
+    socketIO.destroy();
   }
 }

@@ -12,14 +12,45 @@ const { ggmail, ppassword } = require('../config/key');
 var ObjectId = require('mongodb').ObjectID;
 
 router.get('/getAllChats', login_required, async (req, res) => {
-  console.log("reqqqq=",req.user._id)
+  console.log("reqqqq=", req.user._id)
   Chat.find({ $or: [{ from: req.user._id }, { to: req.user._id }] })
-    .populate("from", "_id name email publicKey profile_pic",User)
-    .populate("to", "_id name email publicKey profile_pic",User)
+    .populate("from", "_id name email publicKey profile_pic", User)
+    .populate("to", "_id name email publicKey profile_pic", User)
     // .sort('-sentAt')
     .then((chats) => {
       console.log(chats)
       res.send({ chats })
+    }).catch(err => {
+      console.log(err)
+    })
+})
+
+router.get('/getNewChats', login_required, async (req, res) => {
+  console.log("reqqqq=", req.user._id)
+  Chat.find({ $and: [{ to: req.user._id }, { isStored: false }] })
+    .populate("from", "_id name email publicKey profile_pic", User)
+    .populate("to", "_id name email publicKey profile_pic", User)
+    // .sort('-sentAt')
+    .then((chats) => {
+      console.log(chats)
+      const n=chats.length;
+      var i;
+      for (i = 0; i < n; i++) {
+
+        chats[i].isStored=true
+      }
+      Chat.updateMany({ $and: [{ to: req.user._id }, { isStored: false }]  },
+        { isStored: true }, function (err, doc) {
+          if (err) {
+            console.log(err)
+            res.send(err)
+          }
+          else {
+            console.log(doc)
+            res.send({ chats })
+            // res.send(doc)
+          }
+        });
     }).catch(err => {
       console.log(err)
     })
@@ -114,19 +145,19 @@ router.post('/schedule', login_required, async (req, res) => {
   var from = mongoose.Types.ObjectId(req.user._id)
   var to = mongoose.Types.ObjectId(req.body.to)
   var message = req.body.message
-  var toSendAt=req.body.toSendAt
-  var dateTime= moment(toSendAt)
-  console.log(typeof(dateTime))
+  var toSendAt = req.body.toSendAt
+  var dateTime = moment(toSendAt)
+  console.log(typeof (dateTime))
   console.log(toSendAt)
-  var date=toSendAt.split(" ")[0]
-  var time=dateTime.format("HH:mm")
+  var date = toSendAt.split(" ")[0]
+  var time = dateTime.format("HH:mm")
   console.log(date)
   const newChat = new Schedule({
     from: from,
     to: to,
     message: message,
-    toSendAtDate:date,
-    toSendAtTime:time,
+    toSendAtDate: date,
+    toSendAtTime: time,
   })
   try {
     await newChat.save()

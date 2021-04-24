@@ -441,6 +441,21 @@ class ChatsProvider with ChangeNotifier {
     // notifyListeners();
   }
 
+  void storeMessage(String receiverId, String senderId) async {
+    // messages.add(Message(text, currentUser.chatID, receiverChatID));
+    // print(message);
+    await socketIO.sendMessage(
+      'store_message',
+      json.encode({
+        'receiverId': receiverId,
+        'senderId': senderId,
+        // 'message': message,
+      }),
+    );
+    print("done");
+    // notifyListeners();
+  }
+
   void initSocket(id) {
     print(id);
     socketIO = SocketIOManager()
@@ -457,6 +472,8 @@ class ChatsProvider with ChangeNotifier {
       print("before function");
       print(ContextUtil.buildContext.last != null);
       print(ContextUtil.selectedUserIds.last == data['from']['_id']);
+      storeMessage(data['to']['_id'], data['from']['_id']);
+      setStoredTrue(data['from']['_id'], data['to']['_id']);
       if (ContextUtil.buildContext.last != null &&
           ContextUtil.selectedUserIds.last == data['from']['_id']) {
         //call read message
@@ -474,11 +491,43 @@ class ChatsProvider with ChangeNotifier {
       setSeenTrue(data['senderId'], data['receiverId']);
       // databaseHelper.updateSeen(data['senderId'], data['receiverId']);
     });
+    
+    socketIO.subscribe('set_isStored_true', (jsonData) {
+      Map<String, dynamic> data = json.decode(jsonData);
+      setSeenTrue(data['senderId'], data['receiverId']);
+      // databaseHelper.updateSeen(data['senderId'], data['receiverId']);
+    });
     print("SOCKET CONNECTED@@@@");
     socketIO.connect();
 
     databaseHelper = DatabaseHelper();
   }
+
+  void setStoredTrue(String from, String to) {
+    if (_allChats == null) {
+      return;
+    }
+    databaseHelper.updateIsStored(from, to);
+    _allChats.forEach((chat) {
+      if (chat['from']['_id'] == from && chat['to']['_id'] == to) {
+        chat['isStored'] = true;
+      }
+    });
+
+    _allChatContacts.forEach((chatContact) {
+      if (chatContact.id == from) {
+        chatContact.notificationCount = 0;
+      }
+    });
+
+    _selectedChats.forEach((selectedChat) {
+      if (selectedChat.from == from) {
+        selectedChat.seen = true;
+      }
+    });
+    notifyListeners();
+  }
+
 
   void setSeenTrue(String from, String to) {
     if (_allChats == null) {

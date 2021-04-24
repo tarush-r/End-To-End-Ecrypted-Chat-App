@@ -52,7 +52,8 @@ class DatabaseHelper {
       fromProfilePic TEXT NOT NULL, 
       message TEXT, 
       sentAt TEXT NOT NULL, 
-      seen BIT NOT NULL);    
+      seen BIT NOT NULL,
+      isStored BIT NOT NULL);    
     ''');
   }
 
@@ -84,7 +85,8 @@ class DatabaseHelper {
       "fromProfilePic",
       "message",
       "sentAt",
-      "seen"
+      "seen",
+      "isStored"
     ]);
     print("DATABASE VALUES");
     print(res.length);
@@ -95,6 +97,15 @@ class DatabaseHelper {
     var dbClient = await db;
     var res = await dbClient.rawUpdate('''
     UPDATE $TABLE SET seen=? WHERE fromId=? AND toId=?
+    ''', [1, senderId, receiverId]);
+    print("UPDATED SEEN IN LOCAL STORAGE");
+    return res;
+  }
+
+  Future updateIsStored(senderId, receiverId) async {
+    var dbClient = await db;
+    var res = await dbClient.rawUpdate('''
+    UPDATE $TABLE SET isStored=? WHERE fromId=? AND toId=?
     ''', [1, senderId, receiverId]);
     print("UPDATED SEEN IN LOCAL STORAGE");
     return res;

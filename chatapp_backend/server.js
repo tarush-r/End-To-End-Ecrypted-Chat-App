@@ -155,6 +155,22 @@ io.on('connection', (userSocket) => {
       console.log("broadcasting read message==",data)
       userSocket.broadcast.to(data.senderId).emit("read_message", data)
   })
+
+  userSocket.on('store_message', async (data) => {
+    console.log("inside set store")
+    console.log(data)
+    Chat.updateMany({ $and: [{ to: data.receiverId }, { from: data.senderId }] },
+      { isStored: true }, function (err, doc) {
+        if (err) {
+          console.log(error)
+        }
+        else {
+          console.log(doc)
+        }
+      });
+      console.log("broadcasting stored message==",data)
+      userSocket.broadcast.to(data.senderId).emit("store_message", data)
+  })
 })
 
 

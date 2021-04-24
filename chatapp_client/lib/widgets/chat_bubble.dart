@@ -1,6 +1,7 @@
 import 'package:chatapp_client/models/chat_model.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatBubble extends StatelessWidget {
   final bool isMe;
@@ -14,6 +15,11 @@ class ChatBubble extends StatelessWidget {
     } else {
       return min[minutes].toString();
     }
+  }
+
+  void _launchUrl(_url) async {
+    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
+
   }
 
   @override
@@ -53,7 +59,30 @@ class ChatBubble extends StatelessWidget {
                               child: Image.network(chat.message),
                             ),
                           )
-                        : Container(
+                        : chat.message.contains('maps.google.com')?
+                        GestureDetector(
+                          onTap: () {
+                            _launchUrl(chat.message);
+                          },
+                            child: Container(
+                              margin: const EdgeInsets.all(2),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.location_on,),
+                                  Text('Location shared', style: TextStyle(
+                                    // color: Colors.white
+                                  ),)
+                                ],
+                              ),
+                            ),
+                          ):
+                        Container(
                             child: Text(
                               chat.message,
                               style: TextStyle(color: Colors.white),

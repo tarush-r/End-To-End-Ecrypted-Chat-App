@@ -251,15 +251,31 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
-                          chatContact.recentMessage.contains('firebasestorage.googleapis.com')?
-                          Text(
-                            "Photo",
-                            overflow: TextOverflow.ellipsis,
-                          ):
-                          Text(
-                            chatContact.recentMessage,
-                            overflow: TextOverflow.ellipsis,
-                          )
+                          chatContact.recentMessage
+                                  .contains('firebasestorage.googleapis.com')
+                              ? Text(
+                                  "Photo",
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : chatContact.recentMessage
+                                      .contains('maps.google.com')
+                                  ? Row(
+                                      children: [
+                                        Icon(
+                                          Icons.location_on,
+                                        ),
+                                        Text(
+                                          'Location shared',
+                                          style: TextStyle(
+                                              // color: Colors.white
+                                              ),
+                                        )
+                                      ],
+                                    )
+                                  : Text(
+                                      chatContact.recentMessage,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
                         ],
                       ),
                     )

@@ -12,6 +12,7 @@ import 'package:chatapp_client/utils/urls.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -142,11 +143,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     GestureDetector(
                       onTap: () {
                         print(url);
-                        sendMessage(url, selectedUserId,
-                            user['_id']);
+                        sendMessage(url, selectedUserId, user['_id']);
                         Provider.of<ChatsProvider>(context, listen: false)
-                            .addChat(url, user, selectedUser,
-                                false);
+                            .addChat(url, user, selectedUser, false);
                         messageController.clear();
                         _scrollToBottom();
                         Navigator.of(ctx).pop();
@@ -550,6 +549,130 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  _sendLocation() async {
+    print("REQUEST LOCATION PERMISSIOn");
+    PermissionStatus status = await Permission.location.request();
+    // LocationPermission permission = await Geolocator.requestPermission();
+    if (!status.isGranted) {
+      return;
+    }
+    Position position = await Geolocator().getCurrentPosition();
+    String mapsUrl = 'http://maps.google.com/?q=' +
+        position.latitude.toString() +
+        ',' +
+        position.longitude.toString();
+    print('http://maps.google.com/?q=' +
+        position.latitude.toString() +
+        ',' +
+        position.longitude.toString());
+    sendMessage(mapsUrl, selectedUserId, user['_id']);
+    Provider.of<ChatsProvider>(context, listen: false)
+        .addChat(mapsUrl, user, selectedUser, false);
+    messageController.clear();
+    _scrollToBottom();
+  }
+
+  _showChoices() {
+    return showModalBottomSheet<dynamic>(
+      isScrollControlled: true,
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext ctx) {
+        return Wrap(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: const Radius.circular(10),
+                      topRight: const Radius.circular(10))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(ctx).pop();
+                        _pickImage();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.camera_alt,
+                            size: 40,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Camera',
+                            style: TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(ctx).pop();
+                        _pickImage();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.photo,
+                            size: 40,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Gallery',
+                            style: TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: GestureDetector(
+                      onTap: () async {
+                        _sendLocation();
+                        Navigator.of(ctx).pop();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 40,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Location',
+                            style: TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   _inputMessage() {
     return Container(
       // color: Colors.red,
@@ -563,7 +686,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     // iconSize: 18.0,
                     icon: Icon(Icons.add),
                     onPressed: () {
-                      _pickImage();
+                      // _pickImage();
+                      _showChoices();
                     },
                     color: Colors.white,
                   ),

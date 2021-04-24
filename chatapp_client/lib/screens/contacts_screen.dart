@@ -7,6 +7,7 @@ import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/widgets/heading_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../helpers/contacts_helper.dart';
 import 'chat_screen.dart';
@@ -31,6 +32,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   _getContacts() async {
+    PermissionStatus permissionStatus = await Permission.contacts.request();
+    if(!permissionStatus.isGranted){
+      Navigator.of(context).pop();
+      return;
+    }
     token = await SharedPreferencesHelper.getToken();
     var res = await ContactsHelper.getContacts(token);
     print(res);

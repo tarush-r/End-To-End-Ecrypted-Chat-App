@@ -128,6 +128,7 @@ class SettingsApi {
       },
     );
     print("====================");
+    print(res.statusCode);
     print(res.body);
     // print(json.decode(res.body)[0]['name']);
     print("====================");

@@ -95,6 +95,9 @@ class AuthenticationApi {
     );
     
     final response=json.decode(res.body);
+    print("STRATUS HERER");
+    print(res.statusCode);
+    print(json.decode(res.body));
     print("HEEYYYYYYY--111");
     print(response['user']['privateKey']);
     response['user']['privateKey']=EncryptionHelper.decryptPrivateKey(
@@ -104,6 +107,7 @@ class AuthenticationApi {
      print("HEEYYYYYY--333");
     print(json.encode(response));
     // res.body=json.encode(response);
+    // catch error
     return json.encode(response);
   }
 }

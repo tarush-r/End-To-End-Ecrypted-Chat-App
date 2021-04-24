@@ -24,7 +24,12 @@ class ShowMessage {
                         },
                         child: Text('Close'),
                       ),
-                      TextButton(onPressed: onClick, child: Text("Ok"))
+                      TextButton(onPressed: () {
+                        Navigator.of(ctx).pop();
+                        onClick();
+                        
+                        print("helloooooo");
+                      }, child: Text("Ok"))
                     ],
                   ),
                 ],

@@ -251,6 +251,11 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
+                          chatContact.recentMessage.contains('firebasestorage.googleapis.com')?
+                          Text(
+                            "Photo",
+                            overflow: TextOverflow.ellipsis,
+                          ):
                           Text(
                             chatContact.recentMessage,
                             overflow: TextOverflow.ellipsis,

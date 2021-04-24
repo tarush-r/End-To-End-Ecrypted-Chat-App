@@ -65,8 +65,10 @@ class _ChatScreenState extends State<ChatScreen> {
     ChatApi.setSeenTrue(token, selectedUserId);
     ContextUtil.selectedUserIds.add(selectedUserId);
     _isLoading = false;
-    Provider.of<ChatsProvider>(context, listen: false).readMessage(user['_id'], selectedUserId);
-    Provider.of<ChatsProvider>(context, listen: false).setSeenTrue(selectedUserId, user['_id']);
+    Provider.of<ChatsProvider>(context, listen: false)
+        .readMessage(user['_id'], selectedUserId);
+    Provider.of<ChatsProvider>(context, listen: false)
+        .setSeenTrue(selectedUserId, user['_id']);
     // setState(() {
     //   _isLoading = false;
     // });
@@ -108,22 +110,62 @@ class _ChatScreenState extends State<ChatScreen> {
     if (image != null) {
       var snapshot = await _storage
           .ref()
-          .child('profilePhotos/${imageName}')
+          .child('chatPhotos/$imageName')
           .putFile(file)
           .whenComplete(() {
         // print(snapshot);
       });
       String url = await snapshot.ref.getDownloadURL();
-      var res = await SettingsApi.updateProfilePhoto(url, token);
+      // var res = await SettingsApi.updateProfilePhoto(url, token);
       print("!!!!!!!!!!!!!!");
       // print(json.decode(res)["user"]);
-      setState(() {
-        SharedPreferencesHelper.persistOnLogin(
-            json.encode(json.decode(res.body)['user']), json.encode(token));
-        _getUser();
-        // Navigator.of(context).pop();
-      });
+      // setState(() {
+      //   SharedPreferencesHelper.persistOnLogin(
+      //       json.encode(json.decode(res.body)['user']), json.encode(token));
+      //   _getUser();
+      //   // Navigator.of(context).pop();
+      // });
       print(url);
+      showDialog(
+          context: context,
+          builder: (BuildContext ctx) {
+            return AlertDialog(
+              // height: MediaQuery.of(context).size.width*0.8,
+              title: Text(imageName),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Image.network(url),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        print(url);
+                        sendMessage(url, selectedUserId,
+                            user['_id']);
+                        Provider.of<ChatsProvider>(context, listen: false)
+                            .addChat(url, user, selectedUser,
+                                false);
+                        messageController.clear();
+                        _scrollToBottom();
+                        Navigator.of(ctx).pop();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        // decoration: BoxDecoration(
+                        //   color: ColorThemes.primary,
+                        //   shape: BoxShape.circle,
+                        // ),
+                        child: Icon(Icons.send),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
     } else {
       print("no image selected");
     }
@@ -132,21 +174,19 @@ class _ChatScreenState extends State<ChatScreen> {
   _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-      print("hello");
-      _scrollController.jumpTo(
-        _scrollController.position.maxScrollExtent,
-        // duration: Duration(milliseconds: 600),
-        // curve: Curves.ease,
-      );
-      // _scrollController.jumpTo(2000);
-    }
+        print("hello");
+        _scrollController.jumpTo(
+          _scrollController.position.maxScrollExtent,
+          // duration: Duration(milliseconds: 600),
+          // curve: Curves.ease,
+        );
+        // _scrollController.jumpTo(2000);
+      }
     });
-    
   }
 
   @override
   void initState() {
-    
     _getUser();
     Firebase.initializeApp();
     messages = [];
@@ -263,7 +303,7 @@ class _ChatScreenState extends State<ChatScreen> {
       Map arguments = ModalRoute.of(context).settings.arguments as Map;
       selectedUserId = arguments['id'];
       print(selectedUserId);
-      
+
       socketIO = Provider.of<ChatsProvider>(context, listen: false).socketIO;
       Provider.of<ChatsProvider>(context).initSelectedUserChats(selectedUserId);
       // Provider.of<UserProvider>(context).initSelectedUser(selectedUserId);
@@ -580,8 +620,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     print(selectedUserId);
                     sendMessage(
                         messageController.text, selectedUserId, user['_id']);
-                    Provider.of<ChatsProvider>(context, listen: false)
-                        .addChat(messageController.text, user, selectedUser, false);
+                    Provider.of<ChatsProvider>(context, listen: false).addChat(
+                        messageController.text, user, selectedUser, false);
                     messageController.clear();
                     _scrollToBottom();
                   },
@@ -610,7 +650,7 @@ class _ChatScreenState extends State<ChatScreen> {
         print(ContextUtil.buildContext.last);
         return true;
       },
-          child: Scaffold(
+      child: Scaffold(
         // appBar: Container(),
         backgroundColor: Colors.black,
         appBar: ChatAppBar(

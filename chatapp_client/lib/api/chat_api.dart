@@ -28,6 +28,27 @@ class ChatApi {
 
   }
 
+    static Future getNewChats(token) async {
+    print('hell0');
+    const url = Urls.baseUrl +"chat/getNewChats/";
+    print(token);
+    print("asdasda");
+    http.Response res = await http.get(
+      url,
+      // body: json.encode(contactslist),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      }, 
+    );
+    print("====================");
+    print("ALL CCHATS");
+   // print(json.decode(res.body));
+    print("====================");
+    return json.decode(res.body);
+
+  }
+
   static Future getSelectedUserChat(token) async {
    
     const url = Urls.baseUrl +"chat/getSelectedUserChat/";

@@ -27,10 +27,10 @@ class ChatsProvider with ChangeNotifier {
     String token;
     token = await SharedPreferencesHelper.getToken();
     print("TOKEN@@@@@@@@@@@@@@@@@@@@@@@@@@@: " + token);
-    var trueRes = await ChatApi.getAllChats(token);
+    var trueRes = await ChatApi.getNewChats(token);
     var response = trueRes;
     // _allChats = trueRes['chats'];
-    await _setAllChats();
+    await _setAllChats(trueRes['chats']);
     // response['chats'] = trueRes['chats'].reversed.toList();
     if (_allChats == null) {
       response['chats'] = [];
@@ -120,7 +120,25 @@ class ChatsProvider with ChangeNotifier {
     // return [..._allChats];
   }
 
-  Future _setAllChats() async {
+  Future _setAllChats(var newChats) async {
+    newChats.forEach((newChat) async{
+     await databaseHelper.insert({
+        'toId': newChat['to']['_id'],
+        'toName': newChat['to']['name'],
+        'toEmail': newChat['to']['email'],
+        'toPublicKey': newChat['to']['publicKey'],
+        'toProfilePic': newChat['to']['profile_pic'],
+        'fromId': newChat['from']['_id'],
+        'fromName': newChat['from']['name'],
+        'fromEmail': newChat['from']['email'],
+        'fromPublicKey': newChat['from']['publicKey'],
+        'fromProfilePic': newChat['from']['profile_pic'],
+        'message': newChat['message'],
+        'sentAt': newChat['sentAt'],
+        'seen': newChat['seen'],
+        'isStored': 1,
+      });
+    });
     List databaseChats = await databaseHelper.getChats();
     print("DATABASE CHATS");
     print(databaseChats);
@@ -217,6 +235,7 @@ class ChatsProvider with ChangeNotifier {
           'message': message,
           'sentAt': DateTime.now().toString(),
           'seen': 1,
+          'isStored': 1,
         });
         chatMap = {
           '_id': 'idfromnode',
@@ -254,6 +273,7 @@ class ChatsProvider with ChangeNotifier {
           'message': message,
           'sentAt': DateTime.now().toString(),
           'seen': 0,
+          'isStored': 1,
         });
         chatMap = {
           '_id': 'idfromnode',
@@ -292,6 +312,7 @@ class ChatsProvider with ChangeNotifier {
         'message': message,
         'sentAt': DateTime.now().toString(),
         'seen': 0,
+        'isStored': 1,
       });
       // } catch (error) {
       //   print(error.toString());
@@ -362,7 +383,7 @@ class ChatsProvider with ChangeNotifier {
       if (isReceived) {
         print("CONRTEXT AND ID");
         print(ContextUtil.buildContext.last);
-        print(ContextUtil.selectedUserIds.last);
+        // print(ContextUtil.selectedUserIds.last);
         print(selectedUser['_id']);
         if (ContextUtil.buildContext.last != null &&
             ContextUtil.selectedUserIds.last == id) {
@@ -471,7 +492,7 @@ class ChatsProvider with ChangeNotifier {
       addChat(data['message'], data['from'], data['to'], true);
       print("before function");
       print(ContextUtil.buildContext.last != null);
-      print(ContextUtil.selectedUserIds.last == data['from']['_id']);
+      // print(ContextUtil.selectedUserIds.last == data['from']['_id']);
       storeMessage(data['to']['_id'], data['from']['_id']);
       setStoredTrue(data['from']['_id'], data['to']['_id']);
       if (ContextUtil.buildContext.last != null &&
@@ -514,17 +535,17 @@ class ChatsProvider with ChangeNotifier {
       }
     });
 
-    _allChatContacts.forEach((chatContact) {
-      if (chatContact.id == from) {
-        chatContact.notificationCount = 0;
-      }
-    });
+    // _allChatContacts.forEach((chatContact) {
+    //   if (chatContact.id == from) {
+    //     chatContact.notificationCount = 0;
+    //   }
+    // });
 
-    _selectedChats.forEach((selectedChat) {
-      if (selectedChat.from == from) {
-        selectedChat.seen = true;
-      }
-    });
+    // _selectedChats.forEach((selectedChat) {
+    //   if (selectedChat.from == from) {
+    //     selectedChat.seen = true;
+    //   }
+    // });
     notifyListeners();
   }
 

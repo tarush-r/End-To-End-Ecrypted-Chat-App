@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/helpers/database_helper.dart';
+import 'package:chatapp_client/helpers/encryption_helper.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
 import 'package:provider/provider.dart';
+import '../helpers/encryption_helper.dart';
+import 'package:rsa_encrypt/rsa_encrypt.dart';
 
 class ChatsProvider with ChangeNotifier {
   List<ChatContactModel> _allChatContacts = [];
@@ -121,6 +124,7 @@ class ChatsProvider with ChangeNotifier {
   }
 
   Future _setAllChats(var newChats) async {
+    var user=await SharedPreferencesHelper.getUser();
     newChats.forEach((newChat) async{
      await databaseHelper.insert({
         'toId': newChat['to']['_id'],
@@ -133,7 +137,8 @@ class ChatsProvider with ChangeNotifier {
         'fromEmail': newChat['from']['email'],
         'fromPublicKey': newChat['from']['publicKey'],
         'fromProfilePic': newChat['from']['profile_pic'],
-        'message': newChat['message'],
+        'message':decrypt(newChat['message'], EncryptionHelper.convertStringToPrivateKey(user['privateKey'])),
+        // 'message': newChat['message'],
         'sentAt': newChat['sentAt'],
         'seen': newChat['seen'],
         'isStored': 1,
@@ -483,13 +488,17 @@ class ChatsProvider with ChangeNotifier {
         .createSocketIO(Urls.baseUrl, '/', query: 'senderId=$id');
     socketIO.init();
 
-    socketIO.subscribe('receive_message', (jsonData) {
+    socketIO.subscribe('receive_message', (jsonData) async {
       Map<String, dynamic> data = json.decode(jsonData);
       print("RECEIVERRRRRRRRRRRRRRRRRRRRRRRRR");
       print(data);
+      var user = await SharedPreferencesHelper.getUser();
+      print(decrypt(data['message'], EncryptionHelper.convertStringToPrivateKey(user['privateKey'])));
       print("-------------------");
       // print(ContextUtil.buildContext.last);
-      addChat(data['message'], data['from'], data['to'], true);
+      addChat(
+        decrypt(data['message'], EncryptionHelper.convertStringToPrivateKey(user['privateKey'])),
+        data['from'], data['to'], true);
       print("before function");
       print(ContextUtil.buildContext.last != null);
       // print(ContextUtil.selectedUserIds.last == data['from']['_id']);

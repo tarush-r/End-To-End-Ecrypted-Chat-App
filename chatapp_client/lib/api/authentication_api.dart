@@ -95,7 +95,7 @@ class AuthenticationApi {
     );
     
     final response=json.decode(res.body);
-    print("STRATUS HERER");
+    print("STATUS HERE");
     print(res.statusCode);
     print(json.decode(res.body));
     print("HEEYYYYYYY--111");

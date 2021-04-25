@@ -16,6 +16,8 @@ class UserProvider with ChangeNotifier{
 
   void initSelectedUser(user) {
     _selectedUser = user;
+    print("SELECTED USER HERE=");
+    print(_selectedUser);
     // notifyListeners();
   }
 

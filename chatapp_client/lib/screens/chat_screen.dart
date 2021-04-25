@@ -16,12 +16,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:rsa_encrypt/rsa_encrypt.dart';
 import 'dart:io';
 import '../widgets/chat_screen_appbar.dart';
 import 'dart:convert';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
+import '../helpers/encryption_helper.dart';
 import '../widgets/chat_bubble.dart';
 // import 'package:provider/provider.dart';
 // import '../utlis/message_store.dart';
@@ -189,102 +191,9 @@ class _ChatScreenState extends State<ChatScreen> {
     _getUser();
     Firebase.initializeApp();
     messages = [];
-    // chats.add(ChatModel(
-    //     to: "Rahil",
-    //     from: 'Tarush',
-    //     message: "Hey",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Rahil",
-    //     from: 'Tarush',
-    //     message: "This is a test",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Tarush",
-    //     from: 'Rahil',
-    //     message: "It works",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Rahil",
-    //     from: 'Tarush',
-    //     message: "Hey",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Rahil",
-    //     from: 'Tarush',
-    //     message: "This is a test",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Tarush",
-    //     from: 'Rahil',
-    //     message: "It works",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Rahil",
-    //     from: 'Tarush',
-    //     message: "Hey",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Rahil",
-    //     from: 'Tarush',
-    //     message: "This is a test",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Tarush",
-    //     from: 'Rahil',
-    //     message:
-    //         "It works asdasdasd a sdasfda fasdfsds dgsdfsdfsdf sfdfsdfsefsda sdasdasdasdasda sdsdfszef",
-    //     seen: true,
-    //     time: DateTime.now()));
-    // chats.add(ChatModel(
-    //     to: "Rahil",
-    //     from: 'Tarush',
-    //     message: "Hey",
-    //     seen: false,
-    //     time: DateTime.now()));
-    //Initializing the TextEditingController and ScrollController
-    // textController = TextEditingController();
-    // scrollController = ScrollController();
-    // socketIO = SocketIOManager().createSocketIO(
-    //   Urls.baseUrl,
-    //   '',
-    // );
-    // socketIO.init();
-    // socketIO.subscribe('receive_message', (jsonData) {
-    //   //Convert the JSON data received into a Map
-    //   Map<String, dynamic> data = json.decode(jsonData);
-    //   this.setState(() => messages.add(data['message']));
-    //   scrollController.animateTo(
-    //     scrollController.position.maxScrollExtent,
-    //     duration: Duration(milliseconds: 600),
-    //     curve: Curves.ease,
-    //   );
-    // });
-    // // print(_scrollController.);
+  
     _scrollToBottom();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (_scrollController.hasClients) {
-    //     print("hello");
-    //     _scrollToBottom();
-    //     // _scrollController.jumpTo(
-    //     //   _scrollController.position.maxScrollExtent,
-    //     //   // duration: Duration(milliseconds: 600),
-    //     //   // curve: Curves.ease,
-    //     // );
-    //     // _scrollController.jumpTo(2000);
-    //   }
-    // });
 
-    // //Connect to the socket
-    // socketIO.connect();
     super.initState();
 
     // socketIO.sendMessage(
@@ -437,82 +346,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             ),
-            // Container(
-            //   child: Text(
-            //     chat.time.hour.toString() +
-            //         ":" +
-            //         _getMinutes(chat.time.minute),
-            //     style: TextStyle(color: Colors.white),
-            //   ),
-            // ),
-            // // Row(children: [
-            // Container(
-            //   padding: EdgeInsets.all(10),
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(10),
-            //     color: ColorThemes.primary,
-            //   ),
-            //   constraints: BoxConstraints(maxWidth: 250),
-            //   // padding: EdgeInsets.all(10),
-            //   // color: Colors.red,
-            //   // height: 30,
-            //   // width: 200,
-
-            //   child: Text(
-            //     chat.message,
-            //     style: TextStyle(color: Colors.white),
-            //     // overflow: TextOverflow.ellipsis,
-            //   ),
-            // ),
-            // Positioned.fill(
-            //   child: Align(
-            //     alignment: Alignment.bottomRight,
-            //     child:
-
-            //   ),
-            // )
-            // ]),
+  
           ],
         )
-        // : Row(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: [
-        //       // Row(children: [
-        //       Container(
-        //         padding: EdgeInsets.all(10),
-        //         decoration: BoxDecoration(
-        //           borderRadius: BorderRadius.circular(10),
-        //           color: ColorThemes.primary,
-        //         ),
-        //         constraints: BoxConstraints(maxWidth: 250),
-        //         // padding: EdgeInsets.all(10),
-        //         // color: Colors.red,
-        //         // height: 30,
-        //         // width: 200,
-
-        //         child: Text(
-        //           chat.message,
-        //           style: TextStyle(color: Colors.white),
-        //           // overflow: TextOverflow.ellipsis,
-        //         ),
-        //       ),
-        //       // Positioned.fill(
-        //       //   child: Align(
-        //       //     alignment: Alignment.bottomRight,
-        //       //     child:
-        //       Container(
-        //         child: Text(
-        //           chat.time.hour.toString() +
-        //               ":" +
-        //               _getMinutes(chat.time.minute),
-        //           style: TextStyle(color: Colors.white),
-        //         ),
-        //       ),
-        //       //   ),
-        //       // )
-        //       // ]),
-        //     ],
-        //   ),
+    
         );
   }
 
@@ -741,9 +578,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     if (messageController.text.isEmpty) {
                       return;
                     }
-                    print(selectedUserId);
+                    print("--------------------------------");
+                    print(selectedUser.publicKey);
+                    print("--------------------------------");
+                    print(EncryptionHelper.convertStringToPublicKey(selectedUser.publicKey));
+                    print("--------------------------------");
+                    print(encrypt(messageController.text, EncryptionHelper.convertStringToPublicKey(selectedUser.publicKey)));
+                    print("--------------------------------");
+                    // print(selectedUser.privateKey);
                     sendMessage(
-                        messageController.text, selectedUserId, user['_id']);
+                        encrypt(messageController.text, EncryptionHelper.convertStringToPublicKey(selectedUser.publicKey)), 
+                        selectedUserId, user['_id']);
                     Provider.of<ChatsProvider>(context, listen: false).addChat(
                         messageController.text, user, selectedUser, false);
                     messageController.clear();

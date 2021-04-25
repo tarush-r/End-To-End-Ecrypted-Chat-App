@@ -145,7 +145,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     GestureDetector(
                       onTap: () {
                         print(url);
-                        sendMessage(url, selectedUserId, user['_id']);
+                        sendMessage(
+                          encrypt(url, EncryptionHelper.convertStringToPublicKey(selectedUser.publicKey))
+                        , selectedUserId, user['_id']);
                         Provider.of<ChatsProvider>(context, listen: false)
                             .addChat(url, user, selectedUser, false);
                         messageController.clear();
@@ -402,7 +404,10 @@ class _ChatScreenState extends State<ChatScreen> {
         position.latitude.toString() +
         ',' +
         position.longitude.toString());
-    sendMessage(mapsUrl, selectedUserId, user['_id']);
+    print(encrypt(mapsUrl, EncryptionHelper.convertStringToPublicKey(selectedUser.publicKey)));
+    sendMessage(
+      encrypt(mapsUrl, EncryptionHelper.convertStringToPublicKey(selectedUser.publicKey))
+    , selectedUserId, user['_id']);
     Provider.of<ChatsProvider>(context, listen: false)
         .addChat(mapsUrl, user, selectedUser, false);
     messageController.clear();

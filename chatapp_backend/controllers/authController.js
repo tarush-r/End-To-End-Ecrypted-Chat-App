@@ -27,10 +27,10 @@ router.post("/login", async (req, res) => {
       console.log((user.token))
       res.status(200).send(user);
       //res.json({'status': "success", 'token_uuid': tokenPair['token_uuid'], 'refresh_uuid':tokenPair['refresh_uuid']});
-    } else res.json({ message: "Technical Error", type: "error" });
+    } else res.status(403).json({ message: "Email id or password doesn't match", type: "error" });
     // dbc=="m"?insertUserMongod(req.body.email,req.body.phone_num,otp):insertUserCass(req.body.email,req.body.phone_num,otp);
   } else {
-    res.json({ error: "Incorrect details" });
+    res.status(400).json({ error: "Incorrect details" });
   }
 });
 
@@ -53,6 +53,7 @@ async function login(email_id, pass) {
     }
   }).exec();
   console.log("result : "+result)
+  console.log("SSSSSSSSSSSSSS=",id)
   if (result) return { status: result, id: id._id };
   else return { status: false };
 }

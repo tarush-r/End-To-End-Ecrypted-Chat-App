@@ -17,12 +17,12 @@ router.post('/getotp', async (req, res) => {
     var otp = await generateOTP(req.body.email)
     const response = insertUserMongod(req.body.name, req.body.email, req.body.phone_num, otp)
     if (response)
-      res.json({ 'message': "New person added", 'type': "success" });
+      res.status(201).json({ 'message': "New person added", 'type': "success" });
     else
-      res.json({ 'message': "Database error", 'type': "error" });
+      res.status(500).json({ 'message': "Database error", 'type': "error" });
     // dbc=="m"?insertUserMongod(req.body.email,req.body.phone_num,otp):insertUserCass(req.body.email,req.body.phone_num,otp);
   } else {
-    res.json({ "error": "Incorrect details" });
+    res.status(400).json({ "error": "Invalid details" });
   }
 })//Step 1: pass name,email,number & receive otp
 
@@ -127,16 +127,19 @@ router.post("/verifyotp", async (req, res) => {
     if (verified) {
       if (register(req.body.password, req.body.email, req.body.phone_num, req.body.name, req.body.publicKey, req.body.privateKey, req.body.hashedPass)) {
         console.log(" status : " + "Success")
-        res.json({ "status": "Success" })
+        res.status(200).json({ "status": "Success" })
       } else {
         console.log(" status : " + "Error")
-        res.json({ "status": "Registration Failed" })
+        res.status(400).json({ "status": "Registration Failed" })
       }
     }
     else {
       console.log(" status : " + "Retry")
-      res.json({ "status": "Retry" })
+      res.status(403).json({ "status": "Retry" })
     }
+  }
+  else {
+    res.status(400).json({ "error": "Invalid details" });
   }
 })//Step 2: pass otp,email & receive confirmation for otp also password
 
@@ -181,20 +184,20 @@ async function checkOTP(otp, email_id) {
   return result;
 }
 
-router.post("/register", (req, res) => {
-  if (req.body.pass != null && /^\d{3}$/.test(req.body.phone_num)) {
-    console.log(req.body.email)
-    console.log(req.body.pass)
-    if (register(req.body.pass, req.body.pass)) {
-      res.json({ "status": "Registered" })
-    }
-    else {
-      res.json({ "status": "Technical Error" })
-    }
-  } else {
-    res.json({ "status": "Syntax Error" })
-  }
-})//Step 3:Register by passing password along with number
+// router.post("/register", (req, res) => {
+//   if (req.body.pass != null && /^\d{3}$/.test(req.body.phone_num)) {
+//     console.log(req.body.email)
+//     console.log(req.body.pass)
+//     if (register(req.body.pass, req.body.pass)) {
+//       res.json({ "status": "Registered" })
+//     }
+//     else {
+//       res.json({ "status": "Technical Error" })
+//     }
+//   } else {
+//     res.json({ "status": "Syntax Error" })
+//   }
+// })//Step 3:Register by passing password along with number
 
 async function register(pass, email, phone_num, name, publicKey, privateKey, hashedPass) {
   var result = true

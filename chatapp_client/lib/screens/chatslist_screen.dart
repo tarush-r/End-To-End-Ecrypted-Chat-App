@@ -412,32 +412,32 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    print("DaTABASE CLEARED");
-                    databaseHelper.dropTable();
-                    // DatabaseHelper.instance.dropTable();
-                  },
-                  child: Container(
-                    color: Colors.blue,
-                    width: 500,
-                    height: 50,
-                    child: Text("Clear Database"),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    print("PRINTING DATABASE");
-                    databaseHelper.getChats();
-                    // DatabaseHelper.instance.dropTable();
-                  },
-                  child: Container(
-                    color: Colors.blue,
-                    width: 500,
-                    height: 50,
-                    child: Text("PRINT DATABASE"),
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     print("DaTABASE CLEARED");
+                //     databaseHelper.dropTable();
+                //     // DatabaseHelper.instance.dropTable();
+                //   },
+                //   child: Container(
+                //     color: Colors.blue,
+                //     width: 500,
+                //     height: 50,
+                //     child: Text("Clear Database"),
+                //   ),
+                // ),
+                // GestureDetector(
+                //   onTap: () {
+                //     print("PRINTING DATABASE");
+                //     databaseHelper.getChats();
+                //     // DatabaseHelper.instance.dropTable();
+                //   },
+                //   child: Container(
+                //     color: Colors.blue,
+                //     width: 500,
+                //     height: 50,
+                //     child: Text("PRINT DATABASE"),
+                //   ),
+                // ),
                 _topBar(),
                 GestureDetector(
                   onTap: () {

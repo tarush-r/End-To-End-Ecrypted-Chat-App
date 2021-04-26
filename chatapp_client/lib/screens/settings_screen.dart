@@ -1,4 +1,5 @@
 import 'package:chatapp_client/api/settings_api.dart';
+import 'package:chatapp_client/helpers/database_helper.dart';
 import 'package:chatapp_client/helpers/encryption_helper.dart';
 import 'package:chatapp_client/helpers/logout_helper.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
@@ -17,6 +18,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   var user;
   var token;
+  DatabaseHelper databaseHelper = DatabaseHelper();
 
   void initState() {
     super.initState();
@@ -367,6 +369,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                               Text(
                                 "Logout from all devices",
+                                style: TextStyle(fontSize: 20),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      //delete later
+                      SizedBox(
+                        height: 15,
+                      ),
+                      RawMaterialButton(
+                        onPressed: () async {
+                          databaseHelper.dropTable();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[200]),
+                          child: Row(
+                            children: [
+                              Icon(Icons.clear),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                "Clear database",
                                 style: TextStyle(fontSize: 20),
                               )
                             ],

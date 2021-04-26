@@ -32,11 +32,6 @@ app.use('/chat', chatController)
 
 // Schedule tasks to be run on the server.
 cron.schedule('* * * * *', function () {
-  // var currentTime = new Date();
-  // var currentOffset = currentTime.getTimezoneOffset();
-  // var ISTOffset = 330;   // IST offset UTC +5:30 
-  // var t=new Date(currentTime.getTime() + (ISTOffset + currentOffset)*60000)
-  // var t=new Date().toISOString()
   var dateTime= moment.tz(Date.now(), "Asia/Calcutta");
   var t= dateTime.format()
   console.log("t=",t)

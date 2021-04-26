@@ -157,6 +157,8 @@ class SettingsApi {
     return res;
   }
 
+
+
   static Future logout(String token) async {
     const url = Urls.baseUrl + "settings/logout";
     print("logout api");

@@ -1,4 +1,5 @@
 import 'package:chatapp_client/api/chat_api.dart';
+import 'package:chatapp_client/api/settings_api.dart';
 import 'package:chatapp_client/helpers/database_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
@@ -158,9 +159,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
           key: UniqueKey(),
           // direction: DismissDirection.endToStart,
           confirmDismiss: (direction) {
-            // setState(() {
 
-            //   });
             if (DismissDirection.startToEnd == direction) {
               ShowMessage.show("Schedule a message",
                   "Schedule a message for ${chatContact.name}", () {
@@ -179,7 +178,19 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                 return false;
               });
             } else {
-              return ShowMessage.show("DELETE", "del", () {}, context);
+              ShowMessage.show(
+                  "Delete chats", "Delete chhats with ${chatContact.name}", () async{
+                Provider.of<UserProvider>(context, listen: false)
+                    .initSelectedUser(chatContact);
+                token = await SharedPreferencesHelper.getToken();
+                ChatApi.deleteSelectedUserChat(
+                    chatContact.id,
+                    token
+                    );
+              }, context);
+              return Future.delayed(Duration.zero, () {
+                return false;
+              });
             }
           },
           secondaryBackground: Container(

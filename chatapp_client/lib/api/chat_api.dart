@@ -92,6 +92,28 @@ class ChatApi {
 
   }
 
+    static Future deleteSelectedUserChat(String id, String token) async {
+    const url = Urls.baseUrl + "chat/deleteSelectedUserChat";
+    Map data = {
+      '_id': id,
+    };
+    print(json.encode(data));
+    print("delete api");
+    http.Response res = await http.post(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("====================");
+    print(res.body);
+    // print(json.decode(res.body)[0]['name']);
+    print("====================");
+    return res;
+  }
+
     static Future schedule(token, id, message, toSendAt) async {
    
     const url = Urls.baseUrl +"chat/schedule/";

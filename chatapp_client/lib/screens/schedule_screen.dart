@@ -1,9 +1,13 @@
 import 'package:chatapp_client/api/chat_api.dart';
+import 'package:chatapp_client/helpers/encryption_helper.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
+import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:chatapp_client/utils/focus_handler.dart';
 import 'package:chatapp_client/widgets/heading_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rsa_encrypt/rsa_encrypt.dart';
 
 class ScheduleScreen extends StatefulWidget {
   static final routeName = "/schedulescreen";
@@ -17,6 +21,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   TimeOfDay selectedTime;
   DateTime toSendAt;
   String selectedUserId;
+  var selectedUser;
   var token;
   TextEditingController textController = new TextEditingController();
 
@@ -37,12 +42,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     Map arguments = ModalRoute.of(context).settings.arguments as Map;
     selectedUserId = arguments['id'];
     token = await SharedPreferencesHelper.getToken();
+    selectedUser = Provider.of<UserProvider>(context,listen: false).selectedUser;
     print("Selecteddddddddddddd");
     print(token);
     ChatApi.schedule(
       token,
       selectedUserId,
-       textController.text.trim(),
+      //  textController.text.trim(),
+      encrypt(textController.text.trim(), EncryptionHelper.convertStringToPublicKey(selectedUser.publicKey)),
        toSendAt
     );
   }

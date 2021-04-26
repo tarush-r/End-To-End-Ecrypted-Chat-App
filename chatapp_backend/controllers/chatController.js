@@ -102,21 +102,23 @@ router.post('/readSelectedUserChat', login_required, async (req, res) => {
 
 })
 
-exports.chatpost = async (parameters) => {
-  const options = {
-    headers: {
-      Accept: "*/*",
-      "Content-type": "application/json",
-    },
-  };
-  const result = await axios.post(
-    parameters.url,
-    options
-  );
-  console.log("HEY")
-  console.log("CHECK", result.data.length);
-  return result;
-};
+
+router.post('/deleteSelectedUserChat', login_required, async (req, res) => {
+  console.log(req.user._id)
+  console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    Chat.deleteMany({  $or: [{ $and: [{ from: req.user._id }, { to: req.body._id }] }, { $and: [{ to: req.user._id }, { from: req.body._id }] }]  }).then(function(){
+      res.status(200).send({data:"Chats deleted successfully"});
+      console.log("Data deleted"); // Success
+    }).catch(function(error){
+      res.status(500).send({data:"Server error"}); // Failure
+    });
+
+})
+
+
+
+
+
 
 router.post('/addChat', async (req, res) => {
   console.log("HEY=", (typeof (ObjectId(req.body.from))))
@@ -167,5 +169,22 @@ router.post('/schedule', login_required, async (req, res) => {
     res.send({ error })
   }
 })
+
+
+exports.chatpost = async (parameters) => {
+  const options = {
+    headers: {
+      Accept: "*/*",
+      "Content-type": "application/json",
+    },
+  };
+  const result = await axios.post(
+    parameters.url,
+    options
+  );
+  console.log("HEY")
+  console.log("CHECK", result.data.length);
+  return result;
+};
 
 module.exports = router;

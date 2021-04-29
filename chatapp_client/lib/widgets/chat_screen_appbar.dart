@@ -1,7 +1,10 @@
+
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
+import 'package:chatapp_client/screens/call_screen.dart';
 import 'package:chatapp_client/utils/context_util.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -13,8 +16,32 @@ class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
   _ChatAppBarState createState() => _ChatAppBarState();
 }
 
-class _ChatAppBarState extends State<ChatAppBar> {
+void onJoin(var selectedUser,BuildContext context)async {
 
+    print("-----------------");
+    print(selectedUser.email);
+    await _handleCameraAndMic(Permission.camera);
+    await _handleCameraAndMic(Permission.microphone);
+    // push video page with given channel name
+    // await Navigator.push(
+    //   context,
+         await Navigator.pushNamed(
+          context,
+          CallPage.routeName,
+          arguments: <String, String>{
+            'email': selectedUser.email,
+          },
+        );
+    // );
+  // }
+}
+
+Future<void> _handleCameraAndMic(Permission permission) async {
+  final status = await permission.request();
+  print(status);
+}
+
+class _ChatAppBarState extends State<ChatAppBar> {
   var selectedUser;
 
   // double hheight = 50;
@@ -86,6 +113,9 @@ class _ChatAppBarState extends State<ChatAppBar> {
                   padding: EdgeInsets.only(right: 20),
                   child: GestureDetector(
                     child: Icon(Icons.video_call),
+                    onTap:(){
+                       onJoin(selectedUser,context);
+                       },
                   ),
                 ),
                 Container(

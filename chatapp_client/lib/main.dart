@@ -1,6 +1,7 @@
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/providers/chats_provider.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
+import 'package:chatapp_client/screens/call_screen.dart';
 import 'package:chatapp_client/screens/calls_screen.dart';
 import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/home_screen.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
           HomeScreen.routeName: (ctx) => HomeScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
           ScheduleScreen.routeName: (ctx) => ScheduleScreen(),
+          CallPage.routeName: (ctx) => CallPage(),
           //RegisterScreen.routeName: (ctx) => RegisterScreen(),
         },
       ),

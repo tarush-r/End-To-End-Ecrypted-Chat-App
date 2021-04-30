@@ -63,6 +63,7 @@ class _CallPageState extends State<CallPage> {
     configuration.dimensions = VideoDimensions(1920, 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
     Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    print("OOOOOOOOOOOOOCHECK");
     await _engine.joinChannel(null, arguments['email'], null, 0);
   }
 

@@ -16,25 +16,7 @@ class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
   _ChatAppBarState createState() => _ChatAppBarState();
 }
 
-void onJoin(var selectedUser,BuildContext context)async {
 
-    print("-----------------");
-    print(selectedUser.email);
-    await _handleCameraAndMic(Permission.camera);
-    await _handleCameraAndMic(Permission.microphone);
-    // push video page with given channel name
-    // await Navigator.push(
-    //   context,
-         await Navigator.pushNamed(
-          context,
-          CallPage.routeName,
-          arguments: <String, String>{
-            'email': selectedUser.email,
-          },
-        );
-    // );
-  // }
-}
 
 Future<void> _handleCameraAndMic(Permission permission) async {
   final status = await permission.request();
@@ -114,7 +96,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
                   child: GestureDetector(
                     child: Icon(Icons.video_call),
                     onTap:(){
-                       onJoin(selectedUser,context);
+                       onJoin(selectedUser);
                        },
                   ),
                 ),
@@ -168,4 +150,31 @@ class _ChatAppBarState extends State<ChatAppBar> {
     //   ],
     // );
   }
+
+Future<void> onJoin(var selectedUser)async {
+
+    print("-----------------");
+    print(selectedUser.email);
+    await _handleCameraAndMic(Permission.camera);
+    await _handleCameraAndMic(Permission.microphone);
+    // push video page with given channel name
+    // await Navigator.push(
+    //   context,
+         await Navigator.pushNamed(
+          context,
+        //   MaterialPageRoute(
+        //   builder: (context) => CallPage(
+        //     channelName: selectedUser.email,
+        //     // role: _role,
+        //   ),
+        // ),
+          CallPage.routeName,
+          arguments: <String, String>{
+            'email': selectedUser.email,
+          },
+        );
+    // );
+  // }
+}
+
 }

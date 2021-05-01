@@ -1,11 +1,15 @@
+import 'dart:convert';
 
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
+import 'package:chatapp_client/providers/chats_provider.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/call_screen.dart';
 import 'package:chatapp_client/utils/context_util.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_socket_io/flutter_socket_io.dart';
 
 class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
   final double height;
@@ -16,8 +20,6 @@ class ChatAppBar extends StatefulWidget implements PreferredSizeWidget {
   _ChatAppBarState createState() => _ChatAppBarState();
 }
 
-
-
 Future<void> _handleCameraAndMic(Permission permission) async {
   final status = await permission.request();
   print(status);
@@ -25,6 +27,30 @@ Future<void> _handleCameraAndMic(Permission permission) async {
 
 class _ChatAppBarState extends State<ChatAppBar> {
   var selectedUser;
+  bool _isInit = true;
+  SocketIO socketIO;
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      socketIO = Provider.of<ChatsProvider>(context, listen: false).socketIO;
+      // Provider.of<UserProvider>(context).initSelectedUser(selectedUserId);
+
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
+  void sendMessage() async {
+    // messages.add(Message(text, currentUser.chatID, receiverChatID));
+    // print(message);
+    await socketIO.sendMessage(
+      'start_call',
+      json.encode({'call_id': selectedUser.email}),
+    );
+    print("done");
+    // notifyListeners();
+  }
 
   // double hheight = 50;
   @override
@@ -95,9 +121,10 @@ class _ChatAppBarState extends State<ChatAppBar> {
                   padding: EdgeInsets.only(right: 20),
                   child: GestureDetector(
                     child: Icon(Icons.video_call),
-                    onTap:(){
-                       onJoin(selectedUser);
-                       },
+                    onTap: () {
+                      sendMessage();
+                      onJoin(selectedUser);
+                    },
                   ),
                 ),
                 Container(
@@ -151,30 +178,29 @@ class _ChatAppBarState extends State<ChatAppBar> {
     // );
   }
 
-Future<void> onJoin(var selectedUser)async {
-
+  Future<void> onJoin(var selectedUser) async {
     print("-----------------");
     print(selectedUser.email);
     await _handleCameraAndMic(Permission.camera);
     await _handleCameraAndMic(Permission.microphone);
     // push video page with given channel name
-    // await Navigator.push(
-    //   context,
-         await Navigator.pushNamed(
-          context,
-        //   MaterialPageRoute(
-        //   builder: (context) => CallPage(
-        //     channelName: selectedUser.email,
-        //     // role: _role,
-        //   ),
-        // ),
-          CallPage.routeName,
-          arguments: <String, String>{
-            'email': selectedUser.email,
-          },
-        );
+    await Navigator.push(
+      context,
+      //  await Navigator.pushNamed(
+      //   context,
+      MaterialPageRoute(
+        builder: (context) => CallPage(
+          channelName: selectedUser.email,
+          role: ClientRole.Broadcaster,
+        ),
+      ),
+      // CallPage.routeName,
+      // arguments: <String, String>{
+      //   'email': selectedUser.email,
+      //   'role': ClientRole.Broadcaster,
+      // },
+    );
     // );
-  // }
-}
-
+    // }
+  }
 }

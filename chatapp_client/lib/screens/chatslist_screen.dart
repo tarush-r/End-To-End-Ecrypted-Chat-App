@@ -107,16 +107,16 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
     // chatContacts.add(ChatContactModel());
   }
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    if (_isInit) {
-      // _getChats();
-      Provider.of<ChatsProvider>(context).getAllChats();
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   if (_isInit) {
+  //     // _getChats();
+  //     Provider.of<ChatsProvider>(context).getAllChats();
+  //   }
+  //   _isInit = false;
+  //   super.didChangeDependencies();
+  // }
 
   @override
   void initState() {

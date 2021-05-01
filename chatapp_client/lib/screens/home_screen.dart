@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsScreen()
   ];
   int _navigationIndex = 1;
-
+  bool _isInit = true;
   var user;
 
   @override
@@ -33,6 +33,18 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<ChatsProvider>(context, listen: false).initSocket(user['_id']);
     });
     super.initState();
+  }
+
+
+    @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      // _getChats();
+      Provider.of<ChatsProvider>(context).getAllChats();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   _navigate(index) {

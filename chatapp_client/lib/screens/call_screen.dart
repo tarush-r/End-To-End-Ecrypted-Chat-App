@@ -12,10 +12,11 @@ class CallPage extends StatefulWidget {
 
 
   /// non-modifiable client role of the page
-  // final ClientRole role;
+  final ClientRole role;
+  final String channelName;
 
-  /// Creates a call page with given channel name.
-  // const CallPage({ this.channelName}) : super(key: key);
+  // / Creates a call page with given channel name.
+  const CallPage({Key key, this.channelName, this.role}) : super(key: key);
   static String routeName = '/call';
   @override
   _CallPageState createState() => _CallPageState();
@@ -62,12 +63,12 @@ class _CallPageState extends State<CallPage> {
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(1920, 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
-    Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    // Map arguments = ModalRoute.of(context).settings.arguments as Map;
     print("OOOOOOOOOOOOOCHECK");
-    await _engine.joinChannel(null, arguments['email'], null, 0);
+    await _engine.joinChannel(null, widget.channelName, null, 0);
   }
 
-  /// Create agora sdk instance and initialize
+  // / Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
     _engine = await RtcEngine.create(APP_ID);
     await _engine.enableVideo();
@@ -115,9 +116,9 @@ class _CallPageState extends State<CallPage> {
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
-    // if (widget.role == ClientRole.Broadcaster) {
-    //   list.add(RtcLocalView.SurfaceView());
-    // }
+    if (widget.role == ClientRole.Broadcaster) {
+    list.add(RtcLocalView.SurfaceView());
+    }
     _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
     return list;
   }
@@ -177,7 +178,7 @@ class _CallPageState extends State<CallPage> {
 
   /// Toolbar layout
   Widget _toolbar() {
-    // if (widget.role == ClientRole.Audience) return Container();
+    if (widget.role == ClientRole.Audience) return Container();
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),

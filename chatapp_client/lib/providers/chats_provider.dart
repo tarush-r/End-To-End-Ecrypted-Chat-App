@@ -521,6 +521,13 @@ class ChatsProvider with ChangeNotifier {
       setSeenTrue(data['senderId'], data['receiverId']);
       // databaseHelper.updateSeen(data['senderId'], data['receiverId']);
     });
+
+    socketIO.subscribe('receive_call', (jsonData) {
+      Map<String, dynamic> data = json.decode(jsonData);
+      print(data);
+      // setSeenTrue(data['senderId'], data['receiverId']);
+      // databaseHelper.updateSeen(data['senderId'], data['receiverId']);
+    });
     
     socketIO.subscribe('set_isStored_true', (jsonData) {
       Map<String, dynamic> data = json.decode(jsonData);

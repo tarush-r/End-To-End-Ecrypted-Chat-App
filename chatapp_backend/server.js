@@ -149,7 +149,7 @@ io.on("connection", (userSocket) => {
       .emit("receive_call", data)
 
     //broadcast.to('ID')
-    io.in(data.receiverId).emit('receive_call', data)
+    // io.in(data.receiverId).emit('receive_call', data)
   });
 
   userSocket.on("read_message", async (data) => {

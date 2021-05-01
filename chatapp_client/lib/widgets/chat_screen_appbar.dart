@@ -43,10 +43,10 @@ class _ChatAppBarState extends State<ChatAppBar> {
 
   void sendMessage() async {
     // messages.add(Message(text, currentUser.chatID, receiverChatID));
-    // print(message);
+    print(selectedUser);
     await socketIO.sendMessage(
       'start_call',
-      json.encode({'call_id': selectedUser.email}),
+      json.encode({'call_id': selectedUser.email, 'receiverId': selectedUser.id}),
     );
     print("done");
     // notifyListeners();

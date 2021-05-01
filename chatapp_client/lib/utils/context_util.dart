@@ -4,5 +4,6 @@ class ContextUtil {
 
   static List<BuildContext> buildContext = [];
   static List<String> selectedUserIds = [];
+  static BuildContext homeScreenContext;
 
 }

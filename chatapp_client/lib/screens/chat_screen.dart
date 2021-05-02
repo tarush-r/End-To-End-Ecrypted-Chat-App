@@ -87,7 +87,7 @@ class _ChatScreenState extends State<ChatScreen> {
         'receiverId': receiverId,
         'senderId': senderId,
         'message': message,
-        'sentAt': DateTime.now()
+        'sentAt': DateTime.now().toString()
       }),
     );
     print("done");

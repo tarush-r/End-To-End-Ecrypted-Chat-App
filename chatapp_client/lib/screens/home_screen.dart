@@ -2,6 +2,7 @@ import 'package:chatapp_client/providers/chats_provider.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/chatslist_screen.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
+import 'package:chatapp_client/utils/context_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'settings_screen.dart';
@@ -141,6 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ContextUtil.homeScreenContext= context;
     return Scaffold(
         body: screens[_navigationIndex],
         bottomNavigationBar: _customBottomNavigation()

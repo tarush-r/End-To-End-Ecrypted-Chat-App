@@ -1,14 +1,17 @@
 import 'dart:convert';
 
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/helpers/database_helper.dart';
 import 'package:chatapp_client/helpers/encryption_helper.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/models/chat_model.dart';
+import 'package:chatapp_client/screens/call_screen.dart';
 import 'package:chatapp_client/utils/context_util.dart';
 import 'package:chatapp_client/utils/urls.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
 import 'package:provider/provider.dart';
@@ -525,6 +528,26 @@ class ChatsProvider with ChangeNotifier {
     socketIO.subscribe('receive_call', (jsonData) {
       Map<String, dynamic> data = json.decode(jsonData);
       print(data);
+      print(ContextUtil.homeScreenContext);
+      print("context herere");
+      Navigator.push(
+      ContextUtil.homeScreenContext,
+      //  await Navigator.pushNamed(
+      //   context,
+      MaterialPageRoute(
+        builder: (context) => CallPage(
+          channelName: data['call_id'],
+          role: ClientRole.Broadcaster,
+        ),
+      ),
+      
+      // CallPage.routeName,
+      // arguments: <String, String>{
+      //   'email': selectedUser.email,
+      //   'role': ClientRole.Broadcaster,
+      // },
+    );
+    print("pushed");
       // setSeenTrue(data['senderId'], data['receiverId']);
       // databaseHelper.updateSeen(data['senderId'], data['receiverId']);
     });

@@ -614,6 +614,17 @@ class ChatsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteSelectedUserChats(selectedUserId) {
+    _allChats.removeWhere((chat) {
+      return (chat['from']['_id']==selectedUserId || chat['to']['_id']==selectedUserId); 
+    });
+
+    _allChatContacts.removeWhere((chatContact) {
+      return chatContact.id==selectedUserId;
+    });
+    notifyListeners();
+  }
+
   void logout() {
     _allChatContacts = [];
     _allChats = [];

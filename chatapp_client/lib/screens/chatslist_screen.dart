@@ -36,7 +36,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   // final List<Widget> selectedScreen = []
   String token;
   bool _isInit = true;
-  var databaseHelper;
+  DatabaseHelper databaseHelper;
 
   _getChats() async {
     Future.delayed(Duration.zero)
@@ -159,7 +159,6 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
           key: UniqueKey(),
           // direction: DismissDirection.endToStart,
           confirmDismiss: (direction) {
-
             if (DismissDirection.startToEnd == direction) {
               ShowMessage.show("Schedule a message",
                   "Schedule a message for ${chatContact.name}", () {
@@ -179,14 +178,17 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
               });
             } else {
               ShowMessage.show(
-                  "Delete chats", "Delete chhats with ${chatContact.name}", () async{
+                  "Delete chats", "Delete chats with ${chatContact.name}",
+                  () async {
                 Provider.of<UserProvider>(context, listen: false)
                     .initSelectedUser(chatContact);
                 token = await SharedPreferencesHelper.getToken();
-                ChatApi.deleteSelectedUserChat(
-                    chatContact.id,
-                    token
-                    );
+                ChatApi.deleteSelectedUserChat(chatContact.id, token);
+                databaseHelper.deleteSelectedUserChats(
+                    Provider.of<UserProvider>(context, listen: false)
+                        .user['_id'],
+                    chatContact.id);
+                Provider.of<ChatsProvider>(context, listen: false).deleteSelectedUserChats(chatContact.id);
               }, context);
               return Future.delayed(Duration.zero, () {
                 return false;

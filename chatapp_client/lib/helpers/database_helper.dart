@@ -111,6 +111,17 @@ class DatabaseHelper {
     return res;
   }
 
+  Future deleteSelectedUserChats(userId, selectedUserId) async {
+    var dbClient = await db;
+    var res = await dbClient.rawDelete(
+        '''DELETE FROM $TABLE WHERE (fromId=? AND toId = ?) OR (fromId=? AND toId = ?)''',
+        [userId, selectedUserId, selectedUserId, userId]);
+    print("res here");
+    print(res);
+    print("chats deleted");
+    print(res);
+  }
+
   Future dropTable() async {
     var dbClient = await db;
     var res = await dbClient.rawDelete("DELETE FROM $TABLE");

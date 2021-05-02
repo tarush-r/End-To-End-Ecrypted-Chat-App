@@ -6,6 +6,7 @@ const moment = require('moment-timezone');
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Chat = require('../models/chat');
+const Call = require('../models/call');
 const Schedule = require('../models/schedule')
 const login_required = require('../middleware/login_required')
 const { ggmail, ppassword } = require('../config/key');
@@ -27,7 +28,7 @@ router.get('/getAllChats', login_required, async (req, res) => {
 
 router.get('/getAllCalls', login_required, async (req, res) => {
   console.log("reqqqq=", req.user._id)
-  Chat.find({ $or: [{ sender: req.user._id }, { receiver: req.user._id }] })
+  Call.find({ $or: [{ sender: req.user._id }, { receiver: req.user._id }] })
     .populate("sender", "_id name email profile_pic number", User)
     .populate("receiver", "_id name email profile_pic number", User)
     .sort('-sentAt')

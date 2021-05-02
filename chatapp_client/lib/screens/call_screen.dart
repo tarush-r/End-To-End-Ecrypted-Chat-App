@@ -294,9 +294,9 @@ class _CallPageState extends State<CallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Video call'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Video call'),
+      // ),
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(

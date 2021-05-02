@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/chat_contact_model.dart';
 import 'package:chatapp_client/providers/chats_provider.dart';
 import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/call_screen.dart';
+import 'package:chatapp_client/screens/view_profile_screen.dart';
 import 'package:chatapp_client/utils/context_util.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -44,9 +46,12 @@ class _ChatAppBarState extends State<ChatAppBar> {
   void sendMessage() async {
     // messages.add(Message(text, currentUser.chatID, receiverChatID));
     // print(message);
+    var user = await SharedPreferencesHelper.getUser();
+    print(user['_id']);
     await socketIO.sendMessage(
       'start_call',
-      json.encode({'call_id': selectedUser.email}),
+      json.encode(
+          {'call_id': selectedUser.email, 'receiverId': selectedUser.id, 'senderId':user['_id']}),
     );
     print("done");
     // notifyListeners();
@@ -100,10 +105,24 @@ class _ChatAppBarState extends State<ChatAppBar> {
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(selectedUser.profilePic),
-                    backgroundColor: Colors.green,
-                    radius: 20,
+                  child: GestureDetector(
+                    onTap: () {
+                      print("---------------------");
+                      print(selectedUser.profilePic);
+                      Navigator.pushNamed(
+                        context,
+                        ViewProfileScreen.routeName,
+                        // arguments: <String, String>{
+                        //   'pic': selectedUser.profilePic,
+                        //   'name':selectedUser.name,
+                        // },
+                      );
+                    },
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(selectedUser.profilePic),
+                      backgroundColor: Colors.green,
+                      radius: 20,
+                    ),
                   ),
                 ),
                 Container(

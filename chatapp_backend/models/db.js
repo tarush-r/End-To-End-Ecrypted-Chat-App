@@ -12,4 +12,5 @@ err =>{
 require('./user.js');
 require('./chat.js')
 require('./schedule.js')
+require('./call.js')
 require('./otp.js')

@@ -13,6 +13,7 @@ const chatController = require("./controllers/chatController");
 const Chat = require("./models/chat");
 const Schedule = require("./models/schedule");
 const User = require("./models/user");
+const Call = require("./models/call");
 const axios = require("axios");
 const port = 3000;
 
@@ -142,14 +143,20 @@ io.on("connection", (userSocket) => {
   userSocket.on("start_call", async (data) => {
     console.log("IT WORKS");
     console.log(data);
-
-    console.log("Chheck receive");
-    userSocket
+    const newCall = new Call({
+      receiver: data.receiverId,
+      sender: data.senderId,
+      // sentAt: data.sentAt,
+    });
+    await newCall
+      .save()
+      .then((res) => {
+        console.log(res), console.log("BROADCAST-" + data.receiverId);
+      })
+      .catch((err) => console.log(err));
+      userSocket
       .to(data.receiverId)
       .emit("receive_call", data)
-
-    //broadcast.to('ID')
-    io.in(data.receiverId).emit('receive_call', data)
   });
 
   userSocket.on("read_message", async (data) => {

@@ -25,21 +25,36 @@ router.get('/getAllChats', login_required, async (req, res) => {
     })
 })
 
+router.get('/getAllCalls', login_required, async (req, res) => {
+  console.log("reqqqq=", req.user._id)
+  Chat.find({ $or: [{ sender: req.user._id }, { receiver: req.user._id }] })
+    .populate("sender", "_id name email profile_pic number", User)
+    .populate("receiver", "_id name email profile_pic number", User)
+    .sort('-sentAt')
+    .then((calls) => {
+      console.log(calls)
+      res.send({ calls })
+    }).catch(err => {
+      console.log(err)
+    })
+})
+
+
 router.get('/getNewChats', login_required, async (req, res) => {
   console.log("reqqqq=", req.user._id)
   Chat.find({ $and: [{ to: req.user._id }, { isStored: false }] })
-    .populate("from", "_id name email publicKey profile_pic", User)
-    .populate("to", "_id name email publicKey profile_pic", User)
+    .populate("from", "_id name email publicKey profile_pic number", User)
+    .populate("to", "_id name email publicKey profile_pic number", User)
     // .sort('-sentAt')
     .then((chats) => {
       console.log(chats)
-      const n=chats.length;
+      const n = chats.length;
       var i;
       for (i = 0; i < n; i++) {
 
-        chats[i].isStored=true
+        chats[i].isStored = true
       }
-      Chat.updateMany({ $and: [{ to: req.user._id }, { isStored: false }]  },
+      Chat.updateMany({ $and: [{ to: req.user._id }, { isStored: false }] },
         { isStored: true }, function (err, doc) {
           if (err) {
             console.log(err)
@@ -102,16 +117,28 @@ router.post('/readSelectedUserChat', login_required, async (req, res) => {
 
 })
 
+router.post('/getSelectedUserProfile', login_required, async (req, res) => {
+  console.log(req.user._id)
+   User.find({_id:req.body._id})
+    .then((user) => {
+      console.log(user[0])
+      user=user[0];
+      res.send({ user })
+    }).catch(err => {
+      console.log(err)
+    })
+})
+
 
 router.post('/deleteSelectedUserChat', login_required, async (req, res) => {
   console.log(req.user._id)
   console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-    Chat.deleteMany({  $or: [{ $and: [{ from: req.user._id }, { to: req.body._id }] }, { $and: [{ to: req.user._id }, { from: req.body._id }] }]  }).then(function(){
-      res.status(200).send({data:"Chats deleted successfully"});
-      console.log("Data deleted"); // Success
-    }).catch(function(error){
-      res.status(500).send({data:"Server error"}); // Failure
-    });
+  Chat.deleteMany({ $or: [{ $and: [{ from: req.user._id }, { to: req.body._id }] }, { $and: [{ to: req.user._id }, { from: req.body._id }] }] }).then(function () {
+    res.status(200).send({ data: "Chats deleted successfully" });
+    console.log("Data deleted"); // Success
+  }).catch(function (error) {
+    res.status(500).send({ data: "Server error" }); // Failure
+  });
 
 })
 
@@ -169,6 +196,8 @@ router.post('/schedule', login_required, async (req, res) => {
     res.send({ error })
   }
 })
+
+
 
 
 exports.chatpost = async (parameters) => {

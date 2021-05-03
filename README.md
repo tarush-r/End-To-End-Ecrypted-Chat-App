@@ -24,7 +24,6 @@ The Cypher Encryption Scheme has a couple key requirements that secure your data
 1. The server must never know your password.
 2. The server must never know your private key.
 
-With these two principles, Tunnelgram uses the Tunnelwire Encryption Scheme to transfer end to end encrypted messages between multiple parties.
 
 ## How the Cypher Encryption Scheme Works
 

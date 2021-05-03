@@ -16,7 +16,6 @@ Cypher, is an end-to-end encrypted secured instant messaging application that wo
 * Every message is encrypted from sender to recipient. There is no way to send a plain text message in them and Cypher's servers cannot decrypt them.
 * You can log in on **multiple clients** at the same time, read all of your conversations and messages, and send new messages.
   * The original sign-up device is *not required*.
-* Your account is not tied to a phone number or specific device. You log in with a username and password.
 
 
 The Cypher Encryption Scheme has a couple key requirements that secure your data.

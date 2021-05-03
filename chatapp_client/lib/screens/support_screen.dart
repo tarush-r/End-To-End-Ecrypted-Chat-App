@@ -17,7 +17,7 @@ class _SupportScreenState extends State<SupportScreen> {
     questions = [
       {
         "id": "1",
-        "question": "About supported operating systems",
+        "question": "Supported operating systems",
         "answer":
             "We provide support for and recommend using the following devices:\nAndroid running OS 4.0.3 and newer\nOnce you have one of these devices, install Cypher and register your phone number and email id.\nCypher can only be activated with one devices on one device at a time but can be used from multiple devices."
       },

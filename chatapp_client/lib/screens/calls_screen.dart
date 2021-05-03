@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:chatapp_client/api/chat_api.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/models/contact_model.dart';
+import 'package:chatapp_client/screens/call_screen.dart';
 import 'package:chatapp_client/widgets/heading_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CallsScreen extends StatefulWidget {
@@ -20,6 +23,37 @@ class _CallsScreenState extends State<CallsScreen> {
   bool loading = true;
   Map user;
   List callLogs;
+
+  Future<void> _handleCameraAndMic(Permission permission) async {
+    final status = await permission.request();
+    print(status);
+  }
+
+  Future<void> onJoin(String email) async {
+    print("-----------------");
+    print(email);
+    await _handleCameraAndMic(Permission.camera);
+    await _handleCameraAndMic(Permission.microphone);
+    // push video page with given channel name
+    await Navigator.push(
+      context,
+      //  await Navigator.pushNamed(
+      //   context,
+      MaterialPageRoute(
+        builder: (context) => CallPage(
+          channelName: email,
+          role: ClientRole.Broadcaster,
+        ),
+      ),
+      // CallPage.routeName,
+      // arguments: <String, String>{
+      //   'email': selectedUser.email,
+      //   'role': ClientRole.Broadcaster,
+      // },
+    );
+    // );
+    // }
+  }
 
   void initState() {
     super.initState();
@@ -49,7 +83,7 @@ class _CallsScreenState extends State<CallsScreen> {
     callLogs = json.decode(res.body)['calls'];
     print(callLogs);
     setState(() {
-      loading= false;
+      loading = false;
     });
   }
 
@@ -118,7 +152,13 @@ class _CallsScreenState extends State<CallsScreen> {
                   ),
             Row(
               children: [
-                Icon(Icons.video_call),
+                GestureDetector(
+                  onTap: () {
+                    // sendMessage();
+                    //   onJoin();
+                  },
+                  child: Icon(Icons.video_call),
+                ),
                 SizedBox(
                   width: 15,
                 ),

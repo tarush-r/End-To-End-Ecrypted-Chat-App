@@ -213,7 +213,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                               width: 15,
                                             ),
                                             Text(
-                                              res['number'],
+                                              "9382934057",
                                               style: TextStyle(fontSize: 20),
                                             )
                                           ],
@@ -246,7 +246,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                             ),
                                             Text(
                                               // user['email'],
-                                              res['email'],
+                                              "test@email.com",
                                               style: TextStyle(fontSize: 20),
                                             )
                                           ],

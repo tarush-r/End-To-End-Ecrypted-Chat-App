@@ -122,7 +122,7 @@ class _CallsScreenState extends State<CallsScreen> {
                 SizedBox(
                   width: 15,
                 ),
-                Icon(Icons.call)
+                // Icon(Icons.call)
               ],
             )
           ],

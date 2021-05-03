@@ -3,6 +3,7 @@ import 'package:chatapp_client/providers/user_provider.dart';
 import 'package:chatapp_client/screens/generate_otp_screen.dart';
 import 'package:chatapp_client/screens/home_screen.dart';
 import 'package:chatapp_client/screens/register_screen.dart';
+import 'package:chatapp_client/utils/show_message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../helpers/encryption_helper.dart';
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = new TextEditingController();
   var user;
   bool _isInit = true;
-  _submit() async {
+  _submit(context) async {
     List<String> hashedPassword;
     // print("HEllo");
     _formKey.currentState.validate();
@@ -34,9 +35,19 @@ class _LoginScreenState extends State<LoginScreen> {
         EncryptionHelper.hashPassword(passwordController.text.trim());
     var response = await AuthenticationApi.login(
         hashedPassword[0], hashedPassword[1], emailController.text.trim());
+    print("herererere");
+    if (!(response is String)) {
+      print(response.statusCode);
+      if (response.statusCode != 200) {
+        ShowMessage.show(
+            "Error occured", "Username or password incorrect", () {}, context);
+        return;
+      }
+    }
     print(json.decode(response)['token']);
     await SharedPreferencesHelper.persistOnLogin(
-        json.encode(json.decode(response)['user']), json.encode(json.decode(response)['token']));
+        json.encode(json.decode(response)['user']),
+        json.encode(json.decode(response)['token']));
     var user = await SharedPreferencesHelper.getUser();
     print("--------------user-----------------");
     print(user['name']);
@@ -54,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // String password = '';
   void checkLogin() async {
     user = await SharedPreferencesHelper.getUser();
-    
+
     if (user != null) {
       print("hello");
       Provider.of<UserProvider>(context, listen: false).initUser(user);
@@ -209,7 +220,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0)),
-                      onPressed: _submit),
+                      onPressed: () {
+                        _submit(context);
+                      }),
                 )
               ],
             ),

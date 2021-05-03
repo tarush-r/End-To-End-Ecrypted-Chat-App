@@ -146,12 +146,12 @@ class _ChatAppBarState extends State<ChatAppBar> {
                     },
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(right: 20),
-                  child: GestureDetector(
-                    child: Icon(Icons.call),
-                  ),
-                ),
+                // Container(
+                //   padding: EdgeInsets.only(right: 20),
+                //   child: GestureDetector(
+                //     child: Icon(Icons.call),
+                //   ),
+                // ),
               ],
             )
           ]),

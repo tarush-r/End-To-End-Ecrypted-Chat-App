@@ -7,6 +7,7 @@ import 'package:chatapp_client/screens/chat_screen.dart';
 import 'package:chatapp_client/screens/home_screen.dart';
 import 'package:chatapp_client/screens/schedule_screen.dart';
 import 'package:chatapp_client/screens/settings_screen.dart';
+import 'package:chatapp_client/screens/support_screen.dart';
 import 'package:chatapp_client/screens/view_profile_screen.dart';
 import 'package:chatapp_client/utils/color_themes.dart';
 import 'package:chatapp_client/utils/message_store.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
           ScheduleScreen.routeName: (ctx) => ScheduleScreen(),
           CallPage.routeName: (ctx) => CallPage(),
           ViewProfileScreen.routeName: (ctx) => ViewProfileScreen(),
+          SupportScreen.routeName: (ctx) => SupportScreen(),
           //RegisterScreen.routeName: (ctx) => RegisterScreen(),
         },
       ),

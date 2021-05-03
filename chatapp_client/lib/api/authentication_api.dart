@@ -97,6 +97,9 @@ class AuthenticationApi {
     final response=json.decode(res.body);
     print("STATUS HERE");
     print(res.statusCode);
+    if(res.statusCode!=200){
+      return res;
+    }
     print(json.decode(res.body));
     print("HEEYYYYYYY--111");
     print(response['user']['privateKey']);

@@ -4,6 +4,7 @@ import 'package:chatapp_client/helpers/encryption_helper.dart';
 import 'package:chatapp_client/helpers/logout_helper.dart';
 import 'package:chatapp_client/helpers/sharedpreferences_helper.dart';
 import 'package:chatapp_client/screens/login_screen.dart';
+import 'package:chatapp_client/screens/support_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/heading_widget.dart';
 import './profile_screen.dart';
@@ -321,6 +322,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         height: 15,
                       ),
                       RawMaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(SupportScreen.routeName);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[200]),
+                          child: Row(
+                            children: [
+                              Icon(Icons.info),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Support",
+                                style: TextStyle(fontSize: 20),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      RawMaterialButton(
                         onPressed: () async {
                           var res = await SettingsApi.logout(token);
                           LogoutHelper.Logout(context);
@@ -346,35 +373,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      RawMaterialButton(
-                        onPressed: () async {
-                          var res = await SettingsApi.logoutAll(token);
-                          LogoutHelper.Logout(context);
-                          Navigator.pushReplacementNamed(
-                              context, LoginScreen.routeName);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey[200]),
-                          child: Row(
-                            children: [
-                              Icon(Icons.logout),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                "Logout from all devices",
-                                style: TextStyle(fontSize: 20),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      // SizedBox(
+                      //   height: 15,
+                      // ),
+                      // RawMaterialButton(
+                      //   onPressed: () async {
+                      //     var res = await SettingsApi.logoutAll(token);
+                      //     LogoutHelper.Logout(context);
+                      //     Navigator.pushReplacementNamed(
+                      //         context, LoginScreen.routeName);
+                      //   },
+                      //   child: Container(
+                      //     padding: EdgeInsets.all(10),
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         color: Colors.grey[200]),
+                      //     child: Row(
+                      //       children: [
+                      //         Icon(Icons.logout),
+                      //         SizedBox(
+                      //           width: 15,
+                      //         ),
+                      //         Text(
+                      //           "Logout from all devices",
+                      //           style: TextStyle(fontSize: 20),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       //delete later
                       SizedBox(
                         height: 15,

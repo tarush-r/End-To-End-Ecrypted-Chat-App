@@ -66,7 +66,21 @@ When a user logs in, the client must:
 
 ### Screensots ###
 ----------------------------------------------------------------------------------------
+<img height=480 width=240 style="margin: 10px;" src="./screenshots/notificaton.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/chat_screen.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/share.png"/>
+<br>
+### Agora video call and call log ###
+<img height=480 width=240 style="margin: 10px;" src="./screenshots/Screenshot_20210503-141058.jpg"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/call_logs.png"/>
+<br>
+### Message scheduling for a contact and delete chat with a particular contact ###
+<img height=480 width=240 style="margin: 10px;" src="./screenshots/chatlist_schedule_swipe.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/scheduler.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/chatlist_delete_swipe.png"/>
 
+<img height=480 width=240 style="margin: 10px;" src="./screenshots/settings.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/support.png"/>
+<br>
+### Self profile update and view other user's profile ###
+<img height=480 width=240 style="margin: 10px;" src="./screenshots/profile.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/view_profile.png"/>
+<br>
+### Login, sign up and all users from contact bok of logged in user who have registered into our app listed ###
+<img height=480 width=240 style="margin: 10px;" src="./screenshots/Screenshot_1616383521.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/Screenshot_1616383548.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/verified_contacts.png"/>
 
 ---------------------------------------------------------------------------------------
 
@@ -75,7 +89,6 @@ When a user logs in, the client must:
 Clone the repository and navigate to chatapp_client folder and run the flutter application after giving backend localhost/ngrok url in urls.dart
 
 ###### Backend
-#### Run using Command Prompt
 Clone the repository, navigate to chatapp_backend folder and run the following command-
 ```html
   npm run dev

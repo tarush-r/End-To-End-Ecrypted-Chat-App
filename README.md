@@ -78,7 +78,7 @@ When a user logs in, the client must:
 ### Self profile update and view other user's profile ###
 <img height=480 width=240 style="margin: 10px;" src="./screenshots/profile.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/view_profile.png"/>
 <br>
-### Login, sign up and all users from contact bok of logged in user who have registered into our app listed ###
+### Login, sign up and all users from contact book of logged in user who have registered into our app listed ###
 <img height=480 width=240 style="margin: 10px;" src="./screenshots/Screenshot_1616383521.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/Screenshot_1616383548.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/verified_contacts.png"/>
 
 ---------------------------------------------------------------------------------------

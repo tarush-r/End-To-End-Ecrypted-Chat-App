@@ -63,7 +63,7 @@ When a user logs in, the client must:
 - Logout from current device or from all devices user has logged into
 
 
-### Screensots ###
+### Screenshots ###
 ----------------------------------------------------------------------------------------
 <img height=480 width=240 style="margin: 10px;" src="./screenshots/notificaton.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/chat_screen.png"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height=480 width=240 style="margin: 10px;" src="./screenshots/share.png"/>
 <br>

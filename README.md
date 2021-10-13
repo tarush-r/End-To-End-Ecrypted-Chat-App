@@ -98,6 +98,6 @@ Clone the repository, navigate to chatapp_backend folder and run the following c
 `Frontend` : Flutter  <br>
 
 
-<h3 align="center"><b>Developed with :heart: by <b><a href="https://github.com/tarush-r/">Tarush Rajput</a>, <b><a href="https://github.com/sakship31/">Sakshi Pandey</a> <b><a href="https://github.com/Rahil-Parikh/">Rahil Parikh</a></b> <b><a href="https://github.com/AkshatG6/">Akshat Gandhi</a></b> and <b><a href="https://github.com/kunal-16/">Kunal Rane</a></b></h3>
+<h3 align="center"><b>Developed with :heart: by <b><a href="https://github.com/tarush-r/">Tarush Rajput</a>, <b><a href="https://github.com/sakship31/">Sakshi Pandey</a>, <b><a href="https://github.com/Rahil-Parikh/">Rahil Parikh</a></b>, <b><a href="https://github.com/AkshatG6/">Akshat Gandhi</a></b> and <b><a href="https://github.com/kunal-16/">Kunal Rane</a></b></h3>
 
 
